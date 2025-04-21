@@ -1,0 +1,64 @@
+# Go specific
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+/vendor/
+/bin/
+/dist/
+/docs/*.md
+
+/Godeps/
+
+# Build artifacts
+*.o
+*.a
+
+# Test files
+*.test
+*.prof
+coverage.txt
+coverage.html
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+*.sublime*
+
+# Logs
+*.log
+
+# Environment variables and secrets
+.env
+.env.*
+.envrc
+*.pem
+*.key
+*.crt
+credentials.json
+
+# Generated files
+/docs/generated/
+*.pb.go
+
+# Debug files
+debug
+__debug_bin
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Project specific
+/cmd/examples/config.yaml
