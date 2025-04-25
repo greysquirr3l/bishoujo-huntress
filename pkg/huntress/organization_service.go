@@ -1,3 +1,4 @@
+// Package huntress provides a client for the Huntress API
 package huntress
 
 import (
@@ -12,8 +13,8 @@ type organizationService struct {
 }
 
 // Get retrieves organization details by ID
-func (s *organizationService) Get(ctx context.Context, id int) (*Organization, error) {
-	path := fmt.Sprintf("/organizations/%d", id)
+func (s *organizationService) Get(ctx context.Context, id string) (*Organization, error) {
+	path := fmt.Sprintf("/organizations/%s", id)
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
 		return nil, err
@@ -28,57 +29,15 @@ func (s *organizationService) Get(ctx context.Context, id int) (*Organization, e
 	return org, nil
 }
 
-// Create creates a new organization
-func (s *organizationService) Create(ctx context.Context, input *OrganizationCreateInput) (*Organization, error) {
-	req, err := s.client.NewRequest(ctx, http.MethodPost, "/organizations", input)
-	if err != nil {
-		return nil, err
-	}
-
-	org := new(Organization)
-	_, err = s.client.Do(ctx, req, org)
-	if err != nil {
-		return nil, err
-	}
-
-	return org, nil
-}
-
-// Update updates an organization
-func (s *organizationService) Update(ctx context.Context, id int, input *OrganizationUpdateInput) (*Organization, error) {
-	path := fmt.Sprintf("/organizations/%d", id)
-	req, err := s.client.NewRequest(ctx, http.MethodPatch, path, input)
-	if err != nil {
-		return nil, err
-	}
-
-	org := new(Organization)
-	_, err = s.client.Do(ctx, req, org)
-	if err != nil {
-		return nil, err
-	}
-
-	return org, nil
-}
-
-// Delete deletes an organization
-func (s *organizationService) Delete(ctx context.Context, id int) error {
-	path := fmt.Sprintf("/organizations/%d", id)
-	req, err := s.client.NewRequest(ctx, http.MethodDelete, path, nil)
-	if err != nil {
-		return err
-	}
-
-	_, err = s.client.Do(ctx, req, nil)
-	return err
-}
-
-// List lists organizations with optional filtering
-func (s *organizationService) List(ctx context.Context, opts *OrganizationListOptions) ([]*Organization, *Pagination, error) {
+// List returns all organizations with optional filtering
+func (s *organizationService) List(ctx context.Context, params *ListOrganizationsParams) ([]*Organization, *Pagination, error) {
 	path := "/organizations"
-	path, err := addOptions(path, opts)
-	if err != nil {
-		return nil, nil, err
+	if params != nil {
+		query, err := addQueryParams(path, params)
+		if err != nil {
+			return nil, nil, err
+		}
+		path = query
 	}
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
@@ -96,12 +55,61 @@ func (s *organizationService) List(ctx context.Context, opts *OrganizationListOp
 	return orgs, pagination, nil
 }
 
-// ListUsers lists users associated with an organization
-func (s *organizationService) ListUsers(ctx context.Context, id int, opts *ListOptions) ([]*User, *Pagination, error) {
-	path := fmt.Sprintf("/organizations/%d/users", id)
-	path, err := addOptions(path, opts)
+// Create creates a new organization
+func (s *organizationService) Create(ctx context.Context, org *OrganizationCreateParams) (*Organization, error) {
+	path := "/organizations"
+	req, err := s.client.NewRequest(ctx, http.MethodPost, path, org)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
+	}
+
+	newOrg := new(Organization)
+	_, err = s.client.Do(ctx, req, newOrg)
+	if err != nil {
+		return nil, err
+	}
+
+	return newOrg, nil
+}
+
+// Update updates an existing organization
+func (s *organizationService) Update(ctx context.Context, id string, org *OrganizationUpdateParams) (*Organization, error) {
+	path := fmt.Sprintf("/organizations/%s", id)
+	req, err := s.client.NewRequest(ctx, http.MethodPatch, path, org)
+	if err != nil {
+		return nil, err
+	}
+
+	updatedOrg := new(Organization)
+	_, err = s.client.Do(ctx, req, updatedOrg)
+	if err != nil {
+		return nil, err
+	}
+
+	return updatedOrg, nil
+}
+
+// Delete removes an organization
+func (s *organizationService) Delete(ctx context.Context, id string) error {
+	path := fmt.Sprintf("/organizations/%s", id)
+	req, err := s.client.NewRequest(ctx, http.MethodDelete, path, nil)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.client.Do(ctx, req, nil)
+	return err
+}
+
+// ListUsers returns all users in an organization with optional filtering
+func (s *organizationService) ListUsers(ctx context.Context, orgID string, params *ListParams) ([]*User, *Pagination, error) {
+	path := fmt.Sprintf("/organizations/%s/users", orgID)
+	if params != nil {
+		query, err := addQueryParams(path, params)
+		if err != nil {
+			return nil, nil, err
+		}
+		path = query
 	}
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
@@ -119,19 +127,38 @@ func (s *organizationService) ListUsers(ctx context.Context, id int, opts *ListO
 	return users, pagination, nil
 }
 
-// GetStatistics retrieves organization statistics
-func (s *organizationService) GetStatistics(ctx context.Context, id int) (*OrganizationStatistics, error) {
-	path := fmt.Sprintf("/organizations/%d/statistics", id)
-	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
+// AddUser adds a user to an organization
+func (s *organizationService) AddUser(ctx context.Context, orgID string, user *UserCreateParams) (*User, error) {
+	path := fmt.Sprintf("/organizations/%s/users", orgID)
+	req, err := s.client.NewRequest(ctx, http.MethodPost, path, user)
 	if err != nil {
 		return nil, err
 	}
 
-	stats := new(OrganizationStatistics)
-	_, err = s.client.Do(ctx, req, stats)
+	newUser := new(User)
+	_, err = s.client.Do(ctx, req, newUser)
 	if err != nil {
 		return nil, err
 	}
 
-	return stats, nil
+	return newUser, nil
 }
+
+// RemoveUser removes a user from an organization
+func (s *organizationService) RemoveUser(ctx context.Context, orgID string, userID string) error {
+	path := fmt.Sprintf("/organizations/%s/users/%s", orgID, userID)
+	req, err := s.client.NewRequest(ctx, http.MethodDelete, path, nil)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.client.Do(ctx, req, nil)
+	return err
+}
+
+// URL parameter handling functions have been moved to utils.go
+// for better code organization and to avoid duplication.
+
+// parseTag splits a struct field's url tag into its name and options.
+// These utility functions have been moved to utils.go
+// to maintain DRY principle and avoid code duplication.

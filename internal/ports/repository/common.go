@@ -1,38 +1,7 @@
 package repository
 
-// Pagination contains information about pagination
-type Pagination struct {
-	Page       int
-	Limit      int
-	TotalItems int
-	TotalPages int
-	HasNext    bool
-	HasPrev    bool
-}
-
-// NewPagination creates a new pagination object
-func NewPagination(page, limit, totalItems int) Pagination {
-	if page < 1 {
-		page = 1
-	}
-	if limit < 1 {
-		limit = 10
-	}
-
-	totalPages := (totalItems + limit - 1) / limit
-	if totalPages < 1 {
-		totalPages = 1
-	}
-
-	return Pagination{
-		Page:       page,
-		Limit:      limit,
-		TotalItems: totalItems,
-		TotalPages: totalPages,
-		HasNext:    page < totalPages,
-		HasPrev:    page > 1,
-	}
-}
+// Common repository types and interfaces used across multiple repositories
+// Note: Pagination has been moved to pagination.go
 
 // OrderDirection defines the direction of ordering
 type OrderDirection string

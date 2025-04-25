@@ -3,6 +3,8 @@ package account
 import (
 	"errors"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 // Common errors related to account domain
@@ -15,19 +17,31 @@ var (
 	ErrEmptyContactEmail  = errors.New("contact email cannot be empty")
 )
 
+const (
+	// AccountStatusActive indicates an active account
+	AccountStatusActive AccountStatus = "active"
+	// AccountStatusInactive indicates an inactive account
+	AccountStatusInactive AccountStatus = "inactive"
+	// AccountStatusSuspended indicates a suspended account
+	AccountStatusSuspended AccountStatus = "suspended"
+	// AccountStatusTrialing indicates an account in trial period
+	AccountStatusTrialing AccountStatus = "trialing"
+)
+
 // Account represents a Huntress account entity
 type Account struct {
-	ID              string    `json:"id"`
-	Name            string    `json:"name"`
-	PrimaryContact  Contact   `json:"primaryContact"`
-	BillingContact  Contact   `json:"billingContact"`
-	PreferredCDT    string    `json:"preferredCDT"`
-	Timezone        string    `json:"timezone"`
-	Created         time.Time `json:"created"`
-	Modified        time.Time `json:"modified"`
-	WebhookURL      string    `json:"webhookUrl,omitempty"`
-	WebhookUsername string    `json:"webhookUsername,omitempty"`
-	WebhookPassword string    `json:"webhookPassword,omitempty"`
+	ID              uuid.UUID     `json:"id"`
+	Name            string        `json:"name"`
+	Status          AccountStatus `json:"status"`
+	PrimaryContact  Contact       `json:"primaryContact"`
+	BillingContact  Contact       `json:"billingContact"`
+	PreferredCDT    string        `json:"preferredCDT"`
+	Timezone        string        `json:"timezone"`
+	Created         time.Time     `json:"created"`
+	Modified        time.Time     `json:"modified"`
+	WebhookURL      string        `json:"webhookUrl,omitempty"`
+	WebhookUsername string        `json:"webhookUsername,omitempty"`
+	WebhookPassword string        `json:"webhookPassword,omitempty"`
 }
 
 // Contact represents contact information for an account
@@ -66,4 +80,9 @@ func (c *Contact) Validate() error {
 	}
 
 	return nil
+}
+
+// IsActive returns true if the account is in active status
+func (a *Account) IsActive() bool {
+	return a.Status == AccountStatusActive
 }

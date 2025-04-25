@@ -31,8 +31,8 @@ func NewOrganizationRepository(httpClient HTTPClient, baseURL string, authHeader
 }
 
 // Get retrieves an organization by ID
-func (r *OrganizationRepositoryImpl) Get(ctx context.Context, id int) (*organization.Organization, error) {
-	path := fmt.Sprintf("/organizations/%d", id)
+func (r *OrganizationRepositoryImpl) Get(ctx context.Context, id string) (*organization.Organization, error) {
+	path := fmt.Sprintf("/organizations/%s", id)
 	req, err := createRequest(ctx, http.MethodGet, r.baseURL+path, nil, r.authHeaders)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
@@ -53,50 +53,42 @@ func (r *OrganizationRepositoryImpl) Get(ctx context.Context, id int) (*organiza
 		return nil, fmt.Errorf("failed to decode response: %w", err)
 	}
 
-	return orgDTO.toDomain(), nil
+	return mapDTOToOrganization(&orgDTO)
 }
 
 // List retrieves multiple organizations based on filters
-func (r *OrganizationRepositoryImpl) List(ctx context.Context, filters repository.OrganizationFilters) ([]*organization.Organization, repository.Pagination, error) {
+func (r *OrganizationRepositoryImpl) List(ctx context.Context, filters map[string]interface{}) ([]*organization.Organization, *repository.Pagination, error) {
 	// Construct query parameters
 	query := url.Values{}
-	if filters.Page > 0 {
-		query.Set("page", strconv.Itoa(filters.Page))
+
+	// Add page and per page if provided in filters
+	if page, ok := filters["page"].(int); ok && page > 0 {
+		query.Set("page", strconv.Itoa(page))
 	}
-	if filters.Limit > 0 {
-		query.Set("limit", strconv.Itoa(filters.Limit))
+
+	if perPage, ok := filters["per_page"].(int); ok && perPage > 0 {
+		query.Set("per_page", strconv.Itoa(perPage))
 	}
-	if filters.AccountID != nil {
-		query.Set("account_id", strconv.Itoa(*filters.AccountID))
+
+	// Add status filter if provided
+	if status, ok := filters["status"].(string); ok && status != "" {
+		query.Set("status", status)
 	}
-	if filters.Status != nil {
-		query.Set("status", string(*filters.Status))
+
+	// Add search filter if provided
+	if search, ok := filters["search"].(string); ok && search != "" {
+		query.Set("search", search)
 	}
-	if filters.Search != "" {
-		query.Set("search", filters.Search)
+
+	// Add account ID filter if provided
+	if accountID, ok := filters["account_id"].(int); ok && accountID > 0 {
+		query.Set("account_id", strconv.Itoa(accountID))
 	}
-	if filters.Industry != "" {
-		query.Set("industry", filters.Industry)
-	}
-	// Add tags if present
-	for _, tag := range filters.Tags {
-		query.Add("tags", tag)
-	}
-	// Add ordering
-	for _, order := range filters.OrderBy {
-		direction := "asc"
-		if order.Direction == repository.OrderDesc {
-			direction = "desc"
-		}
-		query.Add("sort", fmt.Sprintf("%s:%s", order.Field, direction))
-	}
-	// Add time range if present
-	if filters.TimeRange != nil {
-		if filters.TimeRange.Start != "" {
-			query.Set("from", filters.TimeRange.Start)
-		}
-		if filters.TimeRange.End != "" {
-			query.Set("to", filters.TimeRange.End)
+
+	// Add tags filter if provided
+	if tags, ok := filters["tags"].([]string); ok && len(tags) > 0 {
+		for _, tag := range tags {
+			query.Add("tags", tag)
 		}
 	}
 
@@ -107,22 +99,22 @@ func (r *OrganizationRepositoryImpl) List(ctx context.Context, filters repositor
 
 	req, err := createRequest(ctx, http.MethodGet, r.baseURL+path, nil, r.authHeaders)
 	if err != nil {
-		return nil, repository.Pagination{}, fmt.Errorf("failed to create request: %w", err)
+		return nil, nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
 	resp, err := r.httpClient.Do(req)
 	if err != nil {
-		return nil, repository.Pagination{}, fmt.Errorf("failed to execute request: %w", err)
+		return nil, nil, fmt.Errorf("failed to execute request: %w", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, repository.Pagination{}, handleErrorResponse(resp)
+		return nil, nil, handleErrorResponse(resp)
 	}
 
 	var orgDTOs []organizationDTO
 	if err := json.NewDecoder(resp.Body).Decode(&orgDTOs); err != nil {
-		return nil, repository.Pagination{}, fmt.Errorf("failed to decode response: %w", err)
+		return nil, nil, fmt.Errorf("failed to decode response: %w", err)
 	}
 
 	// Extract pagination information from headers
@@ -130,84 +122,89 @@ func (r *OrganizationRepositoryImpl) List(ctx context.Context, filters repositor
 
 	// Convert DTOs to domain entities
 	orgs := make([]*organization.Organization, len(orgDTOs))
-	for i, orgDTO := range orgDTOs {
-		orgs[i] = orgDTO.toDomain()
+	for i, dto := range orgDTOs {
+		org, err := mapDTOToOrganization(&dto)
+		if err != nil {
+			return nil, nil, err
+		}
+		orgs[i] = org
 	}
 
-	return orgs, pagination, nil
+	return orgs, &pagination, nil
 }
 
 // Create creates a new organization
-func (r *OrganizationRepositoryImpl) Create(ctx context.Context, org *organization.Organization) error {
-	// Convert domain entity to DTO
-	orgDTO := fromDomainOrganization(org)
+func (r *OrganizationRepositoryImpl) Create(ctx context.Context, org *organization.Organization) (*organization.Organization, error) {
+	dto := mapOrganizationToDTO(org)
 
 	// Create request body
-	body, err := json.Marshal(orgDTO)
+	body, err := json.Marshal(dto)
 	if err != nil {
-		return fmt.Errorf("failed to marshal organization: %w", err)
+		return nil, fmt.Errorf("failed to marshal organization: %w", err)
 	}
 
 	req, err := createRequest(ctx, http.MethodPost, r.baseURL+"/organizations", body, r.authHeaders)
 	if err != nil {
-		return fmt.Errorf("failed to create request: %w", err)
+		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
 	resp, err := r.httpClient.Do(req)
 	if err != nil {
-		return fmt.Errorf("failed to execute request: %w", err)
+		return nil, fmt.Errorf("failed to execute request: %w", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusCreated {
-		return handleErrorResponse(resp)
+		return nil, handleErrorResponse(resp)
 	}
 
-	// Parse the response to get the created organization's ID
-	var createdOrgDTO organizationDTO
-	if err := json.NewDecoder(resp.Body).Decode(&createdOrgDTO); err != nil {
-		return fmt.Errorf("failed to decode response: %w", err)
+	// Parse the response to get the created organization
+	var createdDTO organizationDTO
+	if err := json.NewDecoder(resp.Body).Decode(&createdDTO); err != nil {
+		return nil, fmt.Errorf("failed to decode response: %w", err)
 	}
 
-	// Update the ID of the original organization object
-	org.ID = createdOrgDTO.ID
-
-	return nil
+	return mapDTOToOrganization(&createdDTO)
 }
 
 // Update updates an existing organization
-func (r *OrganizationRepositoryImpl) Update(ctx context.Context, org *organization.Organization) error {
-	// Convert domain entity to DTO
-	orgDTO := fromDomainOrganization(org)
+func (r *OrganizationRepositoryImpl) Update(ctx context.Context, org *organization.Organization) (*organization.Organization, error) {
+	dto := mapOrganizationToDTO(org)
 
 	// Create request body
-	body, err := json.Marshal(orgDTO)
+	body, err := json.Marshal(dto)
 	if err != nil {
-		return fmt.Errorf("failed to marshal organization: %w", err)
+		return nil, fmt.Errorf("failed to marshal organization: %w", err)
 	}
 
-	path := fmt.Sprintf("/organizations/%d", org.ID)
+	path := fmt.Sprintf("/organizations/%s", org.ID)
 	req, err := createRequest(ctx, http.MethodPut, r.baseURL+path, body, r.authHeaders)
 	if err != nil {
-		return fmt.Errorf("failed to create request: %w", err)
+		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
 	resp, err := r.httpClient.Do(req)
 	if err != nil {
-		return fmt.Errorf("failed to execute request: %w", err)
+		return nil, fmt.Errorf("failed to execute request: %w", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return handleErrorResponse(resp)
+		return nil, handleErrorResponse(resp)
 	}
 
-	return nil
+	// Parse the response to get the updated organization
+	var updatedDTO organizationDTO
+	if err := json.NewDecoder(resp.Body).Decode(&updatedDTO); err != nil {
+		return nil, fmt.Errorf("failed to decode response: %w", err)
+	}
+
+	return mapDTOToOrganization(&updatedDTO)
 }
 
 // Delete deletes an organization by ID
-func (r *OrganizationRepositoryImpl) Delete(ctx context.Context, id int) error {
-	path := fmt.Sprintf("/organizations/%d", id)
+func (r *OrganizationRepositoryImpl) Delete(ctx context.Context, id string) error {
+	path := fmt.Sprintf("/organizations/%s", id)
 	req, err := createRequest(ctx, http.MethodDelete, r.baseURL+path, nil, r.authHeaders)
 	if err != nil {
 		return fmt.Errorf("failed to create request: %w", err)
@@ -226,81 +223,55 @@ func (r *OrganizationRepositoryImpl) Delete(ctx context.Context, id int) error {
 	return nil
 }
 
-// GetByName retrieves an organization by name within an account
-func (r *OrganizationRepositoryImpl) GetByName(ctx context.Context, accountID int, name string) (*organization.Organization, error) {
-	// Construct query parameters to filter by name and account
-	query := url.Values{}
-	query.Set("account_id", strconv.Itoa(accountID))
-	query.Set("name", name)
-
-	path := "/organizations?" + query.Encode()
+// GetUsers retrieves users associated with an organization
+func (r *OrganizationRepositoryImpl) GetUsers(ctx context.Context, orgID string) ([]*organization.User, *repository.Pagination, error) {
+	path := fmt.Sprintf("/organizations/%s/users", orgID)
 	req, err := createRequest(ctx, http.MethodGet, r.baseURL+path, nil, r.authHeaders)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create request: %w", err)
+		return nil, nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
 	resp, err := r.httpClient.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("failed to execute request: %w", err)
+		return nil, nil, fmt.Errorf("failed to execute request: %w", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, handleErrorResponse(resp)
+		return nil, nil, handleErrorResponse(resp)
 	}
 
-	var orgDTOs []organizationDTO
-	if err := json.NewDecoder(resp.Body).Decode(&orgDTOs); err != nil {
-		return nil, fmt.Errorf("failed to decode response: %w", err)
+	var userDTOs []userDTO
+	if err := json.NewDecoder(resp.Body).Decode(&userDTOs); err != nil {
+		return nil, nil, fmt.Errorf("failed to decode response: %w", err)
 	}
 
-	// Check if we found any organizations
-	if len(orgDTOs) == 0 {
-		return nil, fmt.Errorf("no organization found with name '%s' in account %d", name, accountID)
+	// Extract pagination information from headers
+	pagination := extractPagination(resp.Header)
+
+	// Convert DTOs to domain entities
+	users := make([]*organization.User, len(userDTOs))
+	for i, userDTO := range userDTOs {
+		users[i] = userDTO.toDomain()
 	}
 
-	// Return the first match (assuming the API filters exactly by name)
-	return orgDTOs[0].toDomain(), nil
+	return users, &pagination, nil
 }
 
-// GetStatistics retrieves organization statistics
-func (r *OrganizationRepositoryImpl) GetStatistics(ctx context.Context, id int) (map[string]interface{}, error) {
-	path := fmt.Sprintf("/organizations/%d/statistics", id)
-	req, err := createRequest(ctx, http.MethodGet, r.baseURL+path, nil, r.authHeaders)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create request: %w", err)
-	}
+// AddUser adds a user to an organization
+func (r *OrganizationRepositoryImpl) AddUser(ctx context.Context, orgID string, user *organization.User) error {
+	path := fmt.Sprintf("/organizations/%s/users", orgID)
 
-	resp, err := r.httpClient.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("failed to execute request: %w", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, handleErrorResponse(resp)
-	}
-
-	var stats map[string]interface{}
-	if err := json.NewDecoder(resp.Body).Decode(&stats); err != nil {
-		return nil, fmt.Errorf("failed to decode response: %w", err)
-	}
-
-	return stats, nil
-}
-
-// UpdateTags updates the tags for an organization
-func (r *OrganizationRepositoryImpl) UpdateTags(ctx context.Context, id int, tags []string) error {
-	path := fmt.Sprintf("/organizations/%d/tags", id)
+	// Convert domain entity to DTO
+	userDTO := fromDomainUser(user)
 
 	// Create request body
-	tagData := map[string][]string{"tags": tags}
-	body, err := json.Marshal(tagData)
+	body, err := json.Marshal(userDTO)
 	if err != nil {
-		return fmt.Errorf("failed to marshal tags: %w", err)
+		return fmt.Errorf("failed to marshal user: %w", err)
 	}
 
-	req, err := createRequest(ctx, http.MethodPut, r.baseURL+path, body, r.authHeaders)
+	req, err := createRequest(ctx, http.MethodPost, r.baseURL+path, body, r.authHeaders)
 	if err != nil {
 		return fmt.Errorf("failed to create request: %w", err)
 	}
@@ -311,7 +282,28 @@ func (r *OrganizationRepositoryImpl) UpdateTags(ctx context.Context, id int, tag
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode != http.StatusCreated {
+		return handleErrorResponse(resp)
+	}
+
+	return nil
+}
+
+// RemoveUser removes a user from an organization
+func (r *OrganizationRepositoryImpl) RemoveUser(ctx context.Context, orgID string, userID string) error {
+	path := fmt.Sprintf("/organizations/%s/users/%s", orgID, userID)
+	req, err := createRequest(ctx, http.MethodDelete, r.baseURL+path, nil, r.authHeaders)
+	if err != nil {
+		return fmt.Errorf("failed to create request: %w", err)
+	}
+
+	resp, err := r.httpClient.Do(req)
+	if err != nil {
+		return fmt.Errorf("failed to execute request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusNoContent {
 		return handleErrorResponse(resp)
 	}
 
@@ -351,53 +343,86 @@ type contactInfoDTO struct {
 	Title       string `json:"title,omitempty"`
 }
 
-// toDomain converts a DTO to a domain entity
-func (dto *organizationDTO) toDomain() *organization.Organization {
+type userDTO struct {
+	ID        string `json:"id"`
+	Email     string `json:"email"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Role      string `json:"role"`
+	Status    string `json:"status"`
+}
+
+// mapDTOToOrganization maps a DTO to a domain entity
+func mapDTOToOrganization(dto *organizationDTO) (*organization.Organization, error) {
+	// Parse timestamps
+	createdAt, err := parseTime(dto.CreatedAt)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse created_at: %w", err)
+	}
+
+	updatedAt, err := parseTime(dto.UpdatedAt)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse updated_at: %w", err)
+	}
+
+	// Map address
+	address := organization.Address{
+		Street1: dto.Address.Street1,
+		Street2: dto.Address.Street2,
+		City:    dto.Address.City,
+		State:   dto.Address.State,
+		ZipCode: dto.Address.ZipCode,
+		Country: dto.Address.Country,
+	}
+
+	// Map contact info
+	contactInfo := organization.ContactInfo{
+		Name:        dto.ContactInfo.Name,
+		Email:       dto.ContactInfo.Email,
+		PhoneNumber: dto.ContactInfo.PhoneNumber,
+		Title:       dto.ContactInfo.Title,
+	}
+
+	// Create and return the domain entity
 	org := &organization.Organization{
-		ID:          dto.ID,
+		ID:          strconv.Itoa(dto.ID), // Convert int ID to string for domain model
 		AccountID:   dto.AccountID,
 		Name:        dto.Name,
 		Description: dto.Description,
-		Status:      organization.OrganizationStatus(dto.Status),
-		Address: organization.Address{
-			Street1: dto.Address.Street1,
-			Street2: dto.Address.Street2,
-			City:    dto.Address.City,
-			State:   dto.Address.State,
-			ZipCode: dto.Address.ZipCode,
-			Country: dto.Address.Country,
-		},
-		ContactInfo: organization.ContactInfo{
-			Name:        dto.ContactInfo.Name,
-			Email:       dto.ContactInfo.Email,
-			PhoneNumber: dto.ContactInfo.PhoneNumber,
-			Title:       dto.ContactInfo.Title,
-		},
-		Settings:   dto.Settings,
-		Tags:       dto.Tags,
-		Industry:   dto.Industry,
-		AgentCount: dto.AgentCount,
+		Status:      dto.Status,
+		Address:     address,
+		ContactInfo: contactInfo,
+		CreatedAt:   createdAt,
+		UpdatedAt:   updatedAt,
+		Settings:    dto.Settings,
+		Tags:        dto.Tags,
+		Industry:    dto.Industry,
+		AgentCount:  dto.AgentCount,
 	}
 
-	// Parse timestamps
-	if dto.CreatedAt != "" {
-		org.CreatedAt, _ = parseTime(dto.CreatedAt)
-	}
-	if dto.UpdatedAt != "" {
-		org.UpdatedAt, _ = parseTime(dto.UpdatedAt)
-	}
-
-	return org
+	return org, nil
 }
 
-// fromDomainOrganization converts a domain entity to a DTO
-func fromDomainOrganization(org *organization.Organization) *organizationDTO {
+// mapOrganizationToDTO maps a domain entity to a DTO
+func mapOrganizationToDTO(org *organization.Organization) *organizationDTO {
+	// Convert string ID to int
+	var idInt int
+	if org.ID != "" {
+		var err error
+		idInt, err = strconv.Atoi(org.ID)
+		if err != nil {
+			// If conversion fails, use 0 or handle the error appropriately
+			// For now, we'll log it and use 0
+			fmt.Printf("Warning: Failed to convert organization ID '%s' to int: %v\n", org.ID, err)
+		}
+	}
+
 	return &organizationDTO{
-		ID:          org.ID,
+		ID:          idInt,
 		AccountID:   org.AccountID,
 		Name:        org.Name,
 		Description: org.Description,
-		Status:      string(org.Status),
+		Status:      org.Status,
 		Address: addressDTO{
 			Street1: org.Address.Street1,
 			Street2: org.Address.Street2,
@@ -412,11 +437,40 @@ func fromDomainOrganization(org *organization.Organization) *organizationDTO {
 			PhoneNumber: org.ContactInfo.PhoneNumber,
 			Title:       org.ContactInfo.Title,
 		},
+		CreatedAt:  org.CreatedAt.Format(time.RFC3339),
+		UpdatedAt:  org.UpdatedAt.Format(time.RFC3339),
 		Settings:   org.Settings,
 		Tags:       org.Tags,
 		Industry:   org.Industry,
 		AgentCount: org.AgentCount,
-		CreatedAt:  org.CreatedAt.Format(time.RFC3339),
-		UpdatedAt:  org.UpdatedAt.Format(time.RFC3339),
 	}
 }
+
+// User DTO conversions
+
+// toDomain converts a user DTO to a domain entity
+func (dto *userDTO) toDomain() *organization.User {
+	return &organization.User{
+		ID:        dto.ID,
+		Email:     dto.Email,
+		FirstName: dto.FirstName,
+		LastName:  dto.LastName,
+		Role:      dto.Role,
+		Status:    dto.Status,
+	}
+}
+
+// fromDomainUser converts a domain user to a DTO
+func fromDomainUser(user *organization.User) *userDTO {
+	return &userDTO{
+		ID:        user.ID,
+		Email:     user.Email,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+		Role:      user.Role,
+		Status:    user.Status,
+	}
+}
+
+// Helper functions for this repository have been moved to http_utils.go
+// Use the shared utility functions from that file instead of defining them here

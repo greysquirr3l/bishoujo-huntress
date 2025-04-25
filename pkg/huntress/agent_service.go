@@ -1,3 +1,4 @@
+// Package huntress provides a client for the Huntress API
 package huntress
 
 import (
@@ -28,12 +29,15 @@ func (s *agentService) Get(ctx context.Context, id string) (*Agent, error) {
 	return agent, nil
 }
 
-// List lists agents with optional filtering
-func (s *agentService) List(ctx context.Context, opts *AgentListOptions) ([]*Agent, *Pagination, error) {
+// List returns all agents with optional filtering
+func (s *agentService) List(ctx context.Context, params *AgentListOptions) ([]*Agent, *Pagination, error) {
 	path := "/agents"
-	path, err := addOptions(path, opts)
-	if err != nil {
-		return nil, nil, err
+	if params != nil {
+		query, err := addQueryParams(path, params)
+		if err != nil {
+			return nil, nil, err
+		}
+		path = query
 	}
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
@@ -51,52 +55,9 @@ func (s *agentService) List(ctx context.Context, opts *AgentListOptions) ([]*Age
 	return agents, pagination, nil
 }
 
-// Update updates an agent
-func (s *agentService) Update(ctx context.Context, id string, input *AgentUpdateInput) (*Agent, error) {
-	path := fmt.Sprintf("/agents/%s", id)
-	req, err := s.client.NewRequest(ctx, http.MethodPatch, path, input)
-	if err != nil {
-		return nil, err
-	}
-
-	agent := new(Agent)
-	_, err = s.client.Do(ctx, req, agent)
-	if err != nil {
-		return nil, err
-	}
-
-	return agent, nil
-}
-
-// Delete deletes an agent
-func (s *agentService) Delete(ctx context.Context, id string) error {
-	path := fmt.Sprintf("/agents/%s", id)
-	req, err := s.client.NewRequest(ctx, http.MethodDelete, path, nil)
-	if err != nil {
-		return err
-	}
-
-	_, err = s.client.Do(ctx, req, nil)
-	return err
-}
-
-// UpdateStatus updates the status of an agent
-func (s *agentService) UpdateStatus(ctx context.Context, id string, status string) error {
-	path := fmt.Sprintf("/agents/%s/status", id)
-	statusData := map[string]string{"status": status}
-
-	req, err := s.client.NewRequest(ctx, http.MethodPut, path, statusData)
-	if err != nil {
-		return err
-	}
-
-	_, err = s.client.Do(ctx, req, nil)
-	return err
-}
-
-// GetStatistics retrieves agent statistics
-func (s *agentService) GetStatistics(ctx context.Context, id string) (*AgentStatistics, error) {
-	path := fmt.Sprintf("/agents/%s/statistics", id)
+// GetStats retrieves statistics for a specific agent
+func (s *agentService) GetStats(ctx context.Context, id string) (*AgentStatistics, error) {
+	path := fmt.Sprintf("/agents/%s/stats", id)
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
 		return nil, err
@@ -109,4 +70,33 @@ func (s *agentService) GetStatistics(ctx context.Context, id string) (*AgentStat
 	}
 
 	return stats, nil
+}
+
+// Update updates an existing agent
+func (s *agentService) Update(ctx context.Context, id string, agent map[string]interface{}) (*Agent, error) {
+	path := fmt.Sprintf("/agents/%s", id)
+	req, err := s.client.NewRequest(ctx, http.MethodPatch, path, agent)
+	if err != nil {
+		return nil, err
+	}
+
+	updatedAgent := new(Agent)
+	_, err = s.client.Do(ctx, req, updatedAgent)
+	if err != nil {
+		return nil, err
+	}
+
+	return updatedAgent, nil
+}
+
+// Delete removes an agent
+func (s *agentService) Delete(ctx context.Context, id string) error {
+	path := fmt.Sprintf("/agents/%s", id)
+	req, err := s.client.NewRequest(ctx, http.MethodDelete, path, nil)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.client.Do(ctx, req, nil)
+	return err
 }

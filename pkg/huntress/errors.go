@@ -1,3 +1,4 @@
+// Package huntress provides a client for the Huntress API
 package huntress
 
 import (
@@ -6,100 +7,262 @@ import (
 	"net/http"
 )
 
-// Common errors returned by the Huntress API client
-var (
-	// ErrBadRequest represents a 400 Bad Request error
-	ErrBadRequest = errors.New("bad request")
-	// ErrUnauthorized represents a 401 Unauthorized error
-	ErrUnauthorized = errors.New("unauthorized")
-	// ErrForbidden represents a 403 Forbidden error
-	ErrForbidden = errors.New("forbidden")
-	// ErrNotFound represents a 404 Not Found error
-	ErrNotFound = errors.New("not found")
-	// ErrRateLimit represents a 429 Too Many Requests error
-	ErrRateLimit = errors.New("rate limit exceeded")
-	// ErrInternal represents a 500 Internal Server Error
-	ErrInternal = errors.New("internal server error")
-	// ErrTimeout represents a client-side timeout error
-	ErrTimeout = errors.New("request timed out")
-	// ErrInvalidInput represents invalid client-side input
-	ErrInvalidInput = errors.New("invalid input")
-)
+// Error is the base error interface for all errors returned by this package
+type Error interface {
+	error
+	// Code returns the error code
+	Code() string
+	// StatusCode returns the HTTP status code associated with this error, if any
+	StatusCode() int
+}
 
-// ErrorResponse represents an error response from the Huntress API
-type ErrorResponse struct {
-	StatusCode int    `json:"status"`
-	Code       string `json:"code,omitempty"`
+// InternalAPIError defines the structure for API errors received from the Huntress API
+type InternalAPIError struct {
+	Code       string `json:"code"`
 	Message    string `json:"message"`
-	RequestID  string `json:"request_id,omitempty"`
-	Details    any    `json:"details,omitempty"`
+	Details    string `json:"details,omitempty"`
+	StatusCode int    `json:"-"` // Not part of the JSON response, set from HTTP status code
+}
+
+func (e *InternalAPIError) Error() string {
+	if e.Details != "" {
+		return fmt.Sprintf("[%s] %s: %s", e.Code, e.Message, e.Details)
+	}
+	return fmt.Sprintf("[%s] %s", e.Code, e.Message)
+}
+
+// InternalRateLimitError defines the structure for rate limit errors
+type InternalRateLimitError struct {
+	RetryAfter int `json:"retry_after"`
+}
+
+func (e *InternalRateLimitError) Error() string {
+	return fmt.Sprintf("rate limit exceeded, retry after %d seconds", e.RetryAfter)
+}
+
+// InternalRequestError defines the structure for request errors
+type InternalRequestError struct {
+	Err error
+}
+
+func (e *InternalRequestError) Error() string {
+	if e.Err == nil {
+		return "request error"
+	}
+	return fmt.Sprintf("request error: %s", e.Err.Error())
+}
+
+// APIError represents an error returned by the Huntress API
+type APIError struct {
+	internal *InternalAPIError
 }
 
 // Error implements the error interface
-func (e *ErrorResponse) Error() string {
-	if e.RequestID != "" {
-		return fmt.Sprintf("API error %d (%s): %s [request-id: %s]",
-			e.StatusCode, e.Code, e.Message, e.RequestID)
+func (e *APIError) Error() string {
+	if e.internal == nil {
+		return "API error"
 	}
-	return fmt.Sprintf("API error %d (%s): %s", e.StatusCode, e.Code, e.Message)
+	return e.internal.Error()
 }
 
-// Unwrap returns the underlying error for the given status code
-func (e *ErrorResponse) Unwrap() error {
-	return StatusCodeToError(e.StatusCode, e.Message)
-}
-
-// StatusCodeToError converts an HTTP status code to a corresponding error
-func StatusCodeToError(statusCode int, message string) error {
-	switch statusCode {
-	case http.StatusBadRequest:
-		return fmt.Errorf("%w: %s", ErrBadRequest, message)
-	case http.StatusUnauthorized:
-		return fmt.Errorf("%w: %s", ErrUnauthorized, message)
-	case http.StatusForbidden:
-		return fmt.Errorf("%w: %s", ErrForbidden, message)
-	case http.StatusNotFound:
-		return fmt.Errorf("%w: %s", ErrNotFound, message)
-	case http.StatusTooManyRequests:
-		return fmt.Errorf("%w: %s", ErrRateLimit, message)
-	case http.StatusInternalServerError:
-		return fmt.Errorf("%w: %s", ErrInternal, message)
-	default:
-		if statusCode >= 400 && statusCode < 500 {
-			return fmt.Errorf("client error %d: %s", statusCode, message)
-		} else if statusCode >= 500 {
-			return fmt.Errorf("server error %d: %s", statusCode, message)
-		}
-		return fmt.Errorf("unexpected status code %d: %s", statusCode, message)
+// Code returns the API error code
+func (e *APIError) Code() string {
+	if e.internal == nil {
+		return ""
 	}
+	return e.internal.Code
 }
 
-// IsNotFound returns true if the error is a Not Found error
-func IsNotFound(err error) bool {
-	return errors.Is(err, ErrNotFound)
+// StatusCode returns the HTTP status code
+func (e *APIError) StatusCode() int {
+	if e.internal == nil {
+		return 0
+	}
+	return e.internal.StatusCode
 }
 
-// IsUnauthorized returns true if the error is an Unauthorized error
-func IsUnauthorized(err error) bool {
-	return errors.Is(err, ErrUnauthorized)
+// Message returns the error message
+func (e *APIError) Message() string {
+	if e.internal == nil {
+		return ""
+	}
+	return e.internal.Message
 }
 
-// IsForbidden returns true if the error is a Forbidden error
-func IsForbidden(err error) bool {
-	return errors.Is(err, ErrForbidden)
+// Details returns additional error details
+func (e *APIError) Details() string {
+	if e.internal == nil {
+		return ""
+	}
+	return e.internal.Details
 }
 
-// IsRateLimit returns true if the error is a Rate Limit error
-func IsRateLimit(err error) bool {
-	return errors.Is(err, ErrRateLimit)
+// IsNotFound returns true if the error is a 404 Not Found
+func (e *APIError) IsNotFound() bool {
+	return e.internal != nil && e.internal.StatusCode == http.StatusNotFound
 }
 
-// IsBadRequest returns true if the error is a Bad Request error
-func IsBadRequest(err error) bool {
-	return errors.Is(err, ErrBadRequest)
+// IsUnauthorized returns true if the error is a 401 Unauthorized
+func (e *APIError) IsUnauthorized() bool {
+	return e.internal != nil && e.internal.StatusCode == http.StatusUnauthorized
 }
 
-// IsTimeout returns true if the error is a Timeout error
-func IsTimeout(err error) bool {
-	return errors.Is(err, ErrTimeout)
+// IsForbidden returns true if the error is a 403 Forbidden
+func (e *APIError) IsForbidden() bool {
+	return e.internal != nil && e.internal.StatusCode == http.StatusForbidden
+}
+
+// RateLimitError indicates that the API rate limit has been exceeded
+type RateLimitError struct {
+	internal *InternalRateLimitError
+}
+
+// Error implements the error interface
+func (e *RateLimitError) Error() string {
+	if e.internal == nil {
+		return "rate limit exceeded"
+	}
+	return e.internal.Error()
+}
+
+// Code returns the error code
+func (e *RateLimitError) Code() string {
+	return "RATE_LIMIT_EXCEEDED"
+}
+
+// StatusCode returns the HTTP status code
+func (e *RateLimitError) StatusCode() int {
+	return http.StatusTooManyRequests
+}
+
+// RetryAfter returns the number of seconds to wait before retrying
+func (e *RateLimitError) RetryAfter() int {
+	if e.internal == nil {
+		return 60 // Default to 60 seconds
+	}
+	return e.internal.RetryAfter
+}
+
+// RequestError represents an error that occurred while making a request
+type RequestError struct {
+	internal *InternalRequestError
+}
+
+// Error implements the error interface
+func (e *RequestError) Error() string {
+	if e.internal == nil {
+		return "request error"
+	}
+	return e.internal.Error()
+}
+
+// Code returns the error code
+func (e *RequestError) Code() string {
+	return "REQUEST_ERROR"
+}
+
+// StatusCode returns the HTTP status code
+func (e *RequestError) StatusCode() int {
+	return 0 // No HTTP status for request errors
+}
+
+// Unwrap returns the underlying error
+func (e *RequestError) Unwrap() error {
+	if e.internal == nil || e.internal.Err == nil {
+		return nil
+	}
+	return e.internal.Err
+}
+
+// IsAPIError returns true if the error is an APIError
+func IsAPIError(err error) bool {
+	var apiErr *APIError
+	return errors.As(err, &apiErr)
+}
+
+// IsRateLimitError returns true if the error is a RateLimitError
+func IsRateLimitError(err error) bool {
+	var rateLimitErr *RateLimitError
+	return errors.As(err, &rateLimitErr)
+}
+
+// IsRequestError returns true if the error is a RequestError
+func IsRequestError(err error) bool {
+	var requestErr *RequestError
+	return errors.As(err, &requestErr)
+}
+
+// IsNotFoundError returns true if the error is a 404 Not Found error
+func IsNotFoundError(err error) bool {
+	var apiErr *APIError
+	return errors.As(err, &apiErr) && apiErr.IsNotFound()
+}
+
+// IsAuthError returns true if the error is an authentication error (401 or 403)
+func IsAuthError(err error) bool {
+	var apiErr *APIError
+	return errors.As(err, &apiErr) && (apiErr.IsUnauthorized() || apiErr.IsForbidden())
+}
+
+// AsAPIError attempts to convert an error to an APIError
+func AsAPIError(err error) (*APIError, bool) {
+	var apiErr *APIError
+	if errors.As(err, &apiErr) {
+		return apiErr, true
+	}
+
+	var internalAPIErr *InternalAPIError
+	if errors.As(err, &internalAPIErr) {
+		return &APIError{internal: internalAPIErr}, true
+	}
+
+	return nil, false
+}
+
+// AsRateLimitError attempts to convert an error to a RateLimitError
+func AsRateLimitError(err error) (*RateLimitError, bool) {
+	var rateLimitErr *RateLimitError
+	if errors.As(err, &rateLimitErr) {
+		return rateLimitErr, true
+	}
+
+	var internalRateLimitErr *InternalRateLimitError
+	if errors.As(err, &internalRateLimitErr) {
+		return &RateLimitError{internal: internalRateLimitErr}, true
+	}
+
+	return nil, false
+}
+
+// NewError creates a new general error with the given message
+func NewError(msg string, args ...interface{}) error {
+	return fmt.Errorf(msg, args...)
+}
+
+// wrapError wraps an internal error into a public error
+func wrapError(err error) error {
+	if err == nil {
+		return nil
+	}
+
+	// Check if it's an API error
+	var internalAPIErr *InternalAPIError
+	if errors.As(err, &internalAPIErr) {
+		return &APIError{internal: internalAPIErr}
+	}
+
+	// Check if it's a rate limit error
+	var internalRateLimitErr *InternalRateLimitError
+	if errors.As(err, &internalRateLimitErr) {
+		return &RateLimitError{internal: internalRateLimitErr}
+	}
+
+	// Check if it's a request error
+	var internalRequestErr *InternalRequestError
+	if errors.As(err, &internalRequestErr) {
+		return &RequestError{internal: internalRequestErr}
+	}
+
+	// Otherwise, just return the error as is
+	return err
 }

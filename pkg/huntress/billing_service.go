@@ -1,3 +1,4 @@
+// Package huntress provides a client for the Huntress API
 package huntress
 
 import (
@@ -11,29 +12,31 @@ type billingService struct {
 	client *Client
 }
 
-// GetInvoice retrieves an invoice by ID
-func (s *billingService) GetInvoice(ctx context.Context, id string) (*Invoice, error) {
-	path := fmt.Sprintf("/billing/invoices/%s", id)
-	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
+// GetSummary retrieves a billing summary
+func (s *billingService) GetSummary(ctx context.Context) (*BillingSummary, error) {
+	req, err := s.client.NewRequest(ctx, http.MethodGet, "/billing/summary", nil)
 	if err != nil {
 		return nil, err
 	}
 
-	invoice := new(Invoice)
-	_, err = s.client.Do(ctx, req, invoice)
+	summary := new(BillingSummary)
+	_, err = s.client.Do(ctx, req, summary)
 	if err != nil {
 		return nil, err
 	}
 
-	return invoice, nil
+	return summary, nil
 }
 
-// ListInvoices lists invoices with optional filtering
-func (s *billingService) ListInvoices(ctx context.Context, opts *InvoiceListOptions) ([]*Invoice, *Pagination, error) {
+// ListInvoices lists all invoices
+func (s *billingService) ListInvoices(ctx context.Context, params *ListParams) ([]*Invoice, *Pagination, error) {
 	path := "/billing/invoices"
-	path, err := addOptions(path, opts)
-	if err != nil {
-		return nil, nil, err
+	if params != nil {
+		query, err := addQueryParams(path, params)
+		if err != nil {
+			return nil, nil, err
+		}
+		path = query
 	}
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
@@ -51,12 +54,32 @@ func (s *billingService) ListInvoices(ctx context.Context, opts *InvoiceListOpti
 	return invoices, pagination, nil
 }
 
-// GetUsage retrieves usage information
-func (s *billingService) GetUsage(ctx context.Context, period *BillingPeriod) (*UsageReport, error) {
-	path := "/billing/usage"
-	path, err := addOptions(path, period)
+// GetInvoice retrieves a specific invoice
+func (s *billingService) GetInvoice(ctx context.Context, id string) (*Invoice, error) {
+	path := fmt.Sprintf("/billing/invoices/%s", id)
+	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
 		return nil, err
+	}
+
+	invoice := new(Invoice)
+	_, err = s.client.Do(ctx, req, invoice)
+	if err != nil {
+		return nil, err
+	}
+
+	return invoice, nil
+}
+
+// GetUsage retrieves usage statistics
+func (s *billingService) GetUsage(ctx context.Context, params *UsageParams) (*UsageReport, error) {
+	path := "/billing/usage"
+	if params != nil {
+		query, err := addQueryParams(path, params)
+		if err != nil {
+			return nil, err
+		}
+		path = query
 	}
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
@@ -64,11 +87,11 @@ func (s *billingService) GetUsage(ctx context.Context, period *BillingPeriod) (*
 		return nil, err
 	}
 
-	usageReport := new(UsageReport)
-	_, err = s.client.Do(ctx, req, usageReport)
+	usage := new(UsageReport)
+	_, err = s.client.Do(ctx, req, usage)
 	if err != nil {
 		return nil, err
 	}
 
-	return usageReport, nil
+	return usage, nil
 }

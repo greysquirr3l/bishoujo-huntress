@@ -8,8 +8,10 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/greysquirr3l/bishoujo-huntress/internal/domain/incident"
 	"github.com/greysquirr3l/bishoujo-huntress/internal/ports/repository"
 )
@@ -48,12 +50,19 @@ func (r *IncidentRepositoryImpl) Get(ctx context.Context, id string) (*incident.
 		return nil, handleErrorResponse(resp)
 	}
 
-	var incidentDTO incidentDTO
-	if err := json.NewDecoder(resp.Body).Decode(&incidentDTO); err != nil {
+	// Parse the response into our DTO structure
+	var dto incidentDTO
+	if err := json.NewDecoder(resp.Body).Decode(&dto); err != nil {
 		return nil, fmt.Errorf("failed to decode response: %w", err)
 	}
 
-	return incidentDTO.toDomain(), nil
+	// Convert the DTO to a domain model
+	incident, err := ToDomainIncident(&dto)
+	if err != nil {
+		return nil, fmt.Errorf("failed to convert DTO to domain model: %w", err)
+	}
+
+	return incident, nil
 }
 
 // List retrieves multiple incidents based on filters
@@ -136,8 +145,12 @@ func (r *IncidentRepositoryImpl) List(ctx context.Context, filters repository.In
 
 	// Convert DTOs to domain entities
 	incidents := make([]*incident.Incident, len(incidentDTOs))
-	for i, incidentDTO := range incidentDTOs {
-		incidents[i] = incidentDTO.toDomain()
+	for i, dto := range incidentDTOs {
+		incident, err := ToDomainIncident(&dto)
+		if err != nil {
+			return nil, repository.Pagination{}, fmt.Errorf("failed to convert incident DTO to domain model at index %d: %w", i, err)
+		}
+		incidents[i] = incident
 	}
 
 	return incidents, pagination, nil
@@ -146,7 +159,7 @@ func (r *IncidentRepositoryImpl) List(ctx context.Context, filters repository.In
 // Create creates a new incident
 func (r *IncidentRepositoryImpl) Create(ctx context.Context, inc *incident.Incident) error {
 	// Convert domain entity to DTO
-	incidentDTO := fromDomainIncident(inc)
+	incidentDTO := ToIncidentDTO(inc)
 
 	// Create request body
 	body, err := json.Marshal(incidentDTO)
@@ -170,13 +183,21 @@ func (r *IncidentRepositoryImpl) Create(ctx context.Context, inc *incident.Incid
 	}
 
 	// Parse the response to get the created incident's ID
-	var createdIncidentDTO incidentDTO
-	if err := json.NewDecoder(resp.Body).Decode(&createdIncidentDTO); err != nil {
+	var responseData map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&responseData); err != nil {
 		return fmt.Errorf("failed to decode response: %w", err)
 	}
 
-	// Update the ID of the original incident object
-	inc.ID = createdIncidentDTO.ID
+	// Parse the ID from the response and update the original incident object
+	if idStr, ok := responseData["id"].(string); ok {
+		createdID, err := uuid.Parse(idStr)
+		if err != nil {
+			return fmt.Errorf("failed to parse created incident ID: %w", err)
+		}
+		inc.ID = createdID
+	} else {
+		return fmt.Errorf("failed to extract ID from response")
+	}
 
 	return nil
 }
@@ -184,7 +205,7 @@ func (r *IncidentRepositoryImpl) Create(ctx context.Context, inc *incident.Incid
 // Update updates an existing incident
 func (r *IncidentRepositoryImpl) Update(ctx context.Context, inc *incident.Incident) error {
 	// Convert domain entity to DTO
-	incidentDTO := fromDomainIncident(inc)
+	incidentDTO := ToIncidentDTO(inc)
 
 	// Create request body
 	body, err := json.Marshal(incidentDTO)
@@ -192,7 +213,7 @@ func (r *IncidentRepositoryImpl) Update(ctx context.Context, inc *incident.Incid
 		return fmt.Errorf("failed to marshal incident: %w", err)
 	}
 
-	path := fmt.Sprintf("/incidents/%s", inc.ID)
+	path := fmt.Sprintf("/incidents/%s", inc.ID.String())
 	req, err := createRequest(ctx, http.MethodPut, r.baseURL+path, body, r.authHeaders)
 	if err != nil {
 		return fmt.Errorf("failed to create request: %w", err)
@@ -337,13 +358,12 @@ func (r *IncidentRepositoryImpl) AddNote(ctx context.Context, incidentID string,
 func (r *IncidentRepositoryImpl) AddIOC(ctx context.Context, incidentID string, ioc incident.IndicatorOfCompromise) error {
 	path := fmt.Sprintf("/incidents/%s/iocs", incidentID)
 
-	// Create request body
-	iocDTO := indicatorOfCompromiseDTO{
-		Type:        ioc.Type,
-		Value:       ioc.Value,
-		Description: ioc.Description,
-		Source:      ioc.Source,
-		Timestamp:   ioc.Timestamp.Format(time.RFC3339),
+	// Create simplified DTO for API request (only sending required fields, not full conversion)
+	iocDTO := map[string]interface{}{
+		"type":        ioc.Type,
+		"value":       ioc.Value,
+		"description": ioc.Description,
+		"source":      ioc.Source,
 	}
 
 	body, err := json.Marshal(iocDTO)
@@ -373,18 +393,17 @@ func (r *IncidentRepositoryImpl) AddIOC(ctx context.Context, incidentID string, 
 func (r *IncidentRepositoryImpl) AddArtifact(ctx context.Context, incidentID string, artifact incident.Artifact) error {
 	path := fmt.Sprintf("/incidents/%s/artifacts", incidentID)
 
-	// Create request body
-	artifactDTO := artifactDTO{
-		Name:        artifact.Name,
-		Type:        artifact.Type,
-		Size:        artifact.Size,
-		Hash:        artifact.Hash,
-		Path:        artifact.Path,
-		CreatedAt:   artifact.CreatedAt.Format(time.RFC3339),
-		Description: artifact.Description,
+	// Create simplified map for API request (only sending required fields)
+	artifactData := map[string]interface{}{
+		"name":         artifact.Name,
+		"type":         artifact.Type,
+		"size":         artifact.Size,
+		"content_type": strings.TrimSpace(artifact.ContentHash), // Use ContentHash as ContentType
+		"url":          artifact.StoragePath,                    // Use StoragePath as URL
 	}
 
-	body, err := json.Marshal(artifactDTO)
+	// Create request body
+	body, err := json.Marshal(artifactData)
 	if err != nil {
 		return fmt.Errorf("failed to marshal artifact: %w", err)
 	}
@@ -436,185 +455,9 @@ func (r *IncidentRepositoryImpl) UpdateTags(ctx context.Context, id string, tags
 	return nil
 }
 
-// incidentDTO is the data transfer object for an incident
-type incidentDTO struct {
-	ID             string                     `json:"id"`
-	OrganizationID int                        `json:"organization_id"`
-	AgentID        string                     `json:"agent_id,omitempty"`
-	Title          string                     `json:"title"`
-	Description    string                     `json:"description"`
-	Status         string                     `json:"status"`
-	Severity       string                     `json:"severity"`
-	Type           string                     `json:"type"`
-	DetectedAt     string                     `json:"detected_at"`
-	ResolvedAt     string                     `json:"resolved_at,omitempty"`
-	CreatedAt      string                     `json:"created_at"`
-	UpdatedAt      string                     `json:"updated_at"`
-	AssignedTo     string                     `json:"assigned_to,omitempty"`
-	Tags           []string                   `json:"tags,omitempty"`
-	IOCs           []indicatorOfCompromiseDTO `json:"iocs,omitempty"`
-	Artifacts      []artifactDTO              `json:"artifacts,omitempty"`
-	Notes          []noteDTO                  `json:"notes,omitempty"`
-}
+// Note: We're removing these obsolete conversion functions since they have type mismatches.
+// We'll use the properly implemented ToDomainIncident and ToIncidentDTO functions from incident_dtos.go instead.
 
-type indicatorOfCompromiseDTO struct {
-	Type        string `json:"type"`
-	Value       string `json:"value"`
-	Description string `json:"description"`
-	Source      string `json:"source"`
-	Timestamp   string `json:"timestamp"`
-}
-
-type artifactDTO struct {
-	Name        string `json:"name"`
-	Type        string `json:"type"`
-	Size        int64  `json:"size"`
-	Hash        string `json:"hash"`
-	Path        string `json:"path"`
-	CreatedAt   string `json:"created_at"`
-	Description string `json:"description"`
-}
-
-type noteDTO struct {
-	ID        string `json:"id"`
-	Content   string `json:"content"`
-	CreatedBy string `json:"created_by"`
-	CreatedAt string `json:"created_at"`
-	UpdatedAt string `json:"updated_at"`
-}
-
-// toDomain converts a DTO to a domain entity
-func (dto *incidentDTO) toDomain() *incident.Incident {
-	inc := &incident.Incident{
-		ID:             dto.ID,
-		OrganizationID: dto.OrganizationID,
-		AgentID:        dto.AgentID,
-		Title:          dto.Title,
-		Description:    dto.Description,
-		Status:         incident.IncidentStatus(dto.Status),
-		Severity:       incident.IncidentSeverity(dto.Severity),
-		Type:           incident.IncidentType(dto.Type),
-		AssignedTo:     dto.AssignedTo,
-		Tags:           dto.Tags,
-	}
-
-	// Parse timestamps
-	if dto.DetectedAt != "" {
-		inc.DetectedAt, _ = parseTime(dto.DetectedAt)
-	}
-	if dto.ResolvedAt != "" {
-		resolvedAt, _ := parseTime(dto.ResolvedAt)
-		inc.ResolvedAt = &resolvedAt
-	}
-	if dto.CreatedAt != "" {
-		inc.CreatedAt, _ = parseTime(dto.CreatedAt)
-	}
-	if dto.UpdatedAt != "" {
-		inc.UpdatedAt, _ = parseTime(dto.UpdatedAt)
-	}
-
-	// Convert IOCs
-	inc.IOCs = make([]incident.IndicatorOfCompromise, len(dto.IOCs))
-	for i, iocDTO := range dto.IOCs {
-		timestamp, _ := parseTime(iocDTO.Timestamp)
-		inc.IOCs[i] = incident.IndicatorOfCompromise{
-			Type:        iocDTO.Type,
-			Value:       iocDTO.Value,
-			Description: iocDTO.Description,
-			Source:      iocDTO.Source,
-			Timestamp:   timestamp,
-		}
-	}
-
-	// Convert Artifacts
-	inc.Artifacts = make([]incident.Artifact, len(dto.Artifacts))
-	for i, artifactDTO := range dto.Artifacts {
-		createdAt, _ := parseTime(artifactDTO.CreatedAt)
-		inc.Artifacts[i] = incident.Artifact{
-			Name:        artifactDTO.Name,
-			Type:        artifactDTO.Type,
-			Size:        artifactDTO.Size,
-			Hash:        artifactDTO.Hash,
-			Path:        artifactDTO.Path,
-			CreatedAt:   createdAt,
-			Description: artifactDTO.Description,
-		}
-	}
-
-	// Convert Notes
-	inc.Notes = make([]incident.Note, len(dto.Notes))
-	for i, noteDTO := range dto.Notes {
-		createdAt, _ := parseTime(noteDTO.CreatedAt)
-		updatedAt, _ := parseTime(noteDTO.UpdatedAt)
-		inc.Notes[i] = incident.Note{
-			ID:        noteDTO.ID,
-			Content:   noteDTO.Content,
-			CreatedBy: noteDTO.CreatedBy,
-			CreatedAt: createdAt,
-			UpdatedAt: updatedAt,
-		}
-	}
-
-	return inc
-}
-
-// fromDomainIncident converts a domain entity to a DTO
-func fromDomainIncident(inc *incident.Incident) *incidentDTO {
-	dto := &incidentDTO{
-		ID:             inc.ID,
-		OrganizationID: inc.OrganizationID,
-		AgentID:        inc.AgentID,
-		Title:          inc.Title,
-		Description:    inc.Description,
-		Status:         string(inc.Status),
-		Severity:       string(inc.Severity),
-		Type:           string(inc.Type),
-		DetectedAt:     inc.DetectedAt.Format(time.RFC3339),
-		AssignedTo:     inc.AssignedTo,
-		Tags:           inc.Tags,
-	}
-
-	if inc.ResolvedAt != nil {
-		dto.ResolvedAt = inc.ResolvedAt.Format(time.RFC3339)
-	}
-
-	// Convert IOCs
-	dto.IOCs = make([]indicatorOfCompromiseDTO, len(inc.IOCs))
-	for i, ioc := range inc.IOCs {
-		dto.IOCs[i] = indicatorOfCompromiseDTO{
-			Type:        ioc.Type,
-			Value:       ioc.Value,
-			Description: ioc.Description,
-			Source:      ioc.Source,
-			Timestamp:   ioc.Timestamp.Format(time.RFC3339),
-		}
-	}
-
-	// Convert Artifacts
-	dto.Artifacts = make([]artifactDTO, len(inc.Artifacts))
-	for i, artifact := range inc.Artifacts {
-		dto.Artifacts[i] = artifactDTO{
-			Name:        artifact.Name,
-			Type:        artifact.Type,
-			Size:        artifact.Size,
-			Hash:        artifact.Hash,
-			Path:        artifact.Path,
-			CreatedAt:   artifact.CreatedAt.Format(time.RFC3339),
-			Description: artifact.Description,
-		}
-	}
-
-	// Convert Notes
-	dto.Notes = make([]noteDTO, len(inc.Notes))
-	for i, note := range inc.Notes {
-		dto.Notes[i] = noteDTO{
-			ID:        note.ID,
-			Content:   note.Content,
-			CreatedBy: note.CreatedBy,
-			CreatedAt: note.CreatedAt.Format(time.RFC3339),
-			UpdatedAt: note.UpdatedAt.Format(time.RFC3339),
-		}
-	}
-
-	return dto
-}
+// Note: We have removed these additional conversion functions that were causing type conflicts.
+// We'll rely exclusively on the properly implemented ToDomainIncident and ToIncidentDTO functions
+// from incident_dtos.go, which correctly handle the type conversions between domain models and DTOs.

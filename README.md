@@ -1,6 +1,6 @@
 # Bishoujo Huntress
 
-<img src="docs/img/bishoujo-huntress_crop.png" alt="Bishoujo Huntress Logo" width="400">
+<img src="docs/img/bishoujo-huntress_crop.png" alt="Bishoujo Huntress Logo" width="600">
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/greysquirr3l/bishoujo-huntress.svg)](https://pkg.go.dev/github.com/greysquirr3l/bishoujo-huntress)
 [![Go Report Card](https://goreportcard.com/badge/github.com/greysquirr3l/bishoujo-huntress)](https://goreportcard.com/report/github.com/greysquirr3l/bishoujo-huntress)
