@@ -63,7 +63,11 @@ func extractPagination(resp *http.Response) *Pagination {
 
 // parseInt parses a string to an integer, returning 0 if parsing fails
 func parseInt(s string) (int, error) {
-	return strconv.Atoi(s)
+	val, err := strconv.Atoi(s)
+	if err != nil {
+		return 0, fmt.Errorf("failed to convert string to int: %w", err)
+	}
+	return val, nil
 }
 
 // encodeURLValues converts a struct into URL-encoded query parameters.
@@ -154,7 +158,7 @@ func addValues(values url.Values, val reflect.Value) error {
 				// For other slice types, convert to JSON
 				b, err := json.Marshal(fieldValue.Interface())
 				if err != nil {
-					return err
+					return fmt.Errorf("failed to marshal JSON: %w", err)
 				}
 				strValues = []string{string(b)}
 			}
@@ -162,7 +166,7 @@ func addValues(values url.Values, val reflect.Value) error {
 			if !fieldValue.IsNil() {
 				b, err := json.Marshal(fieldValue.Interface())
 				if err != nil {
-					return err
+					return fmt.Errorf("failed to marshal JSON: %w", err)
 				}
 				strValues = []string{string(b)}
 			}
@@ -170,7 +174,7 @@ func addValues(values url.Values, val reflect.Value) error {
 			// For other types, convert to JSON
 			b, err := json.Marshal(fieldValue.Interface())
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to marshal JSON: %w", err)
 			}
 			strValues = []string{string(b)}
 		}

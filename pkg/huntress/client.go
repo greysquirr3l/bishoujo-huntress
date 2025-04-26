@@ -2,7 +2,6 @@
 package huntress
 
 import (
-	"bytes"
 	"context"
 	"encoding/base64"
 	"encoding/json"
@@ -10,6 +9,8 @@ import (
 	"io"
 	"net/http"
 	"time"
+
+	"github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/logging"
 )
 
 // RateLimiter defines the interface for rate limiting API requests
@@ -27,41 +28,17 @@ type Client struct {
 	userAgent   string
 	apiVersion  string
 	rateLimiter RateLimiter
-	retryConfig *retryConfig
-	debug       bool
+	Logger      logging.Logger
 
-	// Services
+	// Services for interacting with different API parts
 	Account      AccountService
 	Agent        AgentService
 	Organization OrganizationService
 	Incident     IncidentService
 	Report       ReportService
 	Billing      BillingService
+	Webhook      WebhookService // <-- Added for webhook support
 }
-
-// clientOptions holds the options for creating a new client
-type clientOptions struct {
-	httpClient  *http.Client
-	baseURL     string
-	apiKey      string
-	apiSecret   string
-	userAgent   string
-	apiVersion  string
-	timeout     time.Duration
-	rateLimiter RateLimiter
-	retryConfig *retryConfig
-	debug       bool
-}
-
-// retryConfig defines retry behavior for API requests
-type retryConfig struct {
-	MaxRetries   int
-	RetryWaitMin time.Duration
-	RetryWaitMax time.Duration
-}
-
-// Option is a function that configures client options
-type Option func(*clientOptions)
 
 // New creates a new Huntress API client
 func New(opts ...Option) *Client {
@@ -94,6 +71,7 @@ func New(opts ...Option) *Client {
 		userAgent:   options.userAgent,
 		apiVersion:  options.apiVersion,
 		rateLimiter: options.rateLimiter,
+		Logger:      options.logger,
 	}
 
 	// Initialize services
@@ -103,83 +81,25 @@ func New(opts ...Option) *Client {
 	client.Incident = &incidentService{client: client}
 	client.Report = &reportService{client: client}
 	client.Billing = &billingService{client: client}
+	client.Webhook = NewWebhookService(client)
 
 	return client
-}
-
-// WithCredentials sets the API credentials for authentication
-func WithCredentials(apiKey, apiSecret string) Option {
-	return func(o *clientOptions) {
-		o.apiKey = apiKey
-		o.apiSecret = apiSecret
-	}
-}
-
-// WithBaseURL sets the API base URL
-func WithBaseURL(baseURL string) Option {
-	return func(o *clientOptions) {
-		o.baseURL = baseURL
-	}
-}
-
-// WithTimeout sets the HTTP client timeout
-func WithTimeout(timeout time.Duration) Option {
-	return func(o *clientOptions) {
-		o.timeout = timeout
-		if o.httpClient != nil {
-			o.httpClient.Timeout = timeout
-		}
-	}
-}
-
-// WithHTTPClient sets a custom HTTP client
-func WithHTTPClient(client *http.Client) Option {
-	return func(o *clientOptions) {
-		o.httpClient = client
-	}
-}
-
-// WithUserAgent sets the user agent string
-func WithUserAgent(userAgent string) Option {
-	return func(o *clientOptions) {
-		o.userAgent = userAgent
-	}
-}
-
-// WithRateLimiter sets a rate limiter for API requests
-func WithRateLimiter(limiter RateLimiter) Option {
-	return func(o *clientOptions) {
-		o.rateLimiter = limiter
-	}
-}
-
-// WithRetryConfig configures the retry behavior for the client
-func WithRetryConfig(maxRetries int, minWait, maxWait time.Duration) Option {
-	return func(o *clientOptions) {
-		o.retryConfig = &retryConfig{
-			MaxRetries:   maxRetries,
-			RetryWaitMin: minWait,
-			RetryWaitMax: maxWait,
-		}
-	}
 }
 
 // NewRequest creates a new API request
 func (c *Client) NewRequest(ctx context.Context, method, path string, body interface{}) (*http.Request, error) {
 	url := c.baseURL + path
 	var bodyReader io.Reader
-
 	if body != nil {
-		bodyData, err := json.Marshal(body)
-		if err != nil {
-			return nil, fmt.Errorf("error marshaling request body: %w", err)
+		var ok bool
+		bodyReader, ok = body.(io.Reader)
+		if !ok {
+			return nil, fmt.Errorf("body must implement io.Reader")
 		}
-		bodyReader = bytes.NewReader(bodyData)
 	}
-
 	req, err := http.NewRequestWithContext(ctx, method, url, bodyReader)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create HTTP request: %w", err)
 	}
 
 	// Set headers
@@ -188,11 +108,19 @@ func (c *Client) NewRequest(ctx context.Context, method, path string, body inter
 	req.Header.Set("Authorization", "Basic "+basicAuth(c.apiKey, c.apiSecret))
 	req.Header.Set("User-Agent", c.userAgent)
 
+	if c.Logger != nil {
+		c.Logger.Debug("Creating new request", logging.String("method", method), logging.String("url", url))
+	}
+
 	return req, nil
 }
 
 // Do sends an API request and returns the response
 func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*http.Response, error) {
+	if c.Logger != nil {
+		c.Logger.Debug("Sending request", logging.String("method", req.Method), logging.String("url", req.URL.String()))
+	}
+
 	// Apply rate limiting if configured
 	if c.rateLimiter != nil {
 		if err := c.rateLimiter.Wait(ctx); err != nil {
@@ -202,9 +130,14 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
+		if c.Logger != nil {
+			c.Logger.Error("Request failed", logging.Error("error", err))
+		}
 		return nil, fmt.Errorf("request failed: %w", err)
 	}
-	defer resp.Body.Close()
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 
 	if v == nil {
 		return resp, nil
@@ -213,14 +146,19 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 	// Check for error responses
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		bodyBytes, _ := io.ReadAll(resp.Body)
+		if c.Logger != nil {
+			c.Logger.Warn("API error response", logging.Int("status", resp.StatusCode), logging.String("body", string(bodyBytes)))
+		}
 		return resp, fmt.Errorf("API error: status code %d, body: %s", resp.StatusCode, string(bodyBytes))
 	}
 
 	// Decode the response
 	if err := json.NewDecoder(resp.Body).Decode(v); err != nil {
+		if c.Logger != nil {
+			c.Logger.Error("Error decoding response", logging.Error("error", err))
+		}
 		return resp, fmt.Errorf("error decoding response: %w", err)
 	}
-
 	return resp, nil
 }
 

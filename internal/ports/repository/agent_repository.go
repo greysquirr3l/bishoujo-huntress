@@ -1,4 +1,4 @@
-// internal/ports/repository/agent_repository.go
+// Package repository defines repository interfaces for Huntress domain entities.
 package repository
 
 import (
@@ -12,8 +12,8 @@ import (
 type AgentFilters struct {
 	OrganizationID *int
 	Search         string
-	Status         *agent.AgentStatus
-	Platform       *agent.AgentPlatform
+	Status         *agent.Status
+	Platform       *agent.Platform
 	Hostname       string
 	IPAddress      string
 	Version        string
@@ -48,7 +48,7 @@ type AgentRepository interface {
 	UpdateTags(ctx context.Context, id string, tags []string) error
 
 	// UpdateStatus updates the status of an agent
-	UpdateStatus(ctx context.Context, id string, status agent.AgentStatus) error
+	UpdateStatus(ctx context.Context, id string, status agent.Status) error
 
 	// ListByOrganization retrieves all agents for an organization
 	ListByOrganization(ctx context.Context, organizationID int, filters AgentFilters) ([]*agent.Agent, Pagination, error)

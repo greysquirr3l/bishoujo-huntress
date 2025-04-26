@@ -238,31 +238,3 @@ func AsRateLimitError(err error) (*RateLimitError, bool) {
 func NewError(msg string, args ...interface{}) error {
 	return fmt.Errorf(msg, args...)
 }
-
-// wrapError wraps an internal error into a public error
-func wrapError(err error) error {
-	if err == nil {
-		return nil
-	}
-
-	// Check if it's an API error
-	var internalAPIErr *InternalAPIError
-	if errors.As(err, &internalAPIErr) {
-		return &APIError{internal: internalAPIErr}
-	}
-
-	// Check if it's a rate limit error
-	var internalRateLimitErr *InternalRateLimitError
-	if errors.As(err, &internalRateLimitErr) {
-		return &RateLimitError{internal: internalRateLimitErr}
-	}
-
-	// Check if it's a request error
-	var internalRequestErr *InternalRequestError
-	if errors.As(err, &internalRequestErr) {
-		return &RequestError{internal: internalRequestErr}
-	}
-
-	// Otherwise, just return the error as is
-	return err
-}

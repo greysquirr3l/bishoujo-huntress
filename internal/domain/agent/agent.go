@@ -1,4 +1,4 @@
-// internal/domain/agent/agent.go
+// Package agent contains the domain model for Huntress agents.
 package agent
 
 import (
@@ -13,30 +13,30 @@ var (
 	ErrInvalidOrganization = errors.New("invalid organization ID")
 )
 
-// AgentStatus represents the current status of an agent
-type AgentStatus string
+// Status represents the current status of an agent
+type Status string
 
 const (
 	// AgentStatusOnline indicates an online agent
-	AgentStatusOnline AgentStatus = "online"
+	AgentStatusOnline Status = "online"
 	// AgentStatusOffline indicates an offline agent
-	AgentStatusOffline AgentStatus = "offline"
+	AgentStatusOffline Status = "offline"
 	// AgentStatusPending indicates a pending agent
-	AgentStatusPending AgentStatus = "pending"
+	AgentStatusPending Status = "pending"
 	// AgentStatusUnknown indicates an agent with unknown status
-	AgentStatusUnknown AgentStatus = "unknown"
+	AgentStatusUnknown Status = "unknown"
 )
 
-// AgentPlatform represents the platform on which an agent is running
-type AgentPlatform string
+// Platform represents the platform on which an agent is running
+type Platform string
 
 const (
 	// PlatformWindows indicates a Windows platform
-	PlatformWindows AgentPlatform = "windows"
+	PlatformWindows Platform = "windows"
 	// PlatformMac indicates a macOS platform
-	PlatformMac AgentPlatform = "mac"
+	PlatformMac Platform = "mac"
 	// PlatformLinux indicates a Linux platform
-	PlatformLinux AgentPlatform = "linux"
+	PlatformLinux Platform = "linux"
 )
 
 // Agent represents a Huntress agent installed on an endpoint
@@ -47,10 +47,10 @@ type Agent struct {
 	Hostname         string
 	IPV4Address      string
 	MACAddress       string
-	Platform         AgentPlatform
+	Platform         Platform
 	OS               string
 	OSVersion        string
-	Status           AgentStatus
+	Status           Status
 	LastSeen         time.Time
 	CreatedAt        time.Time
 	UpdatedAt        time.Time

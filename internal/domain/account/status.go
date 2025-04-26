@@ -1,21 +1,21 @@
 package account
 
-// AccountStatus represents the current status of an account
-type AccountStatus string
+// Status represents the current status of an account
+type Status string
 
 const (
 	// StatusActive indicates an active account
-	StatusActive AccountStatus = "active"
+	StatusActive Status = "active"
 	// StatusSuspended indicates a suspended account
-	StatusSuspended AccountStatus = "suspended"
+	StatusSuspended Status = "suspended"
 	// StatusDeactivated indicates a deactivated account
-	StatusDeactivated AccountStatus = "deactivated"
+	StatusDeactivated Status = "deactivated"
 	// StatusPending indicates a pending account
-	StatusPending AccountStatus = "pending"
+	StatusPending Status = "pending"
 )
 
 // IsValid checks if the status is a valid account status
-func (s AccountStatus) IsValid() bool {
+func (s Status) IsValid() bool {
 	switch s {
 	case StatusActive, StatusSuspended, StatusDeactivated, StatusPending:
 		return true
@@ -25,6 +25,6 @@ func (s AccountStatus) IsValid() bool {
 }
 
 // String returns the string representation of the account status
-func (s AccountStatus) String() string {
+func (s Status) String() string {
 	return string(s)
 }

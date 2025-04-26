@@ -16,13 +16,16 @@ type billingService struct {
 func (s *billingService) GetSummary(ctx context.Context) (*BillingSummary, error) {
 	req, err := s.client.NewRequest(ctx, http.MethodGet, "/billing/summary", nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create request for GetSummary: %w", err)
 	}
 
 	summary := new(BillingSummary)
-	_, err = s.client.Do(ctx, req, summary)
+	resp, err := s.client.Do(ctx, req, summary)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute request for GetSummary: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
 	}
 
 	return summary, nil
@@ -30,27 +33,11 @@ func (s *billingService) GetSummary(ctx context.Context) (*BillingSummary, error
 
 // ListInvoices lists all invoices
 func (s *billingService) ListInvoices(ctx context.Context, params *ListParams) ([]*Invoice, *Pagination, error) {
-	path := "/billing/invoices"
-	if params != nil {
-		query, err := addQueryParams(path, params)
-		if err != nil {
-			return nil, nil, err
-		}
-		path = query
-	}
-
-	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
 	var invoices []*Invoice
-	resp, err := s.client.Do(ctx, req, &invoices)
+	pagination, err := listResource(ctx, s.client, "/billing/invoices", params, &invoices)
 	if err != nil {
 		return nil, nil, err
 	}
-
-	pagination := extractPagination(resp)
 	return invoices, pagination, nil
 }
 
@@ -59,13 +46,16 @@ func (s *billingService) GetInvoice(ctx context.Context, id string) (*Invoice, e
 	path := fmt.Sprintf("/billing/invoices/%s", id)
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create request for GetInvoice: %w", err)
 	}
 
 	invoice := new(Invoice)
-	_, err = s.client.Do(ctx, req, invoice)
+	resp, err := s.client.Do(ctx, req, invoice)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute request for GetInvoice: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
 	}
 
 	return invoice, nil
@@ -77,20 +67,23 @@ func (s *billingService) GetUsage(ctx context.Context, params *UsageParams) (*Us
 	if params != nil {
 		query, err := addQueryParams(path, params)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to add query params in GetUsage: %w", err)
 		}
 		path = query
 	}
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create request for GetUsage: %w", err)
 	}
 
 	usage := new(UsageReport)
-	_, err = s.client.Do(ctx, req, usage)
+	resp, err := s.client.Do(ctx, req, usage)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute request for GetUsage: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
 	}
 
 	return usage, nil

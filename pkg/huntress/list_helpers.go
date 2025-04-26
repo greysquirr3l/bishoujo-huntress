@@ -1,0 +1,36 @@
+// Package huntress provides a client for the Huntress API
+package huntress
+
+import (
+	"context"
+	"fmt"
+	"net/http"
+)
+
+// listResource is a generic helper for paginated GET endpoints.
+// It takes a path, params, a pointer to a slice for results, and a function to create a new request.
+func listResource[T any](ctx context.Context, client *Client, path string, params interface{}, result *[]T) (*Pagination, error) {
+	if params != nil {
+		query, err := addQueryParams(path, params)
+		if err != nil {
+			return nil, fmt.Errorf("failed to add query params in List: %w", err)
+		}
+		path = query
+	}
+
+	req, err := client.NewRequest(ctx, http.MethodGet, path, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request for List: %w", err)
+	}
+
+	resp, err := client.Do(ctx, req, result)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute request for List: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
+
+	pagination := extractPagination(resp)
+	return pagination, nil
+}

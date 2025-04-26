@@ -68,7 +68,7 @@ func ToDomainIncident(dto *incidentDTO) (*incident.Incident, error) {
 	// Parse UUID from string ID
 	incidentID, err := uuid.Parse(dto.ID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to parse uuid: %w", err)
 	}
 
 	// Parse organization ID UUID
@@ -84,9 +84,9 @@ func ToDomainIncident(dto *incidentDTO) (*incident.Incident, error) {
 		OrganizationID: orgID,
 		Title:          dto.Title,
 		Description:    dto.Description,
-		Status:         incident.IncidentStatus(dto.Status),
-		Severity:       incident.IncidentSeverity(dto.Severity),
-		Type:           incident.IncidentType(dto.Type),
+		Status:         incident.Status(dto.Status),
+		Severity:       incident.Severity(dto.Severity),
+		Type:           incident.Type(dto.Type),
 		DetectedAt:     dto.DetectedAt,
 		CreatedAt:      dto.CreatedAt,
 		UpdatedAt:      dto.UpdatedAt,
@@ -107,7 +107,7 @@ func ToDomainIncident(dto *incidentDTO) (*incident.Incident, error) {
 		for i, noteDto := range dto.Notes {
 			noteID, err := uuid.Parse(noteDto.ID)
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("failed to parse uuid: %w", err)
 			}
 
 			inc.Notes[i] = incident.Note{
@@ -126,12 +126,12 @@ func ToDomainIncident(dto *incidentDTO) (*incident.Incident, error) {
 		for i, artifactDto := range dto.Artifacts {
 			artifactID, err := uuid.Parse(artifactDto.ID)
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("failed to parse uuid: %w", err)
 			}
 
 			incidentID, err := uuid.Parse(artifactDto.IncidentID)
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("failed to parse uuid: %w", err)
 			}
 
 			inc.Artifacts[i] = incident.Artifact{
@@ -158,12 +158,12 @@ func ToDomainIncident(dto *incidentDTO) (*incident.Incident, error) {
 		for i, iocDto := range dto.IOCs {
 			iocID, err := uuid.Parse(iocDto.ID)
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("failed to parse uuid: %w", err)
 			}
 
 			incidentID, err := uuid.Parse(iocDto.IncidentID)
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("failed to parse uuid: %w", err)
 			}
 
 			inc.IOCs[i] = incident.IndicatorOfCompromise{
@@ -183,9 +183,30 @@ func ToDomainIncident(dto *incidentDTO) (*incident.Incident, error) {
 	return inc, nil
 }
 
-// ToIncidentDTO converts a domain Incident entity to an incidentDTO
-func ToIncidentDTO(inc *incident.Incident) *incidentDTO {
-	dto := &incidentDTO{
+// IncidentDTO is the exported DTO type for incidents.
+type IncidentDTO struct {
+	ID             string                     `json:"id"`
+	Title          string                     `json:"title"`
+	Description    string                     `json:"description"`
+	OrganizationID int                        `json:"organization_id"`
+	AgentID        string                     `json:"agent_id,omitempty"`
+	Status         string                     `json:"status"`
+	Severity       string                     `json:"severity"`
+	Type           string                     `json:"type"`
+	DetectedAt     time.Time                  `json:"detected_at"`
+	ResolvedAt     *time.Time                 `json:"resolved_at,omitempty"`
+	CreatedAt      time.Time                  `json:"created_at"`
+	UpdatedAt      time.Time                  `json:"updated_at"`
+	Tags           []string                   `json:"tags,omitempty"`
+	AssignedTo     string                     `json:"assigned_to,omitempty"`
+	Notes          []noteDTO                  `json:"notes,omitempty"`
+	Artifacts      []artifactDTO              `json:"artifacts,omitempty"`
+	IOCs           []indicatorOfCompromiseDTO `json:"iocs,omitempty"`
+}
+
+// ToIncidentDTO converts a domain Incident to an exported IncidentDTO.
+func ToIncidentDTO(inc *incident.Incident) *IncidentDTO {
+	dto := &IncidentDTO{
 		ID:          inc.ID.String(),
 		Title:       inc.Title,
 		Description: inc.Description,

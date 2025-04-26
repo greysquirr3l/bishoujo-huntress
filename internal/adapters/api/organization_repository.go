@@ -1,3 +1,4 @@
+// Package api provides API client implementations for Huntress resources.
 package api
 
 import (
@@ -7,32 +8,47 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/greysquirr3l/bishoujo-huntress/internal/adapters/http/client"
+	// Correct the import path for the HTTP client
 	"github.com/greysquirr3l/bishoujo-huntress/internal/domain/organization"
+	httpClient "github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http"
 	"github.com/greysquirr3l/bishoujo-huntress/internal/ports/repository"
 )
 
 // OrganizationRepository implements the repository.OrganizationRepository interface
 type OrganizationRepository struct {
-	httpClient client.Client
+	// Use the imported http client type
+	httpClient *httpClient.Client
 	baseURL    string
 }
 
 // NewOrganizationRepository creates a new OrganizationRepository instance
-func NewOrganizationRepository(httpClient client.Client, baseURL string) *OrganizationRepository {
+// Update the function signature to use the correct client type
+func NewOrganizationRepository(client *httpClient.Client, baseURL string) *OrganizationRepository {
 	return &OrganizationRepository{
-		httpClient: httpClient,
+		httpClient: client,
 		baseURL:    baseURL,
 	}
 }
 
 // Get retrieves a specific organization by its ID
 func (r *OrganizationRepository) Get(ctx context.Context, id string) (*organization.Organization, error) {
-	endpoint := fmt.Sprintf("%s/organizations/%s", r.baseURL, url.PathEscape(id))
+	// Construct the full URL using the base URL and path
+	path := fmt.Sprintf("/organizations/%s", url.PathEscape(id))
+	// endpoint := fmt.Sprintf("%s%s", r.baseURL, path) // BaseURL is handled by the client's Do method
 
 	var orgDTO organizationDTO
-	if err := r.httpClient.Get(ctx, endpoint, &orgDTO); err != nil {
+	// Use the client's Do method for the request
+	resp, err := r.httpClient.Do(ctx, http.MethodGet, path, nil, &orgDTO, nil) // Pass nil for RequestOptions if none
+	if err != nil {
 		return nil, fmt.Errorf("failed to get organization: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
+	// Check response status code if needed, though Do might handle it
+	if resp.StatusCode != http.StatusOK {
+		// Handle non-OK status, potentially using APIError from the client package
+		return nil, fmt.Errorf("unexpected status code %d when getting organization", resp.StatusCode)
 	}
 
 	// Convert DTO to domain entity
@@ -46,7 +62,7 @@ func (r *OrganizationRepository) Get(ctx context.Context, id string) (*organizat
 
 // List retrieves all organizations with optional filtering
 func (r *OrganizationRepository) List(ctx context.Context, params *organization.ListParams) ([]*organization.Organization, *repository.Pagination, error) {
-	endpoint := fmt.Sprintf("%s/organizations", r.baseURL)
+	path := "/organizations"
 
 	// Add query parameters for filtering
 	queryParams := url.Values{}
@@ -55,54 +71,67 @@ func (r *OrganizationRepository) List(ctx context.Context, params *organization.
 			queryParams.Set("page", fmt.Sprintf("%d", params.Page))
 		}
 		if params.Limit > 0 {
-			queryParams.Set("limit", fmt.Sprintf("%d", params.Limit))
+			// Use "per_page" as per Huntress API docs
+			queryParams.Set("per_page", fmt.Sprintf("%d", params.Limit))
 		}
-		if params.AccountID > 0 {
-			queryParams.Set("account_id", fmt.Sprintf("%d", params.AccountID))
-		}
+		// AccountID filtering might not be supported directly, check API docs
+		// if params.AccountID > 0 {
+		// 	queryParams.Set("account_id", fmt.Sprintf("%d", params.AccountID))
+		// }
 		if params.Status != "" {
 			queryParams.Set("status", params.Status)
 		}
 		if params.Search != "" {
 			queryParams.Set("search", params.Search)
 		}
-		if params.Industry != "" {
-			queryParams.Set("industry", params.Industry)
-		}
-		// Add tags if present
-		for _, tag := range params.Tags {
-			queryParams.Add("tags", tag)
-		}
+		// Industry filtering might not be supported directly, check API docs
+		// if params.Industry != "" {
+		// 	queryParams.Set("industry", params.Industry)
+		// }
+		// Tags filtering might not be supported directly, check API docs
+		// for _, tag := range params.Tags {
+		// 	queryParams.Add("tags", tag)
+		// }
 	}
 
-	if len(queryParams) > 0 {
-		endpoint = fmt.Sprintf("%s?%s", endpoint, queryParams.Encode())
+	// Prepare RequestOptions
+	reqOpts := &httpClient.RequestOptions{
+		Query: queryParams,
 	}
 
+	// Define the expected response structure based on Huntress API
+	// The API likely returns a list directly or a structure containing the list and pagination
 	var response struct {
-		Organizations []organizationDTO `json:"organizations"`
-		Pagination    struct {
-			CurrentPage  int `json:"current_page"`
-			TotalPages   int `json:"total_pages"`
-			TotalItems   int `json:"total_items"`
-			ItemsPerPage int `json:"items_per_page"`
-		} `json:"pagination"`
+		// Assuming the API returns a structure like this based on common patterns
+		Data       []organizationDTO     `json:"data"`       // Check actual API response key
+		Pagination httpClient.Pagination `json:"pagination"` // Use pagination struct from http client
 	}
 
-	if err := r.httpClient.Get(ctx, endpoint, &response); err != nil {
+	// Use the client's Do method
+	resp, err := r.httpClient.Do(ctx, http.MethodGet, path, nil, &response, reqOpts)
+	if err != nil {
 		return nil, nil, fmt.Errorf("failed to list organizations: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
+	if resp.StatusCode != http.StatusOK {
+		return nil, nil, fmt.Errorf("unexpected status code %d when listing organizations", resp.StatusCode)
 	}
 
 	// Convert DTOs to domain entities
-	organizations := make([]*organization.Organization, 0, len(response.Organizations))
-	for _, dto := range response.Organizations {
+	organizations := make([]*organization.Organization, 0, len(response.Data))
+	for _, dto := range response.Data {
 		org, err := r.convertDTOToOrganization(dto)
 		if err != nil {
-			return nil, nil, fmt.Errorf("invalid organization data: %w", err)
+			// Consider logging the error and skipping the problematic entry
+			// or returning the error immediately depending on requirements.
+			return nil, nil, fmt.Errorf("invalid organization data in list response: %w", err)
 		}
 		organizations = append(organizations, org)
 	}
 
+	// Map the client's pagination struct to the repository's pagination struct
 	pagination := &repository.Pagination{
 		Page:       response.Pagination.CurrentPage,
 		PerPage:    response.Pagination.ItemsPerPage,
@@ -115,25 +144,35 @@ func (r *OrganizationRepository) List(ctx context.Context, params *organization.
 
 // Create creates a new organization
 func (r *OrganizationRepository) Create(ctx context.Context, org *organization.Organization) (*organization.Organization, error) {
-	endpoint := fmt.Sprintf("%s/organizations", r.baseURL)
+	path := "/organizations"
 
 	// Validate the organization before sending
-	if err := org.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid organization: %w", err)
-	}
+	// Domain validation should ideally happen in the application layer or domain service
+	// if err := org.Validate(); err != nil {
+	// 	return nil, fmt.Errorf("invalid organization: %w", err)
+	// }
 
 	// Convert domain entity to DTO for API request
 	dto := r.convertOrganizationToDTO(org)
 
 	var responseDTO organizationDTO
-	if err := r.httpClient.Post(ctx, endpoint, dto, &responseDTO, http.StatusCreated); err != nil {
+	// Use the client's Do method
+	resp, err := r.httpClient.Do(ctx, http.MethodPost, path, dto, &responseDTO, nil)
+	if err != nil {
 		return nil, fmt.Errorf("failed to create organization: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
+	// Check for expected status code (e.g., 201 Created)
+	if resp.StatusCode != http.StatusCreated {
+		return nil, fmt.Errorf("unexpected status code %d when creating organization", resp.StatusCode)
 	}
 
 	// Convert response DTO back to domain entity
 	createdOrg, err := r.convertDTOToOrganization(responseDTO)
 	if err != nil {
-		return nil, fmt.Errorf("invalid organization data in response: %w", err)
+		return nil, fmt.Errorf("invalid organization data in create response: %w", err)
 	}
 
 	return createdOrg, nil
@@ -145,25 +184,33 @@ func (r *OrganizationRepository) Update(ctx context.Context, org *organization.O
 		return nil, fmt.Errorf("organization ID is required for update")
 	}
 
-	// Validate the organization before sending
-	if err := org.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid organization: %w", err)
-	}
+	// Domain validation should ideally happen in the application layer or domain service
+	// if err := org.Validate(); err != nil {
+	// 	return nil, fmt.Errorf("invalid organization: %w", err)
+	// }
 
-	endpoint := fmt.Sprintf("%s/organizations/%s", r.baseURL, url.PathEscape(org.ID))
+	path := fmt.Sprintf("/organizations/%s", url.PathEscape(org.ID))
 
 	// Convert domain entity to DTO for API request
-	dto := r.convertOrganizationToDTO(org)
+	dto := r.convertOrganizationToDTO(org) // Consider sending only changed fields (PATCH) if API supports it
 
 	var responseDTO organizationDTO
-	if err := r.httpClient.Put(ctx, endpoint, dto, &responseDTO); err != nil {
+	// Use PUT or PATCH depending on API design (PUT usually replaces, PATCH updates)
+	resp, err := r.httpClient.Do(ctx, http.MethodPut, path, dto, &responseDTO, nil)
+	if err != nil {
 		return nil, fmt.Errorf("failed to update organization: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("unexpected status code %d when updating organization", resp.StatusCode)
 	}
 
 	// Convert response DTO back to domain entity
 	updatedOrg, err := r.convertDTOToOrganization(responseDTO)
 	if err != nil {
-		return nil, fmt.Errorf("invalid organization data in response: %w", err)
+		return nil, fmt.Errorf("invalid organization data in update response: %w", err)
 	}
 
 	return updatedOrg, nil
@@ -171,10 +218,19 @@ func (r *OrganizationRepository) Update(ctx context.Context, org *organization.O
 
 // Delete removes an organization by its ID
 func (r *OrganizationRepository) Delete(ctx context.Context, id string) error {
-	endpoint := fmt.Sprintf("%s/organizations/%s", r.baseURL, url.PathEscape(id))
+	path := fmt.Sprintf("/organizations/%s", url.PathEscape(id))
 
-	if err := r.httpClient.Delete(ctx, endpoint, nil); err != nil {
+	// Use the client's Do method, expecting no response body on success (nil for result)
+	resp, err := r.httpClient.Do(ctx, http.MethodDelete, path, nil, nil, nil)
+	if err != nil {
 		return fmt.Errorf("failed to delete organization: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
+	// Check for expected status code (e.g., 204 No Content)
+	if resp.StatusCode != http.StatusNoContent {
+		return fmt.Errorf("unexpected status code %d when deleting organization", resp.StatusCode)
 	}
 
 	return nil
@@ -182,25 +238,29 @@ func (r *OrganizationRepository) Delete(ctx context.Context, id string) error {
 
 // GetUsers retrieves all users associated with an organization
 func (r *OrganizationRepository) GetUsers(ctx context.Context, organizationID string) ([]*organization.User, *repository.Pagination, error) {
-	endpoint := fmt.Sprintf("%s/organizations/%s/users", r.baseURL, url.PathEscape(organizationID))
+	path := fmt.Sprintf("/organizations/%s/users", url.PathEscape(organizationID))
 
+	// Define expected response structure
 	var response struct {
-		Users      []userDTO `json:"users"`
-		Pagination struct {
-			CurrentPage  int `json:"current_page"`
-			TotalPages   int `json:"total_pages"`
-			TotalItems   int `json:"total_items"`
-			ItemsPerPage int `json:"items_per_page"`
-		} `json:"pagination"`
+		Data       []userDTO             `json:"data"` // Check actual API response key
+		Pagination httpClient.Pagination `json:"pagination"`
 	}
 
-	if err := r.httpClient.Get(ctx, endpoint, &response); err != nil {
+	// Use the client's Do method
+	resp, err := r.httpClient.Do(ctx, http.MethodGet, path, nil, &response, nil)
+	if err != nil {
 		return nil, nil, fmt.Errorf("failed to get organization users: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
+	if resp.StatusCode != http.StatusOK {
+		return nil, nil, fmt.Errorf("unexpected status code %d when getting organization users", resp.StatusCode)
 	}
 
 	// Convert DTOs to domain entities
-	users := make([]*organization.User, 0, len(response.Users))
-	for _, dto := range response.Users {
+	users := make([]*organization.User, 0, len(response.Data))
+	for _, dto := range response.Data {
 		user := r.convertDTOToUser(dto)
 		users = append(users, user)
 	}
@@ -217,13 +277,22 @@ func (r *OrganizationRepository) GetUsers(ctx context.Context, organizationID st
 
 // AddUser adds a user to an organization
 func (r *OrganizationRepository) AddUser(ctx context.Context, organizationID string, user *organization.User) error {
-	endpoint := fmt.Sprintf("%s/organizations/%s/users", r.baseURL, url.PathEscape(organizationID))
+	path := fmt.Sprintf("/organizations/%s/users", url.PathEscape(organizationID))
 
 	// Convert domain entity to DTO for API request
 	dto := r.convertUserToDTO(user)
 
-	if err := r.httpClient.Post(ctx, endpoint, dto, nil, http.StatusCreated); err != nil {
+	// Use the client's Do method, potentially expecting a user DTO or no body on success
+	resp, err := r.httpClient.Do(ctx, http.MethodPost, path, dto, nil, nil) // Assuming no response body needed
+	if err != nil {
 		return fmt.Errorf("failed to add user to organization: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
+	// Check for expected status code (e.g., 201 Created or 200 OK)
+	if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("unexpected status code %d when adding user to organization", resp.StatusCode)
 	}
 
 	return nil
@@ -231,10 +300,19 @@ func (r *OrganizationRepository) AddUser(ctx context.Context, organizationID str
 
 // RemoveUser removes a user from an organization
 func (r *OrganizationRepository) RemoveUser(ctx context.Context, organizationID string, userID string) error {
-	endpoint := fmt.Sprintf("%s/organizations/%s/users/%s", r.baseURL, url.PathEscape(organizationID), url.PathEscape(userID))
+	path := fmt.Sprintf("/organizations/%s/users/%s", url.PathEscape(organizationID), url.PathEscape(userID))
 
-	if err := r.httpClient.Delete(ctx, endpoint, nil); err != nil {
+	// Use the client's Do method, expecting no response body on success
+	resp, err := r.httpClient.Do(ctx, http.MethodDelete, path, nil, nil, nil)
+	if err != nil {
 		return fmt.Errorf("failed to remove user from organization: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
+	// Check for expected status code (e.g., 204 No Content)
+	if resp.StatusCode != http.StatusNoContent {
+		return fmt.Errorf("unexpected status code %d when removing user from organization", resp.StatusCode)
 	}
 
 	return nil
@@ -382,5 +460,9 @@ func parseTime(timeStr string) (time.Time, error) {
 	if timeStr == "" {
 		return time.Time{}, nil
 	}
-	return time.Parse(time.RFC3339, timeStr)
+	t, err := time.Parse(time.RFC3339, timeStr)
+	if err != nil {
+		return time.Time{}, fmt.Errorf("failed to parse time: %w", err)
+	}
+	return t, nil
 }

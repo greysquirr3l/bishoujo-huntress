@@ -17,22 +17,22 @@ type AccountUpdateParams struct {
 
 // UserCreateParams contains parameters for creating a user
 type UserCreateParams struct {
-	Email     string   `json:"email"`
-	FirstName string   `json:"first_name,omitempty"`
-	LastName  string   `json:"last_name,omitempty"`
-	Role      string   `json:"role,omitempty"`
-	Roles     []string `json:"roles,omitempty"`
-	Active    bool     `json:"active,omitempty"`
+	Email     string     `json:"email"`
+	FirstName string     `json:"first_name,omitempty"`
+	LastName  string     `json:"last_name,omitempty"`
+	Role      UserRole   `json:"role,omitempty"`
+	Roles     []UserRole `json:"roles,omitempty"`
+	Active    bool       `json:"active,omitempty"`
 }
 
 // UserUpdateParams contains parameters for updating a user
 type UserUpdateParams struct {
-	Email     string   `json:"email,omitempty"`
-	FirstName string   `json:"first_name,omitempty"`
-	LastName  string   `json:"last_name,omitempty"`
-	Role      string   `json:"role,omitempty"`
-	Roles     []string `json:"roles,omitempty"`
-	Active    *bool    `json:"active,omitempty"`
+	Email     string     `json:"email,omitempty"`
+	FirstName string     `json:"first_name,omitempty"`
+	LastName  string     `json:"last_name,omitempty"`
+	Role      UserRole   `json:"role,omitempty"`
+	Roles     []UserRole `json:"roles,omitempty"`
+	Active    *bool      `json:"active,omitempty"`
 }
 
 // ----- Report Types -----

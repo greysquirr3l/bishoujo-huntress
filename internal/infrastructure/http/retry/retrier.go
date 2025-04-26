@@ -1,14 +1,16 @@
+// Package retry provides retry logic for HTTP requests in the Huntress API client.
 package retry
 
 import (
 	"context"
+	"fmt"
 	"math"
 	"net/http"
 	"time"
 )
 
-// RetryConfig defines the configuration for the retry mechanism
-type RetryConfig struct {
+// Config defines the configuration for the retry mechanism
+type Config struct {
 	// MaxRetries is the maximum number of retries
 	MaxRetries int
 	// MaxDelay is the maximum delay between retries
@@ -19,8 +21,8 @@ type RetryConfig struct {
 	RetryableStatusCodes []int
 }
 
-// DefaultRetryConfig provides sensible defaults for the retry configuration
-var DefaultRetryConfig = RetryConfig{
+// DefaultConfig provides sensible defaults for the retry configuration
+var DefaultConfig = Config{
 	MaxRetries: 3,
 	MaxDelay:   30 * time.Second,
 	BaseDelay:  500 * time.Millisecond,
@@ -35,11 +37,11 @@ var DefaultRetryConfig = RetryConfig{
 
 // Retrier provides retry functionality for HTTP requests
 type Retrier struct {
-	config RetryConfig
+	config Config
 }
 
 // NewRetrier creates a new Retrier with the given configuration
-func NewRetrier(config RetryConfig) *Retrier {
+func NewRetrier(config Config) *Retrier {
 	return &Retrier{
 		config: config,
 	}
@@ -55,7 +57,7 @@ func (r *Retrier) Do(ctx context.Context, fn func() (*http.Response, error)) (*h
 	for attempt := 0; attempt <= r.config.MaxRetries; attempt++ {
 		// Check if context is done before making the request
 		if ctx.Err() != nil {
-			return nil, ctx.Err()
+			return nil, fmt.Errorf("context error: %w", ctx.Err())
 		}
 
 		resp, err = fn()
@@ -80,7 +82,7 @@ func (r *Retrier) Do(ctx context.Context, fn func() (*http.Response, error)) (*h
 		select {
 		case <-ctx.Done():
 			timer.Stop()
-			return resp, ctx.Err()
+			return resp, fmt.Errorf("context error: %w", ctx.Err())
 		case <-timer.C:
 			// Continue to the next attempt
 		}
@@ -99,22 +101,48 @@ func (r *Retrier) isRetryableStatusCode(statusCode int) bool {
 	return false
 }
 
-// calculateBackoff computes the backoff delay for a given retry attempt
-// using exponential backoff with jitter
-func (r *Retrier) calculateBackoff(attempt int) time.Duration {
-	// Calculate exponential backoff: baseDelay * 2^attempt
-	backoff := float64(r.config.BaseDelay) * math.Pow(2, float64(attempt))
+// ExecuteWithRetry runs fn with retry logic based on the provided config.
+// It expects fn to return an error; if the error is nil, it returns nil.
+func ExecuteWithRetry(ctx context.Context, fn func() error, cfg *Config) error {
+	var err error
+	for attempt := 0; attempt <= cfg.MaxRetries; attempt++ {
+		if ctx.Err() != nil {
+			return fmt.Errorf("context error: %w", ctx.Err())
+		}
+		err = fn()
+		if err == nil {
+			return nil
+		}
+		delay := calculateBackoff(cfg, attempt)
+		timer := time.NewTimer(delay)
+		select {
+		case <-ctx.Done():
+			timer.Stop()
+			return fmt.Errorf("context error: %w", ctx.Err())
+		case <-timer.C:
+		}
+	}
+	return err
+}
 
-	// Add jitter: random value between 0 and backoff/2
+// calculateBackoff computes the backoff delay for a given retry attempt (stateless version for ExecuteWithRetry)
+func calculateBackoff(cfg *Config, attempt int) time.Duration {
+	backoff := float64(cfg.BaseDelay) * math.Pow(2, float64(attempt))
 	jitter := time.Duration(backoff / 2 * (1 - (0.5 * math.Sin(float64(attempt)))))
-
-	// Calculate final delay
 	delay := time.Duration(backoff) + jitter
+	if delay > cfg.MaxDelay {
+		delay = cfg.MaxDelay
+	}
+	return delay
+}
 
-	// Ensure delay doesn't exceed the maximum
+// calculateBackoff computes the backoff delay for a given retry attempt
+func (r *Retrier) calculateBackoff(attempt int) time.Duration {
+	backoff := float64(r.config.BaseDelay) * math.Pow(2, float64(attempt))
+	jitter := time.Duration(backoff / 2 * (1 - (0.5 * math.Sin(float64(attempt)))))
+	delay := time.Duration(backoff) + jitter
 	if delay > r.config.MaxDelay {
 		delay = r.config.MaxDelay
 	}
-
 	return delay
 }

@@ -17,13 +17,16 @@ func (s *agentService) Get(ctx context.Context, id string) (*Agent, error) {
 	path := fmt.Sprintf("/agents/%s", id)
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create request for Get: %w", err)
 	}
 
 	agent := new(Agent)
-	_, err = s.client.Do(ctx, req, agent)
+	resp, err := s.client.Do(ctx, req, agent)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute request for Get: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
 	}
 
 	return agent, nil
@@ -31,27 +34,16 @@ func (s *agentService) Get(ctx context.Context, id string) (*Agent, error) {
 
 // List returns all agents with optional filtering
 func (s *agentService) List(ctx context.Context, params *AgentListOptions) ([]*Agent, *Pagination, error) {
-	path := "/agents"
 	if params != nil {
-		query, err := addQueryParams(path, params)
-		if err != nil {
-			return nil, nil, err
+		if err := params.Validate(); err != nil {
+			return nil, nil, fmt.Errorf("invalid agent list params: %w", err)
 		}
-		path = query
 	}
-
-	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
 	var agents []*Agent
-	resp, err := s.client.Do(ctx, req, &agents)
+	pagination, err := listResource(ctx, s.client, "/agents", params, &agents)
 	if err != nil {
 		return nil, nil, err
 	}
-
-	pagination := extractPagination(resp)
 	return agents, pagination, nil
 }
 
@@ -60,13 +52,16 @@ func (s *agentService) GetStats(ctx context.Context, id string) (*AgentStatistic
 	path := fmt.Sprintf("/agents/%s/stats", id)
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create request for GetStats: %w", err)
 	}
 
 	stats := new(AgentStatistics)
-	_, err = s.client.Do(ctx, req, stats)
+	resp, err := s.client.Do(ctx, req, stats)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute request for GetStats: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
 	}
 
 	return stats, nil
@@ -81,9 +76,12 @@ func (s *agentService) Update(ctx context.Context, id string, agent map[string]i
 	}
 
 	updatedAgent := new(Agent)
-	_, err = s.client.Do(ctx, req, updatedAgent)
+	resp, err := s.client.Do(ctx, req, updatedAgent)
 	if err != nil {
 		return nil, err
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
 	}
 
 	return updatedAgent, nil
@@ -97,6 +95,13 @@ func (s *agentService) Delete(ctx context.Context, id string) error {
 		return err
 	}
 
-	_, err = s.client.Do(ctx, req, nil)
-	return err
+	resp, err := s.client.Do(ctx, req, nil)
+	if err != nil {
+		return err
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
+
+	return nil
 }

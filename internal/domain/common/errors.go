@@ -1,3 +1,4 @@
+// Package common provides shared domain error types and helpers.
 package common
 
 import (

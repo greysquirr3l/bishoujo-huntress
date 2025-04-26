@@ -1,3 +1,4 @@
+// Package main provides a basic example of using the Bishoujo-Huntress Go client to interact with the Huntress API.
 package main
 
 import (
@@ -5,44 +6,48 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/greysquirr3l/bishoujo-huntress/pkg/huntress"
 )
 
 func main() {
-	// Get API credentials from environment variables
 	apiKey := os.Getenv("HUNTRESS_API_KEY")
 	apiSecret := os.Getenv("HUNTRESS_API_SECRET")
+	baseURL := os.Getenv("HUNTRESS_BASE_URL") // Optional, defaults to production
 
 	if apiKey == "" || apiSecret == "" {
-		log.Fatal("Missing required environment variables: HUNTRESS_API_KEY and/or HUNTRESS_API_SECRET")
+		log.Fatal("HUNTRESS_API_KEY and HUNTRESS_API_SECRET environment variables must be set")
 	}
 
-	// Create a new Huntress client with options
+	// Use the public client constructor from pkg/huntress
 	client := huntress.New(
 		huntress.WithCredentials(apiKey, apiSecret),
-		huntress.WithTimeout(30*time.Second),
-		huntress.WithRetryConfig(3, 500*time.Millisecond, 5*time.Second),
+		huntress.WithTimeout(60*time.Second),
 	)
-
-	// Create a context with timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-	defer cancel()
-
-	// Get the current account
-	fmt.Println("Fetching current account...")
-	account, err := client.Account.GetCurrent(ctx)
-	if err != nil {
-		log.Fatalf("Error fetching account: %v", err)
+	if baseURL != "" {
+		client = huntress.New(
+			huntress.WithCredentials(apiKey, apiSecret),
+			huntress.WithTimeout(60*time.Second),
+			huntress.WithBaseURL(baseURL),
+		)
 	}
 
-	fmt.Printf("Account: %s (ID: %d)\n", account.Name, account.ID)
+	ctx := context.Background()
 
-	// List organizations for the account
+	// Get current account details
+	fmt.Println("Fetching account details...")
+	account, err := client.Account.Get(ctx)
+	if err != nil {
+		log.Fatalf("Error fetching account details: %v", err)
+	}
+	fmt.Printf("Account Name: %s (ID: %s)\n", account.Name, account.ID)
+
+	// List organizations
 	fmt.Println("\nFetching organizations...")
 	orgs, pagination, err := client.Organization.List(ctx, &huntress.OrganizationListOptions{
-		ListOptions: huntress.ListOptions{
+		ListParams: huntress.ListParams{
 			Page:     1,
 			PerPage:  10,
 			SortBy:   "name",
@@ -57,17 +62,24 @@ func main() {
 		len(orgs), pagination.CurrentPage, pagination.TotalPages, pagination.TotalItems)
 
 	for i, org := range orgs {
-		fmt.Printf("%d. %s (ID: %d, Status: %s)\n", i+1, org.Name, org.ID, org.Status)
+		fmt.Printf("%d. %s (ID: %s, Status: %s)\n", i+1, org.Name, org.ID, org.Status)
 
 		// For the first organization, get its agents
 		if i == 0 && len(orgs) > 0 {
 			fmt.Printf("\nFetching agents for organization '%s'...\n", org.Name)
+
+			orgIDInt, err := strconv.Atoi(org.ID)
+			if err != nil {
+				fmt.Printf("Error converting organization ID to int: %v\n", err)
+				continue
+			}
+
 			agents, _, err := client.Agent.List(ctx, &huntress.AgentListOptions{
-				OrganizationID: org.ID,
-				ListOptions: huntress.ListOptions{
+				ListParams: huntress.ListParams{
 					Page:    1,
 					PerPage: 5,
 				},
+				OrganizationID: orgIDInt,
 			})
 			if err != nil {
 				fmt.Printf("Error listing agents: %v\n", err)
@@ -81,12 +93,13 @@ func main() {
 			}
 
 			fmt.Printf("\nFetching incidents for organization '%s'...\n", org.Name)
+
 			incidents, _, err := client.Incident.List(ctx, &huntress.IncidentListOptions{
-				Organization: org.ID,
 				ListOptions: huntress.ListOptions{
 					Page:    1,
 					PerPage: 5,
 				},
+				Organization: orgIDInt,
 			})
 			if err != nil {
 				fmt.Printf("Error listing incidents: %v\n", err)
@@ -103,17 +116,14 @@ func main() {
 
 	// Get account statistics
 	fmt.Println("\nFetching account statistics...")
-	stats, err := client.Account.GetStatistics(ctx, account.ID)
+	stats, err := client.Account.GetStats(ctx)
 	if err != nil {
 		log.Fatalf("Error fetching account statistics: %v", err)
 	}
 
 	fmt.Printf("Account statistics:\n")
 	fmt.Printf("  Organization Count: %d\n", stats.OrganizationCount)
-	fmt.Printf("  Active Agent Count: %d\n", stats.ActiveAgentCount)
-	fmt.Printf("  Total Agent Count: %d\n", stats.TotalAgentCount)
-	fmt.Printf("  Open Incident Count: %d\n", stats.OpenIncidentCount)
-	fmt.Printf("  Total Incident Count: %d\n", stats.TotalIncidentCount)
-
-	fmt.Println("\nExample completed successfully")
+	fmt.Printf("  Agent Count: %d\n", stats.AgentCount)
+	fmt.Printf("  Incident Count: %d\n", stats.IncidentCount)
+	fmt.Printf("  User Count: %d\n", stats.UserCount)
 }

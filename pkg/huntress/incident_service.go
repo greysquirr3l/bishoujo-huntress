@@ -17,13 +17,16 @@ func (s *incidentService) Get(ctx context.Context, id string) (*Incident, error)
 	path := fmt.Sprintf("/incidents/%s", id)
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create request for Get: %w", err)
 	}
 
 	incident := new(Incident)
-	_, err = s.client.Do(ctx, req, incident)
+	resp, err := s.client.Do(ctx, req, incident)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute request for Get: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
 	}
 
 	return incident, nil
@@ -31,44 +34,34 @@ func (s *incidentService) Get(ctx context.Context, id string) (*Incident, error)
 
 // List returns all incidents with optional filtering
 func (s *incidentService) List(ctx context.Context, params *IncidentListOptions) ([]*Incident, *Pagination, error) {
-	path := "/incidents"
 	if params != nil {
-		query, err := addQueryParams(path, params)
-		if err != nil {
-			return nil, nil, err
+		if err := params.Validate(); err != nil {
+			return nil, nil, fmt.Errorf("invalid incident list params: %w", err)
 		}
-		path = query
 	}
-
-	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
 	var incidents []*Incident
-	resp, err := s.client.Do(ctx, req, &incidents)
+	pagination, err := listResource(ctx, s.client, "/incidents", params, &incidents)
 	if err != nil {
 		return nil, nil, err
 	}
-
-	pagination := extractPagination(resp)
 	return incidents, pagination, nil
 }
 
 // UpdateStatus updates the status of an incident
 func (s *incidentService) UpdateStatus(ctx context.Context, id string, status string) (*Incident, error) {
 	path := fmt.Sprintf("/incidents/%s/status", id)
-	req, err := s.client.NewRequest(ctx, http.MethodPatch, path, map[string]string{
-		"status": status,
-	})
+	req, err := s.client.NewRequest(ctx, http.MethodPatch, path, map[string]string{"status": status})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create request for UpdateStatus: %w", err)
 	}
 
 	incident := new(Incident)
-	_, err = s.client.Do(ctx, req, incident)
+	resp, err := s.client.Do(ctx, req, incident)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute request for UpdateStatus: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
 	}
 
 	return incident, nil
@@ -85,9 +78,12 @@ func (s *incidentService) Assign(ctx context.Context, id string, userID string) 
 	}
 
 	incident := new(Incident)
-	_, err = s.client.Do(ctx, req, incident)
+	resp, err := s.client.Do(ctx, req, incident)
 	if err != nil {
 		return nil, err
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
 	}
 
 	return incident, nil

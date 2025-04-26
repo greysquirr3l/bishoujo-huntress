@@ -15,7 +15,7 @@ The Bishoujo-Huntress team takes security issues seriously. We appreciate your e
 To report a security vulnerability, please follow these steps:
 
 1. **DO NOT** create a public GitHub issue for the vulnerability.
-2. Email your findings to [security@example.com](mailto:security@example.com).
+2. Email your findings to [s0ma@proton.me](mailto:s0ma@proton.me).
 3. Include as much information as possible:
    - A detailed description of the vulnerability
    - Steps to reproduce the issue

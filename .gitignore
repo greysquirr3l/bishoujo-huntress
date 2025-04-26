@@ -9,7 +9,7 @@
 /vendor/
 /bin/
 /dist/
-/docs/*.md
+# /docs/*.md
 
 /Godeps/
 

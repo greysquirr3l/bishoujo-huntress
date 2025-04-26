@@ -119,5 +119,9 @@ func parseTime(timeStr string) (time.Time, error) {
 	if timeStr == "" {
 		return time.Time{}, nil
 	}
-	return time.Parse(time.RFC3339, timeStr)
+	t, err := time.Parse(time.RFC3339, timeStr)
+	if err != nil {
+		return time.Time{}, fmt.Errorf("failed to parse time: %w", err)
+	}
+	return t, nil
 }

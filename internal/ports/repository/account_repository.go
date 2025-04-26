@@ -9,7 +9,7 @@ import (
 // AccountFilters defines filters for account queries
 type AccountFilters struct {
 	Search    string
-	Status    *account.AccountStatus
+	Status    *account.Status
 	Page      int
 	Limit     int
 	OrderBy   []OrderBy

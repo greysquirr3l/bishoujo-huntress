@@ -44,7 +44,9 @@ func (r *IncidentRepositoryImpl) Get(ctx context.Context, id string) (*incident.
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute request: %w", err)
 	}
-	defer resp.Body.Close()
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, handleErrorResponse(resp)
@@ -129,7 +131,9 @@ func (r *IncidentRepositoryImpl) List(ctx context.Context, filters repository.In
 	if err != nil {
 		return nil, repository.Pagination{}, fmt.Errorf("failed to execute request: %w", err)
 	}
-	defer resp.Body.Close()
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, repository.Pagination{}, handleErrorResponse(resp)
@@ -176,7 +180,9 @@ func (r *IncidentRepositoryImpl) Create(ctx context.Context, inc *incident.Incid
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	defer resp.Body.Close()
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 
 	if resp.StatusCode != http.StatusCreated {
 		return handleErrorResponse(resp)
@@ -223,7 +229,9 @@ func (r *IncidentRepositoryImpl) Update(ctx context.Context, inc *incident.Incid
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	defer resp.Body.Close()
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 
 	if resp.StatusCode != http.StatusOK {
 		return handleErrorResponse(resp)
@@ -244,7 +252,9 @@ func (r *IncidentRepositoryImpl) Delete(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	defer resp.Body.Close()
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 
 	if resp.StatusCode != http.StatusNoContent {
 		return handleErrorResponse(resp)
@@ -254,7 +264,7 @@ func (r *IncidentRepositoryImpl) Delete(ctx context.Context, id string) error {
 }
 
 // UpdateStatus updates the status of an incident
-func (r *IncidentRepositoryImpl) UpdateStatus(ctx context.Context, id string, status incident.IncidentStatus) error {
+func (r *IncidentRepositoryImpl) UpdateStatus(ctx context.Context, id string, status incident.Status) error {
 	path := fmt.Sprintf("/incidents/%s/status", id)
 
 	// Create request body
@@ -273,7 +283,9 @@ func (r *IncidentRepositoryImpl) UpdateStatus(ctx context.Context, id string, st
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	defer resp.Body.Close()
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 
 	if resp.StatusCode != http.StatusOK {
 		return handleErrorResponse(resp)
@@ -302,7 +314,9 @@ func (r *IncidentRepositoryImpl) UpdateAssignee(ctx context.Context, id string, 
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	defer resp.Body.Close()
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 
 	if resp.StatusCode != http.StatusOK {
 		return handleErrorResponse(resp)
@@ -345,7 +359,9 @@ func (r *IncidentRepositoryImpl) AddNote(ctx context.Context, incidentID string,
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	defer resp.Body.Close()
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 
 	if resp.StatusCode != http.StatusCreated {
 		return handleErrorResponse(resp)
@@ -380,7 +396,9 @@ func (r *IncidentRepositoryImpl) AddIOC(ctx context.Context, incidentID string, 
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	defer resp.Body.Close()
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 
 	if resp.StatusCode != http.StatusCreated {
 		return handleErrorResponse(resp)
@@ -417,7 +435,9 @@ func (r *IncidentRepositoryImpl) AddArtifact(ctx context.Context, incidentID str
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	defer resp.Body.Close()
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 
 	if resp.StatusCode != http.StatusCreated {
 		return handleErrorResponse(resp)
@@ -446,7 +466,9 @@ func (r *IncidentRepositoryImpl) UpdateTags(ctx context.Context, id string, tags
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	defer resp.Body.Close()
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 
 	if resp.StatusCode != http.StatusOK {
 		return handleErrorResponse(resp)

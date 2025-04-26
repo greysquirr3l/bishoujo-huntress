@@ -3,6 +3,7 @@ package organization
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/greysquirr3l/bishoujo-huntress/internal/domain/organization"
 	"github.com/greysquirr3l/bishoujo-huntress/internal/ports/repository"
@@ -74,7 +75,7 @@ func (h *ListOrganizationsHandler) Handle(ctx context.Context, query ListOrganiz
 	// Call repository to get organizations
 	orgs, pagination, err := h.orgRepo.List(ctx, filtersMap)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to list organizations: %w", err)
 	}
 
 	return &ListOrganizationsResult{

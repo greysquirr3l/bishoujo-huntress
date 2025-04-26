@@ -1,3 +1,4 @@
+// Package incident contains the domain model for Huntress incidents.
 package incident
 
 import (
@@ -6,38 +7,38 @@ import (
 	"github.com/google/uuid"
 )
 
-// IncidentStatus represents the status of an incident
-type IncidentStatus string
+// Status represents the status of an incident.
+type Status string
+
+// Severity represents the severity level of an incident.
+type Severity string
+
+// Type represents the type/category of an incident.
+type Type string
 
 // Incident status constants
 const (
-	StatusNew        IncidentStatus = "new"
-	StatusInProgress IncidentStatus = "in_progress"
-	StatusResolved   IncidentStatus = "resolved"
-	StatusClosed     IncidentStatus = "closed"
+	StatusNew        Status = "new"
+	StatusInProgress Status = "in_progress"
+	StatusResolved   Status = "resolved"
+	StatusClosed     Status = "closed"
 )
-
-// IncidentSeverity represents the severity level of an incident
-type IncidentSeverity string
 
 // Incident severity constants
 const (
-	SeverityCritical IncidentSeverity = "critical"
-	SeverityHigh     IncidentSeverity = "high"
-	SeverityMedium   IncidentSeverity = "medium"
-	SeverityLow      IncidentSeverity = "low"
+	SeverityCritical Severity = "critical"
+	SeverityHigh     Severity = "high"
+	SeverityMedium   Severity = "medium"
+	SeverityLow      Severity = "low"
 )
-
-// IncidentType represents the type of an incident
-type IncidentType string
 
 // Incident type constants
 const (
-	TypeMalware      IncidentType = "malware"
-	TypeRansomware   IncidentType = "ransomware"
-	TypePhishing     IncidentType = "phishing"
-	TypeUnauthorized IncidentType = "unauthorized_access"
-	TypeOther        IncidentType = "other"
+	TypeMalware      Type = "malware"
+	TypeRansomware   Type = "ransomware"
+	TypePhishing     Type = "phishing"
+	TypeUnauthorized Type = "unauthorized_access"
+	TypeOther        Type = "other"
 )
 
 // IndicatorOfCompromise (IOC) represents evidence of a potential security breach
@@ -86,9 +87,9 @@ type Incident struct {
 	AgentID        string                  `json:"agent_id"` // Added field based on repository usage
 	Title          string                  `json:"title"`
 	Description    string                  `json:"description"`
-	Status         IncidentStatus          `json:"status"`
-	Severity       IncidentSeverity        `json:"severity"`
-	Type           IncidentType            `json:"type"`
+	Status         Status                  `json:"status"`
+	Severity       Severity                `json:"severity"`
+	Type           Type                    `json:"type"`
 	AssignedTo     string                  `json:"assigned_to"`
 	Reporter       string                  `json:"reporter"`
 	Notes          []Note                  `json:"notes"`

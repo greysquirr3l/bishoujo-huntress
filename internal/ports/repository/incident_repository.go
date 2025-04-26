@@ -11,9 +11,9 @@ import (
 type IncidentFilters struct {
 	OrganizationID *int
 	AgentID        string
-	Status         *incident.IncidentStatus
-	Severity       *incident.IncidentSeverity
-	Type           *incident.IncidentType
+	Status         *incident.Status
+	Severity       *incident.Severity
+	Type           *incident.Type
 	Search         string
 	AssignedTo     string
 	DetectedAfter  *time.Time
@@ -42,7 +42,7 @@ type IncidentRepository interface {
 	Delete(ctx context.Context, id string) error
 
 	// UpdateStatus updates the status of an incident
-	UpdateStatus(ctx context.Context, id string, status incident.IncidentStatus) error
+	UpdateStatus(ctx context.Context, id string, status incident.Status) error
 
 	// UpdateAssignee updates the assignee of an incident
 	UpdateAssignee(ctx context.Context, id string, assignee string) error

@@ -47,6 +47,66 @@ func NewUpdateOrganizationHandler(orgRepo repository.OrganizationRepository) *Up
 	}
 }
 
+// updateAddressFields updates the address fields of the organization if provided in the command.
+func updateAddressFields(addr *organization.Address, cmdAddr struct {
+	Street1 string
+	Street2 string
+	City    string
+	State   string
+	ZipCode string
+	Country string
+}) {
+	if cmdAddr.Street1 != "" {
+		addr.Street1 = cmdAddr.Street1
+	}
+	if cmdAddr.Street2 != "" {
+		addr.Street2 = cmdAddr.Street2
+	}
+	if cmdAddr.City != "" {
+		addr.City = cmdAddr.City
+	}
+	if cmdAddr.State != "" {
+		addr.State = cmdAddr.State
+	}
+	if cmdAddr.ZipCode != "" {
+		addr.ZipCode = cmdAddr.ZipCode
+	}
+	if cmdAddr.Country != "" {
+		addr.Country = cmdAddr.Country
+	}
+}
+
+// updateContactInfoFields updates the contact info fields of the organization if provided in the command.
+func updateContactInfoFields(info *organization.ContactInfo, cmdInfo struct {
+	Name        string
+	Email       string
+	PhoneNumber string
+	Title       string
+}) {
+	if cmdInfo.Name != "" {
+		info.Name = cmdInfo.Name
+	}
+	if cmdInfo.Email != "" {
+		info.Email = cmdInfo.Email
+	}
+	if cmdInfo.PhoneNumber != "" {
+		info.PhoneNumber = cmdInfo.PhoneNumber
+	}
+	if cmdInfo.Title != "" {
+		info.Title = cmdInfo.Title
+	}
+}
+
+// mergeSettings merges the provided settings into the organization's settings.
+func mergeSettings(existing *map[string]interface{}, updates map[string]interface{}) {
+	if *existing == nil {
+		*existing = make(map[string]interface{})
+	}
+	for k, v := range updates {
+		(*existing)[k] = v
+	}
+}
+
 // Handle processes the update organization command
 func (h *UpdateOrganizationHandler) Handle(ctx context.Context, cmd UpdateOrganizationCommand) (*organization.Organization, error) {
 	// Verify that organization ID is provided
@@ -83,55 +143,15 @@ func (h *UpdateOrganizationHandler) Handle(ctx context.Context, cmd UpdateOrgani
 	}
 
 	if cmd.Settings != nil {
-		// Merge settings instead of replacing
-		if existingOrg.Settings == nil {
-			existingOrg.Settings = make(map[string]interface{})
-		}
-		for k, v := range cmd.Settings {
-			existingOrg.Settings[k] = v
-		}
+		mergeSettings(&existingOrg.Settings, cmd.Settings)
 	}
 
-	// Update address if any address field is provided
-	if cmd.Address.Street1 != "" || cmd.Address.Street2 != "" || cmd.Address.City != "" ||
-		cmd.Address.State != "" || cmd.Address.ZipCode != "" || cmd.Address.Country != "" {
-
-		if cmd.Address.Street1 != "" {
-			existingOrg.Address.Street1 = cmd.Address.Street1
-		}
-		if cmd.Address.Street2 != "" {
-			existingOrg.Address.Street2 = cmd.Address.Street2
-		}
-		if cmd.Address.City != "" {
-			existingOrg.Address.City = cmd.Address.City
-		}
-		if cmd.Address.State != "" {
-			existingOrg.Address.State = cmd.Address.State
-		}
-		if cmd.Address.ZipCode != "" {
-			existingOrg.Address.ZipCode = cmd.Address.ZipCode
-		}
-		if cmd.Address.Country != "" {
-			existingOrg.Address.Country = cmd.Address.Country
-		}
+	if cmd.Address.Street1 != "" || cmd.Address.Street2 != "" || cmd.Address.City != "" || cmd.Address.State != "" || cmd.Address.ZipCode != "" || cmd.Address.Country != "" {
+		updateAddressFields(&existingOrg.Address, cmd.Address)
 	}
 
-	// Update contact info if any contact field is provided
-	if cmd.ContactInfo.Name != "" || cmd.ContactInfo.Email != "" ||
-		cmd.ContactInfo.PhoneNumber != "" || cmd.ContactInfo.Title != "" {
-
-		if cmd.ContactInfo.Name != "" {
-			existingOrg.ContactInfo.Name = cmd.ContactInfo.Name
-		}
-		if cmd.ContactInfo.Email != "" {
-			existingOrg.ContactInfo.Email = cmd.ContactInfo.Email
-		}
-		if cmd.ContactInfo.PhoneNumber != "" {
-			existingOrg.ContactInfo.PhoneNumber = cmd.ContactInfo.PhoneNumber
-		}
-		if cmd.ContactInfo.Title != "" {
-			existingOrg.ContactInfo.Title = cmd.ContactInfo.Title
-		}
+	if cmd.ContactInfo.Email != "" || cmd.ContactInfo.PhoneNumber != "" || cmd.ContactInfo.Title != "" {
+		updateContactInfoFields(&existingOrg.ContactInfo, cmd.ContactInfo)
 	}
 
 	// Update the timestamp

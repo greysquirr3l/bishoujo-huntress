@@ -17,13 +17,16 @@ func (s *organizationService) Get(ctx context.Context, id string) (*Organization
 	path := fmt.Sprintf("/organizations/%s", id)
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create request for Get: %w", err)
 	}
 
 	org := new(Organization)
-	_, err = s.client.Do(ctx, req, org)
+	resp, err := s.client.Do(ctx, req, org)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute request for Get: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
 	}
 
 	return org, nil
@@ -31,49 +34,42 @@ func (s *organizationService) Get(ctx context.Context, id string) (*Organization
 
 // List returns all organizations with optional filtering
 func (s *organizationService) List(ctx context.Context, params *ListOrganizationsParams) ([]*Organization, *Pagination, error) {
-	path := "/organizations"
-	if params != nil {
-		query, err := addQueryParams(path, params)
-		if err != nil {
-			return nil, nil, err
-		}
-		path = query
-	}
-
-	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
 	var orgs []*Organization
-	resp, err := s.client.Do(ctx, req, &orgs)
+	pagination, err := listResource(ctx, s.client, "/organizations", params, &orgs)
 	if err != nil {
 		return nil, nil, err
 	}
-
-	pagination := extractPagination(resp)
 	return orgs, pagination, nil
 }
 
 // Create creates a new organization
 func (s *organizationService) Create(ctx context.Context, org *OrganizationCreateParams) (*Organization, error) {
+	if err := org.Validate(); err != nil {
+		return nil, fmt.Errorf("invalid organization params: %w", err)
+	}
 	path := "/organizations"
 	req, err := s.client.NewRequest(ctx, http.MethodPost, path, org)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create request for Create: %w", err)
 	}
 
-	newOrg := new(Organization)
-	_, err = s.client.Do(ctx, req, newOrg)
+	createdOrg := new(Organization)
+	resp, err := s.client.Do(ctx, req, createdOrg)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute request for Create: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
 	}
 
-	return newOrg, nil
+	return createdOrg, nil
 }
 
 // Update updates an existing organization
 func (s *organizationService) Update(ctx context.Context, id string, org *OrganizationUpdateParams) (*Organization, error) {
+	if err := org.Validate(); err != nil {
+		return nil, fmt.Errorf("invalid organization params: %w", err)
+	}
 	path := fmt.Sprintf("/organizations/%s", id)
 	req, err := s.client.NewRequest(ctx, http.MethodPatch, path, org)
 	if err != nil {
@@ -81,24 +77,33 @@ func (s *organizationService) Update(ctx context.Context, id string, org *Organi
 	}
 
 	updatedOrg := new(Organization)
-	_, err = s.client.Do(ctx, req, updatedOrg)
+	resp, err := s.client.Do(ctx, req, updatedOrg)
 	if err != nil {
 		return nil, err
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
 	}
 
 	return updatedOrg, nil
 }
 
 // Delete removes an organization
-func (s *organizationService) Delete(ctx context.Context, id string) error {
-	path := fmt.Sprintf("/organizations/%s", id)
+func (s *organizationService) Delete(ctx context.Context, orgID string) error {
+	path := fmt.Sprintf("/organizations/%s", orgID)
 	req, err := s.client.NewRequest(ctx, http.MethodDelete, path, nil)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create request for Delete: %w", err)
 	}
 
-	_, err = s.client.Do(ctx, req, nil)
-	return err
+	resp, err := s.client.Do(ctx, req, nil)
+	if err != nil {
+		return fmt.Errorf("failed to execute request for Delete: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
+	return nil
 }
 
 // ListUsers returns all users in an organization with optional filtering
@@ -122,6 +127,9 @@ func (s *organizationService) ListUsers(ctx context.Context, orgID string, param
 	if err != nil {
 		return nil, nil, err
 	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 
 	pagination := extractPagination(resp)
 	return users, pagination, nil
@@ -129,6 +137,9 @@ func (s *organizationService) ListUsers(ctx context.Context, orgID string, param
 
 // AddUser adds a user to an organization
 func (s *organizationService) AddUser(ctx context.Context, orgID string, user *UserCreateParams) (*User, error) {
+	if err := user.Validate(); err != nil {
+		return nil, fmt.Errorf("invalid user params: %w", err)
+	}
 	path := fmt.Sprintf("/organizations/%s/users", orgID)
 	req, err := s.client.NewRequest(ctx, http.MethodPost, path, user)
 	if err != nil {
@@ -136,9 +147,12 @@ func (s *organizationService) AddUser(ctx context.Context, orgID string, user *U
 	}
 
 	newUser := new(User)
-	_, err = s.client.Do(ctx, req, newUser)
+	resp, err := s.client.Do(ctx, req, newUser)
 	if err != nil {
 		return nil, err
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
 	}
 
 	return newUser, nil
@@ -149,11 +163,17 @@ func (s *organizationService) RemoveUser(ctx context.Context, orgID string, user
 	path := fmt.Sprintf("/organizations/%s/users/%s", orgID, userID)
 	req, err := s.client.NewRequest(ctx, http.MethodDelete, path, nil)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create request for RemoveUser: %w", err)
 	}
 
-	_, err = s.client.Do(ctx, req, nil)
-	return err
+	resp, err := s.client.Do(ctx, req, nil)
+	if err != nil {
+		return fmt.Errorf("failed to execute request for RemoveUser: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
+	return nil
 }
 
 // URL parameter handling functions have been moved to utils.go

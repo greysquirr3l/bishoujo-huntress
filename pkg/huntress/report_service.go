@@ -17,15 +17,17 @@ type reportService struct {
 func (s *reportService) Generate(ctx context.Context, input *ReportGenerateInput) (*Report, error) {
 	req, err := s.client.NewRequest(ctx, http.MethodPost, "/reports", input)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create request for Generate: %w", err)
 	}
 
 	report := new(Report)
-	_, err = s.client.Do(ctx, req, report)
+	resp, err := s.client.Do(ctx, req, report)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute request for Generate: %w", err)
 	}
-
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 	return report, nil
 }
 
@@ -34,41 +36,27 @@ func (s *reportService) Get(ctx context.Context, id string) (*Report, error) {
 	path := fmt.Sprintf("/reports/%s", id)
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create request for Get: %w", err)
 	}
 
 	report := new(Report)
-	_, err = s.client.Do(ctx, req, report)
+	resp, err := s.client.Do(ctx, req, report)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute request for Get: %w", err)
 	}
-
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 	return report, nil
 }
 
 // List lists reports with optional filtering
 func (s *reportService) List(ctx context.Context, opts *ReportListOptions) ([]*Report, *Pagination, error) {
-	path := "/reports"
-	if opts != nil {
-		query, err := addQueryParams(path, opts)
-		if err != nil {
-			return nil, nil, err
-		}
-		path = query
-	}
-
-	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
 	var reports []*Report
-	resp, err := s.client.Do(ctx, req, &reports)
+	pagination, err := listResource(ctx, s.client, "/reports", opts, &reports)
 	if err != nil {
 		return nil, nil, err
 	}
-
-	pagination := extractPagination(resp)
 	return reports, pagination, nil
 }
 
@@ -81,7 +69,7 @@ func (s *reportService) Download(ctx context.Context, id string, format string) 
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create request for Download: %w", err)
 	}
 
 	// For downloads, we need to handle the raw response
@@ -91,9 +79,11 @@ func (s *reportService) Download(ctx context.Context, id string, format string) 
 
 	resp, err := s.client.httpClient.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute HTTP request for Download: %w", err)
 	}
-	defer resp.Body.Close()
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 
 	// Check for errors
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
@@ -101,7 +91,11 @@ func (s *reportService) Download(ctx context.Context, id string, format string) 
 	}
 
 	// Read the full response body
-	return io.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read response body in Download: %w", err)
+	}
+	return data, nil
 }
 
 // GetSummary retrieves a summary report
@@ -110,22 +104,24 @@ func (s *reportService) GetSummary(ctx context.Context, params *ReportParams) (*
 	if params != nil {
 		query, err := addQueryParams(path, params)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to add query params in GetSummary: %w", err)
 		}
 		path = query
 	}
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create request for GetSummary: %w", err)
 	}
 
 	report := new(SummaryReport)
-	_, err = s.client.Do(ctx, req, report)
+	resp, err := s.client.Do(ctx, req, report)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute request for GetSummary: %w", err)
 	}
-
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 	return report, nil
 }
 
@@ -135,22 +131,24 @@ func (s *reportService) GetDetails(ctx context.Context, params *ReportParams) (*
 	if params != nil {
 		query, err := addQueryParams(path, params)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to add query params in GetDetails: %w", err)
 		}
 		path = query
 	}
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create request for GetDetails: %w", err)
 	}
 
 	report := new(DetailedReport)
-	_, err = s.client.Do(ctx, req, report)
+	resp, err := s.client.Do(ctx, req, report)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute request for GetDetails: %w", err)
 	}
-
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 	return report, nil
 }
 
@@ -159,15 +157,17 @@ func (s *reportService) Schedule(ctx context.Context, params *ReportSchedulePara
 	path := "/reports/schedule"
 	req, err := s.client.NewRequest(ctx, http.MethodPost, path, params)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create request for Schedule: %w", err)
 	}
 
 	schedule := new(ReportSchedule)
-	_, err = s.client.Do(ctx, req, schedule)
+	resp, err := s.client.Do(ctx, req, schedule)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute request for Schedule: %w", err)
 	}
-
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 	return schedule, nil
 }
 
@@ -180,7 +180,7 @@ func (s *reportService) Export(ctx context.Context, params *ReportExportParams) 
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create request for Export: %w", err)
 	}
 
 	// Set Accept header based on format
@@ -202,9 +202,11 @@ func (s *reportService) Export(ctx context.Context, params *ReportExportParams) 
 
 	resp, err := s.client.httpClient.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute HTTP request for Export: %w", err)
 	}
-	defer resp.Body.Close()
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
 
 	// Check for errors
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
@@ -212,5 +214,9 @@ func (s *reportService) Export(ctx context.Context, params *ReportExportParams) 
 	}
 
 	// Read the full response body
-	return io.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read response body in Export: %w", err)
+	}
+	return data, nil
 }

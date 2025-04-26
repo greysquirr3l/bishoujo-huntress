@@ -1,3 +1,4 @@
+// Package errors defines API error types for the Huntress domain.
 package errors
 
 import (

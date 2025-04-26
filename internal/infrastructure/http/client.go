@@ -1,3 +1,4 @@
+// Package http provides the HTTP client and related utilities for the Huntress API client.
 package http
 
 import (
@@ -9,6 +10,8 @@ import (
 	"net/http"
 	"net/url"
 	"time"
+
+	"github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/retry"
 )
 
 // APIError represents an error returned by the Huntress API
@@ -31,8 +34,8 @@ func (e *APIError) Error() string {
 type Client struct {
 	BaseURL     *url.URL
 	HTTPClient  *http.Client
-	ApiKey      string
-	ApiSecret   string
+	APIKey      string
+	APISecret   string
 	UserAgent   string
 	RetryConfig *retry.Config
 }
@@ -49,10 +52,10 @@ func NewClient(baseURL string, apiKey string, apiSecret string, opts ...ClientOp
 		HTTPClient: &http.Client{
 			Timeout: 30 * time.Second,
 		},
-		ApiKey:      apiKey,
-		ApiSecret:   apiSecret,
+		APIKey:      apiKey,
+		APISecret:   apiSecret,
 		UserAgent:   "Bishoujo-Huntress/0.1.0",
-		RetryConfig: retry.DefaultConfig(),
+		RetryConfig: &retry.DefaultConfig,
 	}
 
 	// Apply all client options
@@ -130,8 +133,8 @@ func (c *Client) Do(ctx context.Context, method, path string, body, result inter
 	req.Header.Set("User-Agent", c.UserAgent)
 
 	// Set Basic Auth
-	if c.ApiKey != "" && c.ApiSecret != "" {
-		req.SetBasicAuth(c.ApiKey, c.ApiSecret)
+	if c.APIKey != "" && c.APISecret != "" {
+		req.SetBasicAuth(c.APIKey, c.APISecret)
 	}
 
 	// Set additional headers
@@ -155,15 +158,22 @@ func (c *Client) Do(ctx context.Context, method, path string, body, result inter
 	// Perform the request with retries
 	var resp *http.Response
 	err = retry.ExecuteWithRetry(ctx, func() error {
-		var execErr error
-		resp, execErr = c.HTTPClient.Do(req)
-		return execErr
+		tmpResp, tmpErr := c.HTTPClient.Do(req)
+		if tmpErr != nil {
+			if tmpResp != nil {
+				_ = tmpResp.Body.Close()
+			}
+			return fmt.Errorf("http client do failed: %w", tmpErr)
+		}
+		resp = tmpResp // Only assign to resp if successful
+		return nil
 	}, c.RetryConfig)
-
 	if err != nil {
+		if resp != nil {
+			_ = resp.Body.Close()
+		}
 		return nil, fmt.Errorf("request failed after retries: %w", err)
 	}
-	defer resp.Body.Close()
 
 	// Read the response body
 	respBody, err := io.ReadAll(resp.Body)
