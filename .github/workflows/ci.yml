@@ -74,3 +74,4 @@ jobs:
             git-secrets.txt
             sbom.json
             test-results.txt
+            coverage.txt

@@ -27,6 +27,9 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: results.sarif
+      - name: Run OSSF attestation script
+        run: ./ossf-attest.sh
+
       - name: Upload OSSF attestation artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -38,6 +41,8 @@ jobs:
             git-secrets.txt
             sbom.json
             test-results.txt
+            coverage.txt
+
       - name: Run golangci-lint (v2)
         uses: golangci/golangci-lint-action@v4
         with:

@@ -52,9 +52,9 @@ else
   echo "jq not found, skipping SBOM name/version injection workaround."
 fi
 
-# 5. Test Coverage
-echo "Running tests..."
-make test > "$TEST_OUT" 2>&1 || true
+# 5. Test Coverage (with coverage report)
+echo "Running tests with coverage..."
+go test -coverprofile=coverage.txt ./... > "$TEST_OUT" 2>&1 || true
 
 echo "All OSSF attestation artifacts generated:"
 echo "  $LINT_OUT"
