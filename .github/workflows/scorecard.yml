@@ -18,8 +18,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Run OSSF Scorecard analysis
-        uses: ossf/scorecard-action@v2.3.1
+      - name: OSSF Scorecard action
+        uses: ossf/scorecard-action@v2.4.1
         with:
           results_file: results.sarif
           results_format: sarif
