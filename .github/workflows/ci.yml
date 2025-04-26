@@ -34,11 +34,17 @@ jobs:
       - name: Install dependencies
         run: go mod download
 
-      - name: Run static analysis (golangci-lint)
+      - name: Run golangci-lint (v2)
         uses: golangci/golangci-lint-action@v4
         with:
-          version: latest
+          version: v2.0.0
           args: --timeout=5m
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          only-new-issues: false
+          skip-cache: false
+          skip-pkg-cache: false
+          skip-build-cache: false
+          install-mode: binary
 
       - name: Run tests
         run: make test
