@@ -16,5 +16,26 @@ go test -v ./...
 ?   	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/retry	[no test files]
 ?   	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/logging	[no test files]
 ?   	github.com/greysquirr3l/bishoujo-huntress/internal/ports/repository	[no test files]
-?   	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress	[no test files]
+=== RUN   TestUserCreateParams_Validate
+--- PASS: TestUserCreateParams_Validate (0.00s)
+=== RUN   TestUserUpdateParams_Validate
+--- PASS: TestUserUpdateParams_Validate (0.00s)
+=== RUN   TestClient_New
+--- PASS: TestClient_New (0.00s)
+=== RUN   TestAccountService_Get_NotImplemented
+--- PASS: TestAccountService_Get_NotImplemented (0.34s)
+=== RUN   TestOrganizationCreateParams_Validate
+--- PASS: TestOrganizationCreateParams_Validate (0.00s)
+=== RUN   TestOrganizationUpdateParams_Validate
+--- PASS: TestOrganizationUpdateParams_Validate (0.00s)
+=== RUN   TestPaginationStruct
+--- PASS: TestPaginationStruct (0.00s)
+=== RUN   TestAgentListOptions_Validate
+--- PASS: TestAgentListOptions_Validate (0.00s)
+=== RUN   TestIncidentListOptions_Validate
+--- PASS: TestIncidentListOptions_Validate (0.00s)
+=== RUN   TestWebhookServiceStubbedMethods
+--- PASS: TestWebhookServiceStubbedMethods (0.00s)
+PASS
+ok  	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress	(cached)
 ?   	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress/types	[no test files]
