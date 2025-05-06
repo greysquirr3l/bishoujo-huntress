@@ -17,21 +17,28 @@ jobs:
       security-events: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        # OSSF Scorecard: SHA pinning required for supply chain security
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
       - name: OSSF Scorecard action
-        uses: ossf/scorecard-action@v2.4.1
+        # OSSF Scorecard: SHA pinning required for supply chain security
+        uses: ossf/scorecard-action@ea651e62978af7915d09fe2e282747c798bf2dab # v2.4.1
         with:
           results_file: results.sarif
           results_format: sarif
+
       - name: Upload Scorecard results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
+        # OSSF Scorecard: SHA pinning required for supply chain security
+        uses: github/codeql-action/upload-sarif@60168efe1c415ce0f5521ea06d5c2062adbeed1b # v3.28.17
         with:
           sarif_file: results.sarif
+
       - name: Run OSSF attestation script
         run: ./ossf-attest.sh
 
       - name: Upload OSSF attestation artifacts
-        uses: actions/upload-artifact@v4
+        # OSSF Scorecard: SHA pinning required for supply chain security
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         with:
           name: ossf-attestation
           path: |
@@ -44,7 +51,8 @@ jobs:
             coverage.txt
 
       - name: Run golangci-lint (v2)
-        uses: golangci/golangci-lint-action@v4
+        # OSSF Scorecard: SHA pinning required for supply chain security
+        uses: golangci/golangci-lint-action@3cfe3a4abbb849e10058ce4af15d205b6da42804 # v4.0.0
         with:
           version: v2.0.0
           args: --output.formats=github-actions --timeout=5m

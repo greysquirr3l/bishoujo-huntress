@@ -14,15 +14,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5.0.0
         with:
           go-version: "1.22"
 
       - name: Cache Go modules
-        uses: actions/cache@v4
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
           path: |
             ~/.cache/go-build
@@ -35,7 +35,7 @@ jobs:
         run: go mod download
 
       - name: Run golangci-lint (v2)
-        uses: golangci/golangci-lint-action@v4
+        uses: golangci/golangci-lint-action@3cfe3a4abbb849e10058ce4af15d205b6da42804 # v4.0.0
         with:
           version: v2.0.0
           args: --timeout=5m
@@ -50,28 +50,6 @@ jobs:
         run: make test
 
       - name: Run security scanner (gosec)
-        uses: securego/gosec@master
+        uses: securego/gosec@270b5ce8680a9b04afb94d7b5f2b32b9675e379a # master
         with:
           args: ./...
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          files: ./coverage.out
-        if: always()
-
-      - name: Run OSSF attestation script
-        run: ./ossf-attest.sh
-
-      - name: Upload OSSF attestation artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ossf-attestation
-          path: |
-            golangci-lint.txt
-            gosec.txt
-            govulncheck.txt
-            git-secrets.txt
-            sbom.json
-            test-results.txt
-            coverage.txt

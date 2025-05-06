@@ -17,5 +17,5 @@
 	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/retry		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/logging		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/ports/repository		coverage: 0.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress	0.346s	coverage: 11.8% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress	0.391s	coverage: 11.8% of statements
 	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress/types		coverage: 0.0% of statements

@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:2fdec427-000c-48b1-99a5-74a39143974b",
+  "serialNumber": "urn:uuid:a2a6d654-f248-4b81-89c8-9d81ec5db3d8",
   "version": 1,
   "metadata": {
-    "timestamp": "2025-05-06T08:02:37-04:00",
+    "timestamp": "2025-05-06T08:49:40-04:00",
     "tools": {
       "components": [
         {
@@ -29,12 +29,12 @@
   },
   "components": [
     {
-      "bom-ref": "pkg:github/actions/cache@v4?package-id=5725a169e68be412",
+      "bom-ref": "pkg:github/actions/cache@v4.0.2?package-id=3b75cca42cc5e3a0",
       "type": "library",
       "name": "actions/cache",
-      "version": "v4",
-      "cpe": "cpe:2.3:a:actions\\/cache:actions\\/cache:v4:*:*:*:*:*:*:*",
-      "purl": "pkg:github/actions/cache@v4",
+      "version": "v4.0.2",
+      "cpe": "cpe:2.3:a:actions\\/cache:actions\\/cache:v4.0.2:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/cache@v4.0.2",
       "properties": [
         {
           "name": "syft:package:foundBy",
@@ -55,12 +55,12 @@
       ]
     },
     {
-      "bom-ref": "pkg:github/actions/checkout@v4?package-id=fa2e67b8c20f75f3",
+      "bom-ref": "pkg:github/actions/checkout@v4.1.1?package-id=4467e2f14ec2e247",
       "type": "library",
       "name": "actions/checkout",
-      "version": "v4",
-      "cpe": "cpe:2.3:a:actions\\/checkout:actions\\/checkout:v4:*:*:*:*:*:*:*",
-      "purl": "pkg:github/actions/checkout@v4",
+      "version": "v4.1.1",
+      "cpe": "cpe:2.3:a:actions\\/checkout:actions\\/checkout:v4.1.1:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/checkout@v4.1.1",
       "properties": [
         {
           "name": "syft:package:foundBy",
@@ -81,12 +81,12 @@
       ]
     },
     {
-      "bom-ref": "pkg:github/actions/checkout@v4?package-id=c076af1197c5938f",
+      "bom-ref": "pkg:github/actions/checkout@v4.1.1?package-id=f944653430115232",
       "type": "library",
       "name": "actions/checkout",
-      "version": "v4",
-      "cpe": "cpe:2.3:a:actions\\/checkout:actions\\/checkout:v4:*:*:*:*:*:*:*",
-      "purl": "pkg:github/actions/checkout@v4",
+      "version": "v4.1.1",
+      "cpe": "cpe:2.3:a:actions\\/checkout:actions\\/checkout:v4.1.1:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/checkout@v4.1.1",
       "properties": [
         {
           "name": "syft:package:foundBy",
@@ -107,12 +107,12 @@
       ]
     },
     {
-      "bom-ref": "pkg:github/actions/setup-go@v5?package-id=5a8420ad01a9d4b7",
+      "bom-ref": "pkg:github/actions/setup-go@v5.0.0?package-id=5ea577876a633573",
       "type": "library",
       "name": "actions/setup-go",
-      "version": "v5",
-      "cpe": "cpe:2.3:a:actions\\/setup-go:actions\\/setup-go:v5:*:*:*:*:*:*:*",
-      "purl": "pkg:github/actions/setup-go@v5",
+      "version": "v5.0.0",
+      "cpe": "cpe:2.3:a:actions\\/setup-go:actions\\/setup-go:v5.0.0:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/setup-go@v5.0.0",
       "properties": [
         {
           "name": "syft:package:foundBy",
@@ -128,23 +128,23 @@
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/setup-go:actions\\/setup_go:v5:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/setup-go:actions\\/setup_go:v5.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/setup_go:actions\\/setup-go:v5:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/setup_go:actions\\/setup-go:v5.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/setup_go:actions\\/setup_go:v5:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/setup_go:actions\\/setup_go:v5.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/setup:actions\\/setup-go:v5:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/setup:actions\\/setup-go:v5.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/setup:actions\\/setup_go:v5:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/setup:actions\\/setup_go:v5.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:location:0:path",
@@ -153,12 +153,12 @@
       ]
     },
     {
-      "bom-ref": "pkg:github/actions/upload-artifact@v4?package-id=2350aa1781db3f76",
+      "bom-ref": "pkg:github/actions/upload-artifact@v4.3.1?package-id=40c514cc83a22e9a",
       "type": "library",
       "name": "actions/upload-artifact",
-      "version": "v4",
-      "cpe": "cpe:2.3:a:actions\\/upload-artifact:actions\\/upload-artifact:v4:*:*:*:*:*:*:*",
-      "purl": "pkg:github/actions/upload-artifact@v4",
+      "version": "v4.3.1",
+      "cpe": "cpe:2.3:a:actions\\/upload-artifact:actions\\/upload-artifact:v4.3.1:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/upload-artifact@v4.3.1",
       "properties": [
         {
           "name": "syft:package:foundBy",
@@ -174,119 +174,27 @@
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/upload-artifact:actions\\/upload_artifact:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/upload-artifact:actions\\/upload_artifact:v4.3.1:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/upload_artifact:actions\\/upload-artifact:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/upload_artifact:actions\\/upload-artifact:v4.3.1:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/upload_artifact:actions\\/upload_artifact:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/upload_artifact:actions\\/upload_artifact:v4.3.1:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/upload:actions\\/upload-artifact:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/upload:actions\\/upload-artifact:v4.3.1:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/upload:actions\\/upload_artifact:v4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:location:0:path",
-          "value": "/.github/workflows/ci.yml"
-        }
-      ]
-    },
-    {
-      "bom-ref": "pkg:github/actions/upload-artifact@v4?package-id=b9950d65bf691646",
-      "type": "library",
-      "name": "actions/upload-artifact",
-      "version": "v4",
-      "cpe": "cpe:2.3:a:actions\\/upload-artifact:actions\\/upload-artifact:v4:*:*:*:*:*:*:*",
-      "purl": "pkg:github/actions/upload-artifact@v4",
-      "properties": [
-        {
-          "name": "syft:package:foundBy",
-          "value": "github-actions-usage-cataloger"
-        },
-        {
-          "name": "syft:package:type",
-          "value": "github-action"
-        },
-        {
-          "name": "syft:package:metadataType",
-          "value": "github-actions-use-statement"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/upload-artifact:actions\\/upload_artifact:v4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/upload_artifact:actions\\/upload-artifact:v4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/upload_artifact:actions\\/upload_artifact:v4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/upload:actions\\/upload-artifact:v4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/upload:actions\\/upload_artifact:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/upload:actions\\/upload_artifact:v4.3.1:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:location:0:path",
           "value": "/.github/workflows/scorecard.yml"
-        }
-      ]
-    },
-    {
-      "bom-ref": "pkg:github/codecov/codecov-action@v4?package-id=acb5e39940f4279b",
-      "type": "library",
-      "name": "codecov/codecov-action",
-      "version": "v4",
-      "cpe": "cpe:2.3:a:codecov\\/codecov-action:codecov\\/codecov-action:v4:*:*:*:*:*:*:*",
-      "purl": "pkg:github/codecov/codecov-action@v4",
-      "properties": [
-        {
-          "name": "syft:package:foundBy",
-          "value": "github-actions-usage-cataloger"
-        },
-        {
-          "name": "syft:package:type",
-          "value": "github-action"
-        },
-        {
-          "name": "syft:package:metadataType",
-          "value": "github-actions-use-statement"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:codecov\\/codecov-action:codecov\\/codecov_action:v4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:codecov\\/codecov_action:codecov\\/codecov-action:v4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:codecov\\/codecov_action:codecov\\/codecov_action:v4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:codecov\\/codecov:codecov\\/codecov-action:v4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:codecov\\/codecov:codecov\\/codecov_action:v4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:location:0:path",
-          "value": "/.github/workflows/ci.yml"
         }
       ]
     },
@@ -469,12 +377,12 @@
       ]
     },
     {
-      "bom-ref": "pkg:github/github/codeql-action@v3?package-id=77616ac1ceab854b#upload-sarif",
+      "bom-ref": "pkg:github/github/codeql-action@v3.28.17?package-id=93dca6198f27dc4d#upload-sarif",
       "type": "library",
       "name": "github/codeql-action/upload-sarif",
-      "version": "v3",
-      "cpe": "cpe:2.3:a:github\\/codeql-action\\/upload-sarif:github\\/codeql-action\\/upload-sarif:v3:*:*:*:*:*:*:*",
-      "purl": "pkg:github/github/codeql-action@v3#upload-sarif",
+      "version": "v3.28.17",
+      "cpe": "cpe:2.3:a:github\\/codeql-action\\/upload-sarif:github\\/codeql-action\\/upload-sarif:v3.28.17:*:*:*:*:*:*:*",
+      "purl": "pkg:github/github/codeql-action@v3.28.17#upload-sarif",
       "properties": [
         {
           "name": "syft:package:foundBy",
@@ -490,39 +398,39 @@
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:github\\/codeql-action\\/upload-sarif:github\\/codeql_action\\/upload_sarif:v3:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:github\\/codeql-action\\/upload-sarif:github\\/codeql_action\\/upload_sarif:v3.28.17:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:github\\/codeql_action\\/upload_sarif:github\\/codeql-action\\/upload-sarif:v3:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:github\\/codeql_action\\/upload_sarif:github\\/codeql-action\\/upload-sarif:v3.28.17:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:github\\/codeql_action\\/upload_sarif:github\\/codeql_action\\/upload_sarif:v3:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:github\\/codeql_action\\/upload_sarif:github\\/codeql_action\\/upload_sarif:v3.28.17:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:github\\/codeql-action\\/upload:github\\/codeql-action\\/upload-sarif:v3:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:github\\/codeql-action\\/upload:github\\/codeql-action\\/upload-sarif:v3.28.17:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:github\\/codeql-action\\/upload:github\\/codeql_action\\/upload_sarif:v3:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:github\\/codeql-action\\/upload:github\\/codeql_action\\/upload_sarif:v3.28.17:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:github\\/codeql_action\\/upload:github\\/codeql-action\\/upload-sarif:v3:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:github\\/codeql_action\\/upload:github\\/codeql-action\\/upload-sarif:v3.28.17:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:github\\/codeql_action\\/upload:github\\/codeql_action\\/upload_sarif:v3:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:github\\/codeql_action\\/upload:github\\/codeql_action\\/upload_sarif:v3.28.17:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:github\\/codeql:github\\/codeql-action\\/upload-sarif:v3:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:github\\/codeql:github\\/codeql-action\\/upload-sarif:v3.28.17:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:github\\/codeql:github\\/codeql_action\\/upload_sarif:v3:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:github\\/codeql:github\\/codeql_action\\/upload_sarif:v3.28.17:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:location:0:path",
@@ -531,12 +439,12 @@
       ]
     },
     {
-      "bom-ref": "pkg:github/golangci/golangci-lint-action@v4?package-id=1838b8f10d2124b8",
+      "bom-ref": "pkg:github/golangci/golangci-lint-action@v4.0.0?package-id=58d2f801ab5c8774",
       "type": "library",
       "name": "golangci/golangci-lint-action",
-      "version": "v4",
-      "cpe": "cpe:2.3:a:golangci\\/golangci-lint-action:golangci\\/golangci-lint-action:v4:*:*:*:*:*:*:*",
-      "purl": "pkg:github/golangci/golangci-lint-action@v4",
+      "version": "v4.0.0",
+      "cpe": "cpe:2.3:a:golangci\\/golangci-lint-action:golangci\\/golangci-lint-action:v4.0.0:*:*:*:*:*:*:*",
+      "purl": "pkg:github/golangci/golangci-lint-action@v4.0.0",
       "properties": [
         {
           "name": "syft:package:foundBy",
@@ -552,39 +460,39 @@
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:golangci\\/golangci-lint-action:golangci\\/golangci_lint_action:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci-lint-action:golangci\\/golangci_lint_action:v4.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:golangci\\/golangci_lint_action:golangci\\/golangci-lint-action:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci_lint_action:golangci\\/golangci-lint-action:v4.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:golangci\\/golangci_lint_action:golangci\\/golangci_lint_action:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci_lint_action:golangci\\/golangci_lint_action:v4.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:golangci\\/golangci-lint:golangci\\/golangci-lint-action:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci-lint:golangci\\/golangci-lint-action:v4.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:golangci\\/golangci-lint:golangci\\/golangci_lint_action:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci-lint:golangci\\/golangci_lint_action:v4.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:golangci\\/golangci_lint:golangci\\/golangci-lint-action:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci_lint:golangci\\/golangci-lint-action:v4.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:golangci\\/golangci_lint:golangci\\/golangci_lint_action:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci_lint:golangci\\/golangci_lint_action:v4.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:golangci\\/golangci:golangci\\/golangci-lint-action:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci:golangci\\/golangci-lint-action:v4.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:golangci\\/golangci:golangci\\/golangci_lint_action:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci:golangci\\/golangci_lint_action:v4.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:location:0:path",
@@ -593,12 +501,12 @@
       ]
     },
     {
-      "bom-ref": "pkg:github/golangci/golangci-lint-action@v4?package-id=eacc71803e6fcd91",
+      "bom-ref": "pkg:github/golangci/golangci-lint-action@v4.0.0?package-id=835eefb1eede4fba",
       "type": "library",
       "name": "golangci/golangci-lint-action",
-      "version": "v4",
-      "cpe": "cpe:2.3:a:golangci\\/golangci-lint-action:golangci\\/golangci-lint-action:v4:*:*:*:*:*:*:*",
-      "purl": "pkg:github/golangci/golangci-lint-action@v4",
+      "version": "v4.0.0",
+      "cpe": "cpe:2.3:a:golangci\\/golangci-lint-action:golangci\\/golangci-lint-action:v4.0.0:*:*:*:*:*:*:*",
+      "purl": "pkg:github/golangci/golangci-lint-action@v4.0.0",
       "properties": [
         {
           "name": "syft:package:foundBy",
@@ -614,39 +522,39 @@
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:golangci\\/golangci-lint-action:golangci\\/golangci_lint_action:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci-lint-action:golangci\\/golangci_lint_action:v4.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:golangci\\/golangci_lint_action:golangci\\/golangci-lint-action:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci_lint_action:golangci\\/golangci-lint-action:v4.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:golangci\\/golangci_lint_action:golangci\\/golangci_lint_action:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci_lint_action:golangci\\/golangci_lint_action:v4.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:golangci\\/golangci-lint:golangci\\/golangci-lint-action:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci-lint:golangci\\/golangci-lint-action:v4.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:golangci\\/golangci-lint:golangci\\/golangci_lint_action:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci-lint:golangci\\/golangci_lint_action:v4.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:golangci\\/golangci_lint:golangci\\/golangci-lint-action:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci_lint:golangci\\/golangci-lint-action:v4.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:golangci\\/golangci_lint:golangci\\/golangci_lint_action:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci_lint:golangci\\/golangci_lint_action:v4.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:golangci\\/golangci:golangci\\/golangci-lint-action:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci:golangci\\/golangci-lint-action:v4.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:golangci\\/golangci:golangci\\/golangci_lint_action:v4:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci:golangci\\/golangci_lint_action:v4.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:location:0:path",
@@ -689,7 +597,7 @@
       ]
     },
     {
-      "bom-ref": "pkg:github/ossf/scorecard-action@v2.4.1?package-id=c3eea6ffdade4e03",
+      "bom-ref": "pkg:github/ossf/scorecard-action@v2.4.1?package-id=a2c6ed14305e4cd7",
       "type": "library",
       "name": "ossf/scorecard-action",
       "version": "v2.4.1",
@@ -735,12 +643,12 @@
       ]
     },
     {
-      "bom-ref": "pkg:github/securego/gosec@master?package-id=d11436599de9b754",
+      "bom-ref": "pkg:github/securego/gosec@270b5ce8680a9b04afb94d7b5f2b32b9675e379a?package-id=7ff2380f398bf115",
       "type": "library",
       "name": "securego/gosec",
-      "version": "master",
-      "cpe": "cpe:2.3:a:securego\\/gosec:securego\\/gosec:master:*:*:*:*:*:*:*",
-      "purl": "pkg:github/securego/gosec@master",
+      "version": "270b5ce8680a9b04afb94d7b5f2b32b9675e379a",
+      "cpe": "cpe:2.3:a:securego\\/gosec:securego\\/gosec:270b5ce8680a9b04afb94d7b5f2b32b9675e379a:*:*:*:*:*:*:*",
+      "purl": "pkg:github/securego/gosec@270b5ce8680a9b04afb94d7b5f2b32b9675e379a",
       "properties": [
         {
           "name": "syft:package:foundBy",
@@ -767,11 +675,11 @@
       "hashes": [
         {
           "alg": "SHA-1",
-          "content": "fcb64cea59f1b58ddc6020c532bf25cbb78b9313"
+          "content": "bb4a37596038d54f083f39163e301cbb03784000"
         },
         {
           "alg": "SHA-256",
-          "content": "6332cd73686c35aa25d7316c8659e2876e3c8e1db1a013612c2c26868657647a"
+          "content": "0e3c19a266899cab8b37e67a2ada42880b4cb9cf4e9b03e750fbdef14bb60a1b"
         }
       ]
     },
@@ -782,11 +690,11 @@
       "hashes": [
         {
           "alg": "SHA-1",
-          "content": "019e50ce55d9a63d7dbf1ba305bf7308891c4b7b"
+          "content": "a7684a67e6932cf6d7000fdf89758e9f3992364e"
         },
         {
           "alg": "SHA-256",
-          "content": "c3e1e26b5e0ad0ceadc6e4be6b135d3af02ecf367f94901d48ba750f2fa9f3c9"
+          "content": "5ad2d918022b470e4214dd66dfe0a78b58fc568bebeb6936ddfff353633cd363"
         }
       ]
     },

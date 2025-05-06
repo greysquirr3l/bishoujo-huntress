@@ -20,7 +20,7 @@
 # Test files
 *.test
 *.prof
-coverage.txt
+# coverage.txt
 coverage.html
 
 # IDE

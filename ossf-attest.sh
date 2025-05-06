@@ -12,15 +12,15 @@ GITSECRETS_OUT=git-secrets.txt
 SBOM_OUT=sbom.json
 
 # Project name and version for SBOM workaround
-PROJECT_NAME="bishoujo-huntress"
-PROJECT_VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "dev")
+: "${PROJECT_NAME:=bishoujo-huntress}"
+: "${PROJECT_VERSION:=$(git describe --tags --abbrev=0 2>/dev/null || echo "dev")}"
 
 # Print versions for traceability
 echo "== Tool Versions =="
 golangci-lint --version || true
 gosec --version || true
 govulncheck --version || true
-git secrets --version || true
+git secrets --list || true
 syft version || true
 echo "==================="
 
@@ -42,14 +42,23 @@ go mod tidy
 echo "Running git-secrets..."
 git secrets --scan > "$GITSECRETS_OUT" 2>&1 || true
 
-# 4. SBOM Generation (with workaround for name/version)
+# 4. SBOM Generation (with name/version, pretty-printed)
 echo "Generating SBOM with syft..."
-syft . -o cyclonedx-json > "$SBOM_OUT" 2>&1 || true
+syft . -o cyclonedx-json --source-name "$PROJECT_NAME" --source-version "$PROJECT_VERSION" \
+| jq 'del(.metadata.tools.components[].author)
+      | .metadata.authors = [{"name": "anchore"}]' \
+> "$SBOM_OUT" || true
+
 if command -v jq >/dev/null 2>&1; then
-  echo "Injecting name and version into SBOM (workaround)..."
-  jq --arg name "$PROJECT_NAME" --arg version "$PROJECT_VERSION" '(.name // $name) as $n | (.version // $version) as $v | . + {name: $n, version: $v}' "$SBOM_OUT" > "${SBOM_OUT}.tmp" && mv "${SBOM_OUT}.tmp" "$SBOM_OUT"
+  echo "SBOM generated as a JSON object with name and version fields."
 else
-  echo "jq not found, skipping SBOM name/version injection workaround."
+  echo "jq not found, SBOM may not have name/version fields."
+fi
+
+if command -v jq >/dev/null 2>&1; then
+  echo "SBOM generated as a JSON object with name and version fields."
+else
+  echo "jq not found, SBOM may not have name/version fields."
 fi
 
 # 5. Test Coverage (with coverage report)

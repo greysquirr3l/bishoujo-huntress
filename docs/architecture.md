@@ -14,7 +14,10 @@ This library implements a clean architecture approach with clear separation of c
 4. **Interface Layer**: Provides a clean API for end users
 
 ## Component Architecture
-![architecture](https://raw.githubusercontent.com/greysquirr3l/bishoujo-huntress/main/docs/img/architecture.mmd)
+
+### Component Diagram
+
+The following diagram illustrates the component architecture of the library:
 
 ```mermaid
 %%{init: {"theme": "dark", "themeVariables": { "primaryColor": "#6c2eb6", "primaryTextColor": "#fff", "primaryBorderColor": "#a259f7", "lineColor": "#a259f7", "secondaryColor": "#2d0036", "tertiaryColor": "#1a001f", "fontSize": "16px" }}}%%
