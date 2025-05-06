@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
 
 // reportService implements the ReportService interface
@@ -52,8 +53,36 @@ func (s *reportService) Get(ctx context.Context, id string) (*Report, error) {
 
 // List lists reports with optional filtering
 func (s *reportService) List(ctx context.Context, opts *ReportListOptions) ([]*Report, *Pagination, error) {
+	// Advanced filtering: convert opts to map[string]interface{} using correct types
+	filters := map[string]interface{}{}
+	if opts != nil {
+		if opts.Page > 0 {
+			filters["page"] = opts.Page
+		}
+		if opts.PerPage > 0 {
+			filters["per_page"] = opts.PerPage
+		}
+		if opts.Type != "" {
+			filters["type"] = opts.Type
+		}
+		if opts.Format != "" {
+			filters["format"] = opts.Format
+		}
+		if opts.Status != "" {
+			filters["status"] = opts.Status
+		}
+		if opts.OrganizationID != "" {
+			filters["organization_id"] = opts.OrganizationID
+		}
+		if opts.CreatedAfter != nil {
+			filters["created_after"] = opts.CreatedAfter.Format(time.RFC3339)
+		}
+		if opts.CreatedBefore != nil {
+			filters["created_before"] = opts.CreatedBefore.Format(time.RFC3339)
+		}
+	}
 	var reports []*Report
-	pagination, err := listResource(ctx, s.client, "/reports", opts, &reports)
+	pagination, err := listResource(ctx, s.client, "/reports", filters, &reports)
 	if err != nil {
 		return nil, nil, err
 	}

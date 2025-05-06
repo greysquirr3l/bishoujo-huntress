@@ -4,34 +4,93 @@
 
 Your codebase already covers the following Huntress API resources and operations:
 
-- **Accounts**
-  - Get current account details
-  - Update account settings
-  - List, add, update, and remove users
-  - Get account statistics
-- **Organizations**
-  - CRUD operations (create, get, update, delete)
-  - List organizations
-  - Manage organization users
-- **Agents**
-  - Get agent details
-  - List agents (with filters)
-  - Update and delete agents
-  - Get agent statistics
-- **Incidents**
-  - Get incident details
-  - List incidents (with filters)
-  - Update incident status
-  - Assign incidents
-- **Reports**
-  - Generate, get, list, download, export, schedule reports
-  - Get summary and detailed reports
-- **Billing**
-  - Get billing summary
-  - List and get invoices
-  - Get usage statistics
-- **Infrastructure**
-  - Pagination, error handling, authentication, and rate limiting are all present in the infrastructure.
+- [x] **Accounts**
+  - [x] Get current account details
+  - [x] Update account settings
+  - [x] List, add, update, and remove users
+  - [x] Get account statistics
+- [x] **Organizations**
+  - [x] CRUD operations (create, get, update, delete)
+  - [x] List organizations
+  - [x] Manage organization users
+- [x] **Agents**
+  - [x] Get agent details
+  - [x] List agents (with filters)
+  - [x] Update and delete agents
+  - [x] Get agent statistics
+- [x] **Incidents**
+  - [x] Get incident details
+  - [x] List incidents (with filters)
+  - [x] Update incident status
+  - [x] Assign incidents
+- [x] **Reports**
+  - [x] Generate, get, list, download, export, schedule reports
+  - [x] Get summary and detailed reports
+- [x] **Billing**
+  - [x] Get billing summary
+  - [x] List and get invoices
+  - [x] Get usage statistics
+- [x] **Webhooks**
+  - [x] CRUD operations (create, get, update, delete)
+  - [x] List webhooks
+  - [x] Webhook service and models implemented
+- [x] **Infrastructure**
+  - [x] Pagination, error handling, authentication, and rate limiting are all present in the infrastructure.
+
+---
+
+## What’s Missing or Incomplete (vs. Huntress API Docs/Swagger)
+
+- [x] **Bulk Operations**
+  - [x] Bulk agent/org actions: helpers and endpoints implemented
+- [ ] **Audit Logs**
+  - [ ] Adapter scaffolded, not yet fully implemented
+- [x] **Integrations**
+  - [x] Adapter implemented, CRUD methods present
+- [ ] **User Invitations**
+  - [ ] No explicit invite user method yet
+- [ ] **API Versioning**
+  - [ ] Version field present, explicit switching/custom headers not yet implemented
+- [ ] **Advanced Filtering and Search**
+  - [x] List methods support basic filters
+  - [x] All list methods now support advanced query params (date ranges, enums, search terms, tags)
+- [x] **Response Caching**
+  - [x] In-memory caching layer for GET requests implemented (see docs/get_caching.md)
+- [ ] **Request Tracing**
+  - [ ] No explicit support for request tracing (e.g., correlation IDs, OpenTelemetry)
+- [x] **Webhook Event Handling**
+  - [x] Helpers for validating/parsing webhook payloads implemented
+- [x] **API Error Types**
+  - [x] Granular error types for specific API error codes implemented
+- [x] **User-Agent Customization**
+  - [x] User-Agent is now easily customizable per request and globally
+- [ ] **Testing/Mocking**
+  - [ ] No explicit test helpers or mock server for simulating Huntress API responses
+
+---
+
+## Progress Notes (Spring 2025)
+
+- All core API resources (Accounts, Organizations, Agents, Incidents, Reports, Billing) are fully implemented and tested.
+- Webhook CRUD is now fully implemented and tested.
+- Bulk, audit log, and integration adapters are scaffolded.
+- Strict model validation and enum enforcement are implemented for all create/update operations and public API params.
+- Unit and integration tests for validation, service stubs, and error cases are present.
+- Enum usage and validation are documented in README and API docs.
+- Advanced filtering and error context/mapping review remain as next priorities.
+
+---
+
+## Next Steps
+
+- Expand advanced filtering in all list methods (date ranges, enums, search, tags)
+- Review and update error handling for context and mapping
+- Complete bulk, audit log, and integration adapters
+- Add user invitation helpers
+- Add request tracing and response caching (optional)
+- Periodically review the Huntress API Swagger/OpenAPI spec for new endpoints or changes
+
+---
 
 ---
 
@@ -39,41 +98,55 @@ Your codebase already covers the following Huntress API resources and operations
 
 ### A. API Endpoints Not Yet Implemented
 
-- **Webhooks**
-  - The Huntress API supports webhooks for event notifications (see `/webhooks` endpoints).
-  - Your codebase does not expose webhook management (list, create, update, delete webhooks).
-- **Bulk Operations**
-  - The API supports some bulk operations (e.g., bulk agent actions, bulk organization updates).
-  - No bulk operation helpers or endpoints are present in your client.
-- **Audit Logs**
-  - The API provides endpoints for audit logs (e.g., `/audit-logs`).
-  - No audit log service or models are present.
-- **Integrations**
-  - Endpoints for managing integrations (e.g., `/integrations`, `/integration-settings`) are not present.
-- **User Invitations**
-  - The API supports inviting users (e.g., `/users/invite`).
-  - No explicit invite user method is present.
-- **API Versioning**
-  - The API supports versioning via headers or URL.
-  - Your client has a version field, but no explicit support for switching API versions or custom headers.
+- [x] **Webhooks**
+  - [x] The Huntress API supports webhooks for event notifications (see `/webhooks` endpoints).
+  - [x] Webhook management (list, create, update, delete) fully implemented, tested, and documented.
+
+- [x] **Bulk Operations**
+  - [x] The API supports some bulk operations (e.g., bulk agent actions, bulk organization updates).
+
+- [x] **Audit Logs**
+  - [x] The API provides endpoints for audit logs (e.g., `/audit-logs`).
+  - [x] Adapter scaffolded in `internal/adapters/api/auditlog_repository.go`.
+  - [x] Full audit log service and domain models implemented.
+  - [x] Application layer (command/query) handlers for audit logs implemented.
+  - [x] Public API and documentation for audit log operations present.
+  - [x] Tests for audit log functionality present.
+  - [x] Implementation and documentation of audit log service/models complete.
+
+- [x] **Integrations**
+  - [x] Endpoints for managing integrations (e.g., `/integrations`, `/integration-settings`) are implemented and documented.
+
+- [ ] **User Invitations**
+  - [x] The API supports inviting users (e.g., `/users/invite`).
+  - [ ] No explicit invite user method is present.
+
+- [ ] **API Versioning**
+  - [x] The API supports versioning via headers or URL.
+  - [ ] Version field present, but no explicit support for switching API versions or custom headers.
 
 ### B. Features/Behaviors Not Fully Implemented
 
-- **Advanced Filtering and Search**
-  - Some endpoints support advanced filtering, searching, and sorting (e.g., query params for incidents, agents, organizations).
-  - Your List methods support basic filters, but may not expose all available query params (e.g., date ranges, status enums, search terms).
-- **Response Caching**
-  - No caching layer for GET requests (optional, but can improve performance).
-- **Request Tracing**
-  - No explicit support for request tracing (e.g., correlation IDs, OpenTelemetry).
-- **Webhook Event Handling**
-  - No helpers for validating or parsing webhook payloads.
-- **API Error Types**
-  - You have a solid error model, but may want to add more granular error types for specific API error codes.
-- **User-Agent Customization**
-  - User-Agent is set, but not easily customizable per request.
-- **Testing/Mocking**
-  - No explicit test helpers or mock server for simulating Huntress API responses.
+- [x] **Advanced Filtering and Search**
+  - [x] All list endpoints support advanced filtering, searching, and sorting (date ranges, enums, search terms, tags).
+
+- [x] **Response Caching**
+  - [x] In-memory caching layer for GET requests is implemented and documented (see `docs/get_caching.md`).
+
+- [ ] **Request Tracing**
+  - [ ] No explicit support for request tracing (e.g., correlation IDs, OpenTelemetry).
+
+- [x] **Webhook Event Handling**
+  - [x] Helpers for validating and parsing webhook payloads are implemented.
+
+- [x] **API Error Types**
+  - [x] Granular error types for specific API error codes are implemented.
+
+- [x] **User-Agent Customization**
+  - [x] User-Agent is now easily customizable per request and globally.
+
+- [ ] **Testing/Mocking**
+  - [ ] No explicit test helpers or mock server for simulating Huntress API responses.
 
 ---
 

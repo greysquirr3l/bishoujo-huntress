@@ -24,6 +24,18 @@ type InternalAPIError struct {
 	StatusCode int    `json:"-"` // Not part of the JSON response, set from HTTP status code
 }
 
+// Granular API error types for specific Huntress API error codes
+var (
+	ErrWebhookValidationFailed = &APIError{internal: &InternalAPIError{StatusCode: 422, Code: "WEBHOOK_VALIDATION_FAILED", Message: "Webhook payload validation failed"}}
+	ErrWebhookParseFailed      = &APIError{internal: &InternalAPIError{StatusCode: 400, Code: "WEBHOOK_PARSE_FAILED", Message: "Webhook payload could not be parsed"}}
+	ErrAgentNotFound           = &APIError{internal: &InternalAPIError{StatusCode: 404, Code: "AGENT_NOT_FOUND", Message: "Agent not found"}}
+	ErrOrgNotFound             = &APIError{internal: &InternalAPIError{StatusCode: 404, Code: "ORG_NOT_FOUND", Message: "Organization not found"}}
+	ErrWebhookNotFound         = &APIError{internal: &InternalAPIError{StatusCode: 404, Code: "WEBHOOK_NOT_FOUND", Message: "Webhook not found"}}
+	ErrIntegrationNotFound     = &APIError{internal: &InternalAPIError{StatusCode: 404, Code: "INTEGRATION_NOT_FOUND", Message: "Integration not found"}}
+	ErrInvalidEventType        = &APIError{internal: &InternalAPIError{StatusCode: 400, Code: "INVALID_EVENT_TYPE", Message: "Invalid event type for webhook"}}
+	// Add more as needed for other API error codes
+)
+
 func (e *InternalAPIError) Error() string {
 	if e.Details != "" {
 		return fmt.Sprintf("[%s] %s: %s", e.Code, e.Message, e.Details)

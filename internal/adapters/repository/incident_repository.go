@@ -6,8 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/url"
-	"strconv"
 	"strings"
 	"time"
 
@@ -70,53 +68,35 @@ func (r *IncidentRepositoryImpl) Get(ctx context.Context, id string) (*incident.
 // List retrieves multiple incidents based on filters
 func (r *IncidentRepositoryImpl) List(ctx context.Context, filters repository.IncidentFilters) ([]*incident.Incident, repository.Pagination, error) {
 	// Construct query parameters
-	query := url.Values{}
-	if filters.Page > 0 {
-		query.Set("page", strconv.Itoa(filters.Page))
-	}
-	if filters.Limit > 0 {
-		query.Set("limit", strconv.Itoa(filters.Limit))
-	}
-	if filters.OrganizationID != nil {
-		query.Set("organization_id", strconv.Itoa(*filters.OrganizationID))
-	}
-	if filters.AgentID != "" {
-		query.Set("agent_id", filters.AgentID)
-	}
-	if filters.Status != nil {
-		query.Set("status", string(*filters.Status))
-	}
-	if filters.Severity != nil {
-		query.Set("severity", string(*filters.Severity))
-	}
-	if filters.Type != nil {
-		query.Set("type", string(*filters.Type))
-	}
-	if filters.Search != "" {
-		query.Set("search", filters.Search)
-	}
-	if filters.AssignedTo != "" {
-		query.Set("assigned_to", filters.AssignedTo)
+	// Convert filters to map[string]interface{} for advanced filtering
+	filtersMap := map[string]interface{}{
+		"page":            filters.Page,
+		"limit":           filters.Limit,
+		"organization_id": filters.OrganizationID,
+		"agent_id":        filters.AgentID,
+		"status":          filters.Status,
+		"severity":        filters.Severity,
+		"type":            filters.Type,
+		"search":          filters.Search,
+		"assigned_to":     filters.AssignedTo,
+		"tags":            filters.Tags,
 	}
 	if filters.DetectedAfter != nil {
-		query.Set("detected_after", filters.DetectedAfter.Format(time.RFC3339))
+		filtersMap["detected_after"] = filters.DetectedAfter.Format(time.RFC3339)
 	}
 	if filters.DetectedBefore != nil {
-		query.Set("detected_before", filters.DetectedBefore.Format(time.RFC3339))
-	}
-	// Add tags if present
-	for _, tag := range filters.Tags {
-		query.Add("tags", tag)
+		filtersMap["detected_before"] = filters.DetectedBefore.Format(time.RFC3339)
 	}
 	// Add ordering
-	for _, order := range filters.OrderBy {
+	for i, order := range filters.OrderBy {
+		key := fmt.Sprintf("sort%d", i)
 		direction := "asc"
 		if order.Direction == repository.OrderDesc {
 			direction = "desc"
 		}
-		query.Add("sort", fmt.Sprintf("%s:%s", order.Field, direction))
+		filtersMap[key] = fmt.Sprintf("%s:%s", order.Field, direction)
 	}
-
+	query := buildQueryParams(filtersMap)
 	path := "/incidents"
 	if len(query) > 0 {
 		path += "?" + query.Encode()

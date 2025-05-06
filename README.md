@@ -1,3 +1,4 @@
+
 # Bishoujo Huntress
 
 <img src="docs/img/bishoujo-huntress_crop.png" alt="Bishoujo Huntress Logo" width="600">
@@ -109,6 +110,237 @@ incidents, err := client.Incident.List(ctx, &incident.ListParams{
 	Page:       1,
 	Limit:      25,
 })
+```
+
+### Working with Audit Logs
+
+```go
+// List audit logs
+logs, pagination, err := client.AuditLog.List(ctx, &huntress.AuditLogListParams{
+	StartTime:    nil, // or &startTime
+	EndTime:      nil, // or &endTime
+	Actor:        nil, // or &actor
+	Action:       nil, // or &action
+	ResourceType: nil, // or &resourceType
+	ResourceID:   nil, // or &resourceID
+	Page:         1,
+	Limit:        20,
+})
+
+if err != nil {
+	log.Fatalf("Failed to list audit logs: %v", err)
+}
+
+for _, entry := range logs {
+	fmt.Printf("AuditLog: %s %s %s\n", entry.Timestamp, entry.Actor, entry.Action)
+}
+
+// Get a specific audit log entry
+logEntry, err := client.AuditLog.Get(ctx, "auditlog-id")
+
+if err != nil {
+	log.Fatalf("Failed to get audit log: %v", err)
+}
+
+fmt.Printf("AuditLog: %+v\n", logEntry)
+```
+
+### Working with Reports
+
+```go
+// Generate a report
+report, err := client.Report.Generate(ctx, &huntress.ReportGenerateOptions{
+	OrganizationID: orgID,
+	ReportType:     huntress.ReportTypeIncident,
+	StartDate:      time.Now().AddDate(0, -1, 0),
+	EndDate:        time.Now(),
+})
+
+if err != nil {
+	log.Fatalf("Failed to generate report: %v", err)
+}
+
+fmt.Printf("Report ID: %s\n", report.ID)
+
+// Get report details
+reportDetails, err := client.Report.Get(ctx, report.ID)
+
+if err != nil {
+	log.Fatalf("Failed to get report: %v", err)
+}
+
+fmt.Printf("Report Details: %+v\n", reportDetails)
+
+// Download report
+reportData, err := client.Report.Download(ctx, report.ID)
+
+if err != nil {
+	log.Fatalf("Failed to download report: %v", err)
+}
+
+fmt.Printf("Report Data: %s\n", string(reportData))
+```
+
+### Working with Webhooks
+
+```go
+// Create a new webhook
+webhook, err := client.Webhook.Create(ctx, &huntress.WebhookCreateOptions{
+	URL:         "https://example.com/webhook",
+	Description: "My Webhook",
+	Events:      []string{"incident.created", "incident.updated"},
+})
+
+if err != nil {
+	log.Fatalf("Failed to create webhook: %v", err)
+}
+
+fmt.Printf("Webhook ID: %s\n", webhook.ID)
+
+// List webhooks
+webhooks, err := client.Webhook.List(ctx)
+
+if err != nil {
+	log.Fatalf("Failed to list webhooks: %v", err)
+}
+
+for _, wh := range webhooks {
+	fmt.Printf("Webhook: %s (ID: %s)\n", wh.Description, wh.ID)
+}
+
+// Get a specific webhook
+wh, err := client.Webhook.Get(ctx, webhook.ID)
+
+if err != nil {
+	log.Fatalf("Failed to get webhook: %v", err)
+}
+
+fmt.Printf("Webhook Details: %+v\n", wh)
+
+// Update a webhook
+wh, err = client.Webhook.Update(ctx, webhook.ID, &huntress.WebhookUpdateOptions{
+	Description: "Updated Webhook",
+})
+
+if err != nil {
+	log.Fatalf("Failed to update webhook: %v", err)
+}
+
+fmt.Printf("Updated Webhook: %+v\n", wh)
+
+// Delete a webhook
+err = client.Webhook.Delete(ctx, webhook.ID)
+
+if err != nil {
+	log.Fatalf("Failed to delete webhook: %v", err)
+}
+
+fmt.Println("Webhook deleted successfully")
+```
+
+### Working with Billing
+
+```go
+// Get billing summary
+billingSummary, err := client.Billing.GetSummary(ctx)
+
+if err != nil {
+	log.Fatalf("Failed to get billing summary: %v", err)
+}
+
+fmt.Printf("Billing Summary: %+v\n", billingSummary)
+
+// List invoices
+invoices, err := client.Billing.ListInvoices(ctx, &huntress.BillingListInvoicesOptions{
+	Page:    1,
+	PerPage: 10,
+})
+
+if err != nil {
+	log.Fatalf("Failed to list invoices: %v", err)
+}
+
+for _, invoice := range invoices {
+	fmt.Printf("Invoice: %s (ID: %s)\n", invoice.Description, invoice.ID)
+}
+
+// Get a specific invoice
+invoice, err := client.Billing.GetInvoice(ctx, "invoice-id")
+
+if err != nil {
+	log.Fatalf("Failed to get invoice: %v", err)
+}
+
+fmt.Printf("Invoice Details: %+v\n", invoice)
+
+// Get usage statistics
+usageStats, err := client.Billing.GetUsageStatistics(ctx)
+
+if err != nil {
+	log.Fatalf("Failed to get usage statistics: %v", err)
+}
+
+fmt.Printf("Usage Statistics: %+v\n", usageStats)
+```
+
+### Working with Users
+
+```go
+// List users
+users, err := client.User.List(ctx, &huntress.UserListOptions{
+	Page:    1,
+	PerPage: 10,
+})
+
+if err != nil {
+	log.Fatalf("Failed to list users: %v", err)
+}
+
+for _, user := range users {
+	fmt.Printf("User: %s (ID: %s)\n", user.Name, user.ID)
+}
+
+// Get a specific user
+user, err := client.User.Get(ctx, "user-id")
+
+if err != nil {
+	log.Fatalf("Failed to get user: %v", err)
+}
+
+fmt.Printf("User Details: %+v\n", user)
+
+// Create a new user
+newUser, err := client.User.Create(ctx, &huntress.UserCreateOptions{
+	Email:    "user@example.com",
+	Name:     "New User",
+	Password:  "password123",
+})
+
+if err != nil {
+	log.Fatalf("Failed to create user: %v", err)
+}
+
+fmt.Printf("New User: %+v\n", newUser)
+
+// Update a user
+updatedUser, err := client.User.Update(ctx, newUser.ID, &huntress.UserUpdateOptions{
+	Name: "Updated User",
+})
+
+if err != nil {
+	log.Fatalf("Failed to update user: %v", err)
+}
+
+fmt.Printf("Updated User: %+v\n", updatedUser)
+
+// Delete a user
+err = client.User.Delete(ctx, newUser.ID)
+
+if err != nil {
+	log.Fatalf("Failed to delete user: %v", err)
+}
+
+fmt.Println("User deleted successfully")
 ```
 
 ## 🏛 Architecture

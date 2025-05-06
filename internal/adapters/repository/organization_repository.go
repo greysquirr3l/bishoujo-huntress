@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/url"
 	"strconv"
 	"time"
 
@@ -60,50 +59,15 @@ func (r *OrganizationRepositoryImpl) Get(ctx context.Context, id string) (*organ
 
 // List retrieves multiple organizations based on filters
 func (r *OrganizationRepositoryImpl) List(ctx context.Context, filters map[string]interface{}) ([]*organization.Organization, *repository.Pagination, error) {
-	// Construct query parameters
-	query := url.Values{}
-
-	// Add page and per page if provided in filters
-	if page, ok := filters["page"].(int); ok && page > 0 {
-		query.Set("page", strconv.Itoa(page))
-	}
-
-	if perPage, ok := filters["per_page"].(int); ok && perPage > 0 {
-		query.Set("per_page", strconv.Itoa(perPage))
-	}
-
-	// Add status filter if provided
-	if status, ok := filters["status"].(string); ok && status != "" {
-		query.Set("status", status)
-	}
-
-	// Add search filter if provided
-	if search, ok := filters["search"].(string); ok && search != "" {
-		query.Set("search", search)
-	}
-
-	// Add account ID filter if provided
-	if accountID, ok := filters["account_id"].(int); ok && accountID > 0 {
-		query.Set("account_id", strconv.Itoa(accountID))
-	}
-
-	// Add tags filter if provided
-	if tags, ok := filters["tags"].([]string); ok && len(tags) > 0 {
-		for _, tag := range tags {
-			query.Add("tags", tag)
-		}
-	}
-
+	query := buildQueryParams(filters)
 	path := "/organizations"
 	if len(query) > 0 {
 		path += "?" + query.Encode()
 	}
-
 	req, err := createRequest(ctx, http.MethodGet, r.baseURL+path, nil, r.authHeaders)
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to create request: %w", err)
 	}
-
 	resp, err := r.httpClient.Do(req)
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to execute request: %w", err)
@@ -111,29 +75,24 @@ func (r *OrganizationRepositoryImpl) List(ctx context.Context, filters map[strin
 	if resp != nil {
 		defer func() { _ = resp.Body.Close() }()
 	}
-
 	if resp.StatusCode != http.StatusOK {
 		return nil, nil, handleErrorResponse(resp)
 	}
-
 	var orgDTOs []organizationDTO
 	if err := json.NewDecoder(resp.Body).Decode(&orgDTOs); err != nil {
 		return nil, nil, fmt.Errorf("failed to decode response: %w", err)
 	}
-
 	// Extract pagination information from headers
 	pagination := extractPagination(resp.Header)
-
 	// Convert DTOs to domain entities
 	orgs := make([]*organization.Organization, len(orgDTOs))
 	for i, dto := range orgDTOs {
 		org, err := mapDTOToOrganization(&dto)
 		if err != nil {
-			return nil, nil, err
+			return nil, nil, fmt.Errorf("failed to convert organization DTO to domain model at index %d: %w", i, err)
 		}
 		orgs[i] = org
 	}
-
 	return orgs, &pagination, nil
 }
 

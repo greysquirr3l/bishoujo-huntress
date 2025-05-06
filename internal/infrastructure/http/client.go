@@ -76,11 +76,17 @@ func WithHTTPClient(httpClient *http.Client) ClientOption {
 	}
 }
 
-// WithUserAgent sets the User-Agent header for requests
+// WithUserAgent sets the default User-Agent header for requests
 func WithUserAgent(userAgent string) ClientOption {
 	return func(c *Client) {
 		c.UserAgent = userAgent
 	}
+}
+
+// WithPerRequestUserAgent allows setting a custom User-Agent per request via context or RequestOptions
+func WithPerRequestUserAgent() ClientOption {
+	// This is a no-op; actual per-request logic is handled in Do()
+	return func(c *Client) {}
 }
 
 // WithRetryConfig sets the retry configuration

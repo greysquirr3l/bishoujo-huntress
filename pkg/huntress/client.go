@@ -13,6 +13,26 @@ import (
 	"github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/logging"
 )
 
+type BulkService interface {
+	BulkAgentAction(ctx context.Context, action string, agentIDs []string, payload interface{}) (map[string]interface{}, error)
+	BulkOrgAction(ctx context.Context, action string, orgIDs []string, payload interface{}) (map[string]interface{}, error)
+}
+
+// AuditLogService provides access to audit logs (typed).
+type AuditLogService interface {
+	List(ctx context.Context, params *AuditLogListParams) ([]*AuditLog, *Pagination, error)
+	Get(ctx context.Context, id string) (*AuditLog, error)
+}
+
+// IntegrationService provides access to integrations.
+type IntegrationService interface {
+	List(ctx context.Context, params map[string]string) ([]map[string]interface{}, error)
+	Get(ctx context.Context, id string) (map[string]interface{}, error)
+	Create(ctx context.Context, integration map[string]interface{}) (map[string]interface{}, error)
+	Update(ctx context.Context, id string, integration map[string]interface{}) (map[string]interface{}, error)
+	Delete(ctx context.Context, id string) error
+}
+
 // RateLimiter defines the interface for rate limiting API requests
 type RateLimiter interface {
 	Wait(ctx context.Context) error
@@ -30,6 +50,8 @@ type Client struct {
 	rateLimiter RateLimiter
 	Logger      logging.Logger
 
+	cache *Cache // Optional: in-memory cache for GET requests
+
 	// Services for interacting with different API parts
 	Account      AccountService
 	Agent        AgentService
@@ -37,7 +59,8 @@ type Client struct {
 	Incident     IncidentService
 	Report       ReportService
 	Billing      BillingService
-	Webhook      WebhookService // <-- Added for webhook support
+	Webhook      WebhookService
+	AuditLog     AuditLogService
 }
 
 // New creates a new Huntress API client
@@ -74,7 +97,13 @@ func New(opts ...Option) *Client {
 		Logger:      options.logger,
 	}
 
+	// Enable response caching for GET requests if requested
+	if options.cacheTTL > 0 {
+		client.cache = NewCache(options.cacheTTL)
+	}
+
 	// Initialize services
+
 	client.Account = &accountService{client: client}
 	client.Agent = &agentService{client: client}
 	client.Organization = &organizationService{client: client}
@@ -82,6 +111,10 @@ func New(opts ...Option) *Client {
 	client.Report = &reportService{client: client}
 	client.Billing = &billingService{client: client}
 	client.Webhook = NewWebhookService(client)
+
+	// Wire up audit log service
+	auditlogRepo := newInternalAuditLogRepo(client)
+	client.AuditLog = &auditLogService{repo: auditlogRepo}
 
 	return client
 }
@@ -117,6 +150,18 @@ func (c *Client) NewRequest(ctx context.Context, method, path string, body inter
 
 // Do sends an API request and returns the response
 func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*http.Response, error) {
+	// Response caching for GET requests
+	if c.cache != nil && req.Method == http.MethodGet && v != nil {
+		key := CacheKey(req)
+		if cached := c.cache.Get(key); cached != nil {
+			if err := json.Unmarshal(cached, v); err == nil {
+				if c.Logger != nil {
+					c.Logger.Debug("Cache hit", logging.String("url", req.URL.String()))
+				}
+				return nil, nil // No HTTP response, but data is filled
+			}
+		}
+	}
 	if c.Logger != nil {
 		c.Logger.Debug("Sending request", logging.String("method", req.Method), logging.String("url", req.URL.String()))
 	}
@@ -152,12 +197,24 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 		return resp, fmt.Errorf("API error: status code %d, body: %s", resp.StatusCode, string(bodyBytes))
 	}
 
-	// Decode the response
-	if err := json.NewDecoder(resp.Body).Decode(v); err != nil {
+	// Read and cache the response body
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		if c.Logger != nil {
+			c.Logger.Error("Error reading response body", logging.Error("error", err))
+		}
+		return resp, fmt.Errorf("error reading response body: %w", err)
+	}
+	if err := json.Unmarshal(bodyBytes, v); err != nil {
 		if c.Logger != nil {
 			c.Logger.Error("Error decoding response", logging.Error("error", err))
 		}
 		return resp, fmt.Errorf("error decoding response: %w", err)
+	}
+	// Store in cache
+	if c.cache != nil && req.Method == http.MethodGet {
+		key := CacheKey(req)
+		c.cache.Set(key, bodyBytes)
 	}
 	return resp, nil
 }

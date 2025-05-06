@@ -7,12 +7,49 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"strconv"
 	"time"
 
 	"github.com/greysquirr3l/bishoujo-huntress/internal/domain/errors"
 	"github.com/greysquirr3l/bishoujo-huntress/internal/ports/repository"
 )
+
+// buildQueryParams builds url.Values from a map[string]interface{} for advanced filtering.
+func buildQueryParams(filters map[string]interface{}) url.Values {
+	query := url.Values{}
+	for k, v := range filters {
+		switch val := v.(type) {
+		case string:
+			if val != "" {
+				query.Set(k, val)
+			}
+		case int:
+			if val > 0 {
+				query.Set(k, strconv.Itoa(val))
+			}
+		case []string:
+			for _, s := range val {
+				query.Add(k, s)
+			}
+		case bool:
+			query.Set(k, strconv.FormatBool(val))
+		case *string:
+			if val != nil && *val != "" {
+				query.Set(k, *val)
+			}
+		case *int:
+			if val != nil && *val > 0 {
+				query.Set(k, strconv.Itoa(*val))
+			}
+		case *bool:
+			if val != nil {
+				query.Set(k, strconv.FormatBool(*val))
+			}
+		}
+	}
+	return query
+}
 
 // HTTPClient defines the interface for an HTTP client
 type HTTPClient interface {
@@ -46,9 +83,10 @@ func createRequest(ctx context.Context, method, url string, body []byte, headers
 // handleErrorResponse translates HTTP errors into domain errors
 func handleErrorResponse(resp *http.Response) error {
 	var apiError struct {
-		Code    string `json:"code"`
-		Message string `json:"message"`
-		Details string `json:"details,omitempty"`
+		Code      string `json:"code"`
+		Message   string `json:"message"`
+		Details   string `json:"details,omitempty"`
+		RequestID string `json:"request_id,omitempty"`
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(&apiError); err != nil {
@@ -66,11 +104,20 @@ func handleErrorResponse(resp *http.Response) error {
 		apiError.Code = "API_ERROR"
 	}
 
+	// Attach request ID to details if present
+	details := apiError.Details
+	if apiError.RequestID != "" {
+		if details != "" {
+			details += "; "
+		}
+		details += "request_id=" + apiError.RequestID
+	}
+
 	return errors.NewAPIError(
 		resp.StatusCode,
 		apiError.Code,
 		apiError.Message,
-		apiError.Details,
+		details,
 	)
 }
 

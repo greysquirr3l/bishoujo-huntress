@@ -68,3 +68,12 @@ const (
 	ErrCodeUnauthorized = "UNAUTHORIZED"
 	ErrCodeConflict     = "CONFLICT"
 )
+
+var (
+	ErrInvalidID         = NewDomainError(ErrCodeValidation, "invalid ID", nil)
+	ErrInvalidTimestamp  = NewDomainError(ErrCodeValidation, "invalid timestamp", nil)
+	ErrEmptyActor        = NewDomainError(ErrCodeValidation, "actor is required", nil)
+	ErrEmptyAction       = NewDomainError(ErrCodeValidation, "action is required", nil)
+	ErrEmptyResourceType = NewDomainError(ErrCodeValidation, "resource type is required", nil)
+	ErrEmptyResourceID   = NewDomainError(ErrCodeValidation, "resource ID is required", nil)
+)

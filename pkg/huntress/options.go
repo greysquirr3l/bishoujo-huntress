@@ -20,8 +20,16 @@ type clientOptions struct {
 	rateLimiter RateLimiter
 	retryConfig *retryConfig
 	debug       bool
+	cacheTTL    time.Duration // TTL for GET response cache
 	// logger is an optional structured logger for the client. If nil, logging is disabled.
 	logger logging.Logger
+}
+
+// WithCacheTTL enables GET response caching with the given TTL.
+func WithCacheTTL(ttl time.Duration) Option {
+	return func(o *clientOptions) {
+		o.cacheTTL = ttl
+	}
 }
 
 // retryConfig defines retry behavior for API requests

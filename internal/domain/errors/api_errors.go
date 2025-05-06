@@ -6,6 +6,18 @@ import (
 	"net/http"
 )
 
+// More granular API error types for specific Huntress API error codes
+var (
+	ErrWebhookValidationFailed = NewAPIError(422, "WEBHOOK_VALIDATION_FAILED", "Webhook payload validation failed", "")
+	ErrWebhookParseFailed      = NewAPIError(400, "WEBHOOK_PARSE_FAILED", "Webhook payload could not be parsed", "")
+	ErrAgentNotFound           = NewAPIError(404, "AGENT_NOT_FOUND", "Agent not found", "")
+	ErrOrgNotFound             = NewAPIError(404, "ORG_NOT_FOUND", "Organization not found", "")
+	ErrWebhookNotFound         = NewAPIError(404, "WEBHOOK_NOT_FOUND", "Webhook not found", "")
+	ErrIntegrationNotFound     = NewAPIError(404, "INTEGRATION_NOT_FOUND", "Integration not found", "")
+	ErrInvalidEventType        = NewAPIError(400, "INVALID_EVENT_TYPE", "Invalid event type for webhook", "")
+	// Add more as needed for other API error codes
+)
+
 // APIError represents an error returned by the API
 type APIError struct {
 	StatusCode int    `json:"-"`

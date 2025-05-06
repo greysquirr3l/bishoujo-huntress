@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 // agentService implements the AgentService interface
@@ -39,8 +40,45 @@ func (s *agentService) List(ctx context.Context, params *AgentListOptions) ([]*A
 			return nil, nil, fmt.Errorf("invalid agent list params: %w", err)
 		}
 	}
+	// Advanced filtering: convert params to map[string]interface{} using correct types
+	filters := map[string]interface{}{}
+	if params != nil {
+		if params.Page > 0 {
+			filters["page"] = params.Page
+		}
+		if params.PerPage > 0 {
+			filters["per_page"] = params.PerPage
+		}
+		if params.OrganizationID > 0 {
+			filters["organization_id"] = params.OrganizationID
+		}
+		if params.Status != "" {
+			filters["status"] = params.Status
+		}
+		if params.Platform != "" {
+			filters["platform"] = params.Platform
+		}
+		if params.Hostname != "" {
+			filters["hostname"] = params.Hostname
+		}
+		if params.IPAddress != "" {
+			filters["ip_address"] = params.IPAddress
+		}
+		if params.Version != "" {
+			filters["version"] = params.Version
+		}
+		if params.LastSeenSince != nil {
+			filters["last_seen_since"] = params.LastSeenSince.Format(time.RFC3339)
+		}
+		if len(params.Tags) > 0 {
+			filters["tags"] = params.Tags
+		}
+		if params.Search != "" {
+			filters["search"] = params.Search
+		}
+	}
 	var agents []*Agent
-	pagination, err := listResource(ctx, s.client, "/agents", params, &agents)
+	pagination, err := listResource(ctx, s.client, "/agents", filters, &agents)
 	if err != nil {
 		return nil, nil, err
 	}
