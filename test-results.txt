@@ -1,4 +1,9 @@
-	github.com/greysquirr3l/bishoujo-huntress/cmd/examples/basic		coverage: 0.0% of statements
+# github.com/greysquirr3l/bishoujo-huntress/cmd/examples/basic
+pkg/huntress/organization_service_test.go:1:1: expected 'package', found 'func'
+FAIL	github.com/greysquirr3l/bishoujo-huntress/cmd/examples/basic [setup failed]
+# github.com/greysquirr3l/bishoujo-huntress/pkg/huntress
+pkg/huntress/organization_service_test.go:1:1: expected 'package', found 'func'
+FAIL	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress [setup failed]
 	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/api		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/api/httpclient		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/repository		coverage: 0.0% of statements
@@ -17,5 +22,5 @@
 	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/retry		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/logging		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/ports/repository		coverage: 0.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress	0.391s	coverage: 11.8% of statements
 	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress/types		coverage: 0.0% of statements
+FAIL

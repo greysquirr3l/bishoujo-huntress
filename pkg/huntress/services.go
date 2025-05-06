@@ -27,6 +27,9 @@ type AccountService interface {
 
 	// RemoveUser removes a user from the account
 	RemoveUser(ctx context.Context, userID string) error
+
+	// InviteUser sends an invitation to a new user (if supported by the Huntress API)
+	InviteUser(ctx context.Context, params *UserInviteParams) (*User, error)
 }
 
 // OrganizationService handles Huntress organization operations
@@ -54,6 +57,9 @@ type OrganizationService interface {
 
 	// RemoveUser removes a user from an organization
 	RemoveUser(ctx context.Context, orgID string, userID string) error
+
+	// InviteUser sends an invitation to a user for an organization (if supported by the Huntress API)
+	InviteUser(ctx context.Context, orgID string, params *UserInviteParams) (*User, error)
 }
 
 // AgentService handles Huntress agent operations

@@ -1,1 +1,7 @@
-No vulnerabilities found.
+govulncheck: loading packages: 
+There are errors with the provided package patterns:
+
+pkg/huntress/organization_service_test.go:1:1: expected 'package', found 'func'
+
+For details on package patterns, see https://pkg.go.dev/cmd/go#hdr-Package_lists_and_patterns.
+

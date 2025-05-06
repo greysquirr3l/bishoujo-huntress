@@ -176,6 +176,30 @@ func (s *organizationService) RemoveUser(ctx context.Context, orgID string, user
 	return nil
 }
 
+// InviteUser sends an invitation to a user for an organization (if supported by the Huntress API)
+func (s *organizationService) InviteUser(ctx context.Context, orgID string, params *UserInviteParams) (*User, error) {
+	if params == nil {
+		return nil, fmt.Errorf("invite params required")
+	}
+	// The endpoint is assumed to be /organizations/{orgID}/users/invite
+	path := fmt.Sprintf("/organizations/%s/users/invite", orgID)
+	req, err := s.client.NewRequest(ctx, http.MethodPost, path, params)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request for InviteUser: %w", err)
+	}
+
+	newUser := new(User)
+	resp, err := s.client.Do(ctx, req, newUser)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute request for InviteUser: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
+
+	return newUser, nil
+}
+
 // URL parameter handling functions have been moved to utils.go
 // for better code organization and to avoid duplication.
 

@@ -156,5 +156,29 @@ func (s *accountService) RemoveUser(ctx context.Context, userID string) error {
 	return nil
 }
 
+// InviteUser sends an invitation to a new user (if supported by the Huntress API)
+func (s *accountService) InviteUser(ctx context.Context, params *UserInviteParams) (*User, error) {
+	if params == nil {
+		return nil, fmt.Errorf("invite params required")
+	}
+	// The endpoint is assumed to be /users/invite based on typical REST conventions
+	path := "/users/invite"
+	req, err := s.client.NewRequest(ctx, http.MethodPost, path, params)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request for InviteUser: %w", err)
+	}
+
+	newUser := new(User)
+	resp, err := s.client.Do(ctx, req, newUser)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute request for InviteUser: %w", err)
+	}
+	if resp != nil {
+		defer func() { _ = resp.Body.Close() }()
+	}
+
+	return newUser, nil
+}
+
 // Note: The utility functions (addQueryParams, extractPagination, parseInt)
 // have been moved to utils.go to prevent redeclaration errors

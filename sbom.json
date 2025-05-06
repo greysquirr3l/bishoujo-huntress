@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:a2a6d654-f248-4b81-89c8-9d81ec5db3d8",
+  "serialNumber": "urn:uuid:5c97d552-2883-44ae-ad37-fcbd573c2e2c",
   "version": 1,
   "metadata": {
-    "timestamp": "2025-05-06T08:49:40-04:00",
+    "timestamp": "2025-05-06T09:15:06-04:00",
     "tools": {
       "components": [
         {
@@ -29,7 +29,7 @@
   },
   "components": [
     {
-      "bom-ref": "pkg:github/actions/cache@v4.0.2?package-id=3b75cca42cc5e3a0",
+      "bom-ref": "pkg:github/actions/cache@v4.0.2?package-id=9f307cbed28e23f8",
       "type": "library",
       "name": "actions/cache",
       "version": "v4.0.2",
@@ -675,11 +675,11 @@
       "hashes": [
         {
           "alg": "SHA-1",
-          "content": "bb4a37596038d54f083f39163e301cbb03784000"
+          "content": "3105581a163d17effae77bf30ffa0239268863ee"
         },
         {
           "alg": "SHA-256",
-          "content": "0e3c19a266899cab8b37e67a2ada42880b4cb9cf4e9b03e750fbdef14bb60a1b"
+          "content": "b9751f0f4c704c57941e504ad950da4b6e1f3d2bf4a3111ace28a78faf47a94c"
         }
       ]
     },

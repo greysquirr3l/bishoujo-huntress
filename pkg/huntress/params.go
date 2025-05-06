@@ -25,6 +25,15 @@ type UserCreateParams struct {
 	Active    bool       `json:"active,omitempty"`
 }
 
+// UserInviteParams contains parameters for inviting a user
+type UserInviteParams struct {
+	Email     string     `json:"email"`
+	FirstName string     `json:"first_name,omitempty"`
+	LastName  string     `json:"last_name,omitempty"`
+	Role      UserRole   `json:"role,omitempty"`
+	Roles     []UserRole `json:"roles,omitempty"`
+}
+
 // UserUpdateParams contains parameters for updating a user
 type UserUpdateParams struct {
 	Email     string     `json:"email,omitempty"`

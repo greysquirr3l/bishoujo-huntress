@@ -1,3 +1,23 @@
+func TestOrganizationService_InviteUser(t *testing.T) {
+	client := newMockClient()
+	svc := &huntress.OrganizationService{client}
+
+	orgID := "org-123"
+	params := &huntress.UserInviteParams{
+		Email:     "invitee@example.com",
+		FirstName: "Invitee",
+		LastName:  "User",
+		Role:      huntress.UserRoleViewer,
+	}
+
+	user, err := svc.InviteUser(ctx, orgID, params)
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
+	if user == nil || user.Email != params.Email {
+		t.Errorf("expected invited user with email %s, got %+v", params.Email, user)
+	}
+}
 package huntress_test
 
 import (
