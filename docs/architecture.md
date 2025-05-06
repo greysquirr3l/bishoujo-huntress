@@ -14,35 +14,56 @@ This library implements a clean architecture approach with clear separation of c
 4. **Interface Layer**: Provides a clean API for end users
 
 ## Component Architecture
+![architecture](https://raw.githubusercontent.com/greysquirr3l/bishoujo-huntress/main/docs/img/architecture.mmd)
 
-```sh
-┌─────────────────────────────────────────────────────────────────────┐
-│                          Client Interface                           │
-└───────────────────────────────────┬─────────────────────────────────┘
-                                    │
-┌───────────────────────────────────▼─────────────────────────────────┐
-│                         Application Services                        │
-│                                                                     │
-│  ┌─────────────────┐       ┌─────────────────┐       ┌─────────────┐│
-│  │  Command Layer  │       │   Query Layer   │       │ Event Layer ││
-│  └────────┬────────┘       └────────┬────────┘       └──────┬──────┘│
-└───────────┼─────────────────────────┼───────────────────────┼───────┘
-            │                         │                       │
-┌───────────▼─────────────────────────▼───────────────────────▼───────┐
-│                             Domain Layer                            │
-│                                                                     │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
-│  │   Entities  │  │Value Objects│  │  Aggregates │  │  Services   │ │
-│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘ │
-└─────────────────────────────────────────────────────────────────────┘
-                            │
-┌───────────────────────────▼───────────────────────────────────────┐
-│                      Infrastructure Layer                         │
-│                                                                   │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐    │
-│  │HTTP Client Impl.│  │Auth Mechanisms  │  │  Serialization  │    │
-│  └─────────────────┘  └─────────────────┘  └─────────────────┘    │
-└───────────────────────────────────────────────────────────────────┘
+```mermaid
+%%{init: {"theme": "dark", "themeVariables": { "primaryColor": "#6c2eb6", "primaryTextColor": "#fff", "primaryBorderColor": "#a259f7", "lineColor": "#a259f7", "secondaryColor": "#2d0036", "tertiaryColor": "#1a001f", "fontSize": "16px" }}}%%
+flowchart TD
+    subgraph Interface_Layer["Interface Layer"]
+        A1["Public API<br/>(pkg/huntress)"]
+        A2["CLI / Examples<br/>(cmd/examples)"]
+    end
+    subgraph Infrastructure_Layer["Infrastructure Layer"]
+        B1["HTTP Client<br/>(internal/adapters/http)"]
+        B2["API Adapters<br/>(internal/adapters/api)"]
+        B3["Repository Implementations<br/>(internal/adapters/repository)"]
+        B4["Logging, Caching, etc.<br/>(internal/infrastructure)"]
+    end
+    subgraph Application_Layer["Application Layer"]
+        C1["Command Handlers<br/>(internal/application/command)"]
+        C2["Query Handlers<br/>(internal/application/query)"]
+        C3["Service Interfaces<br/>(internal/ports/service)"]
+    end
+    subgraph Domain_Layer["Domain Layer"]
+        D1["Entities & Aggregates<br/>(internal/domain/*)"]
+        D2["Value Objects<br/>(internal/domain/common)"]
+        D3["Domain Services<br/>(internal/domain/*)"]
+        D4["Repositories (Interfaces)<br/>(internal/ports/repository)"]
+        D5["Domain Events"]
+    end
+    A1 --> B1
+    A1 --> C1
+    A1 --> C2
+    A2 --> A1
+    B1 --> B2
+    B2 --> B3
+    B3 --> D4
+    C1 --> D1
+    C1 --> D2
+    C1 --> D3
+    C1 --> D4
+    C2 --> D1
+    C2 --> D2
+    C2 --> D3
+    C2 --> D4
+    D1 --> D5
+    D3 --> D5
+    B1 --> C1
+    B1 --> C2
+    B2 --> C1
+    B2 --> C2
+    B3 --> C1
+    B3 --> C2
 ```
 
 ## Domain Model

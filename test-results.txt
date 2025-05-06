@@ -1,10 +1,13 @@
 	github.com/greysquirr3l/bishoujo-huntress/cmd/examples/basic		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/api		coverage: 0.0% of statements
+	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/api/httpclient		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/repository		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/application/command/organization		coverage: 0.0% of statements
+	github.com/greysquirr3l/bishoujo-huntress/internal/application/query/auditlog		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/application/query/organization		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/domain/account		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/domain/agent		coverage: 0.0% of statements
+	github.com/greysquirr3l/bishoujo-huntress/internal/domain/auditlog		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/domain/common		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/domain/errors		coverage: 0.0% of statements
 ?   	github.com/greysquirr3l/bishoujo-huntress/internal/domain/incident	[no test files]
@@ -14,5 +17,5 @@
 	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/retry		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/logging		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/ports/repository		coverage: 0.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress	0.484s	coverage: 11.2% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress	0.346s	coverage: 11.8% of statements
 	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress/types		coverage: 0.0% of statements

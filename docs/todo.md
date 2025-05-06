@@ -41,31 +41,26 @@ Your codebase already covers the following Huntress API resources and operations
 
 ## What’s Missing or Incomplete (vs. Huntress API Docs/Swagger)
 
-- [x] **Bulk Operations**
-  - [x] Bulk agent/org actions: helpers and endpoints implemented
 - [ ] **Audit Logs**
   - [ ] Adapter scaffolded, not yet fully implemented
-- [x] **Integrations**
-  - [x] Adapter implemented, CRUD methods present
 - [ ] **User Invitations**
   - [ ] No explicit invite user method yet
 - [ ] **API Versioning**
   - [ ] Version field present, explicit switching/custom headers not yet implemented
-- [ ] **Advanced Filtering and Search**
-  - [x] List methods support basic filters
-  - [x] All list methods now support advanced query params (date ranges, enums, search terms, tags)
-- [x] **Response Caching**
-  - [x] In-memory caching layer for GET requests implemented (see docs/get_caching.md)
 - [ ] **Request Tracing**
   - [ ] No explicit support for request tracing (e.g., correlation IDs, OpenTelemetry)
-- [x] **Webhook Event Handling**
-  - [x] Helpers for validating/parsing webhook payloads implemented
-- [x] **API Error Types**
-  - [x] Granular error types for specific API error codes implemented
-- [x] **User-Agent Customization**
-  - [x] User-Agent is now easily customizable per request and globally
 - [ ] **Testing/Mocking**
   - [ ] No explicit test helpers or mock server for simulating Huntress API responses
+
+## Features/Enhancements (vs. Huntress API Docs/Swagger)
+
+- [x] **Bulk Operations**
+- [x] **Integrations**
+- [x] **Advanced Filtering and Search**
+- [x] **Response Caching**
+- [x] **Webhook Event Handling**
+- [x] **API Error Types**
+- [x] **User-Agent Customization**
 
 ---
 
@@ -94,71 +89,38 @@ Your codebase already covers the following Huntress API resources and operations
 
 ---
 
-## What’s Missing or Incomplete (vs. Huntress API Docs/Swagger)
-
-### A. API Endpoints Not Yet Implemented
+## API Endpoints Not Yet Implemented
 
 - [x] **Webhooks**
-  - [x] The Huntress API supports webhooks for event notifications (see `/webhooks` endpoints).
   - [x] Webhook management (list, create, update, delete) fully implemented, tested, and documented.
-
 - [x] **Bulk Operations**
-  - [x] The API supports some bulk operations (e.g., bulk agent actions, bulk organization updates).
-
+  - [x] Bulk agent/org actions: helpers and endpoints implemented
 - [x] **Audit Logs**
-  - [x] The API provides endpoints for audit logs (e.g., `/audit-logs`).
-  - [x] Adapter scaffolded in `internal/adapters/api/auditlog_repository.go`.
   - [x] Full audit log service and domain models implemented.
   - [x] Application layer (command/query) handlers for audit logs implemented.
   - [x] Public API and documentation for audit log operations present.
   - [x] Tests for audit log functionality present.
   - [x] Implementation and documentation of audit log service/models complete.
-
 - [x] **Integrations**
   - [x] Endpoints for managing integrations (e.g., `/integrations`, `/integration-settings`) are implemented and documented.
-
 - [ ] **User Invitations**
   - [x] The API supports inviting users (e.g., `/users/invite`).
   - [ ] No explicit invite user method is present.
-
 - [ ] **API Versioning**
   - [x] The API supports versioning via headers or URL.
   - [ ] Version field present, but no explicit support for switching API versions or custom headers.
-
-### B. Features/Behaviors Not Fully Implemented
-
-- [x] **Advanced Filtering and Search**
-  - [x] All list endpoints support advanced filtering, searching, and sorting (date ranges, enums, search terms, tags).
-
-- [x] **Response Caching**
-  - [x] In-memory caching layer for GET requests is implemented and documented (see `docs/get_caching.md`).
-
-- [ ] **Request Tracing**
-  - [ ] No explicit support for request tracing (e.g., correlation IDs, OpenTelemetry).
-
-- [x] **Webhook Event Handling**
-  - [x] Helpers for validating and parsing webhook payloads are implemented.
-
-- [x] **API Error Types**
-  - [x] Granular error types for specific API error codes are implemented.
-
-- [x] **User-Agent Customization**
-  - [x] User-Agent is now easily customizable per request and globally.
-
-- [ ] **Testing/Mocking**
-  - [ ] No explicit test helpers or mock server for simulating Huntress API responses.
 
 ---
 
 ## Swagger/Docs-Driven Enhancements
 
-- **Strict Model Validation**
-  - Ensure all request/response models match the latest Swagger schema (field types, required/optional, enums).
-  - Some fields may be missing or have different types (e.g., time.Time vs. string).
-- **Enum Types**
-  - Use Go enums for fields with limited values (e.g., incident status, agent platform).
-- **OpenAPI/Swagger Codegen**
-  - Consider using Swagger/OpenAPI codegen to cross-check your models and endpoints for completeness.
+- [ ] **Strict Model Validation**
+  - [ ] Ensure all request/response models match the latest Swagger schema (field types, required/optional, enums).
+  - [ ] Some fields may be missing or have different types (e.g., time.Time vs. string).
+- [ ] **Enum Types**
+  - [ ] Use Go enums for fields with limited values (e.g., incident status, agent platform).
+- [ ] **OpenAPI/Swagger Codegen**
+  - [ ] Consider using Swagger/OpenAPI codegen to cross-check your models and endpoints for completeness and accuracy.
 
 ---
 
