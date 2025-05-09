@@ -16,29 +16,7 @@ import (
 
 // Search allows searching audit logs with advanced filters.
 func (r *AuditLogRepository) Search(ctx context.Context, filters map[string]string) ([]map[string]interface{}, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", r.BaseURL+"/audit-logs/search", nil)
-	if err != nil {
-		return nil, err
-	}
-	q := req.URL.Query()
-	for k, v := range filters {
-		q.Set(k, v)
-	}
-	req.URL.RawQuery = q.Encode()
-	req.SetBasicAuth(r.APIKey, r.APISecret)
-	resp, err := r.Client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("audit log search failed: %d", resp.StatusCode)
-	}
-	var out []map[string]interface{}
-	if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return doGetWithQueryAndDecode(ctx, r.Client, r.BaseURL, "/audit-logs/search", r.APIKey, r.APISecret, filters)
 }
 
 // AuditLogRepository provides access to Huntress audit logs.
@@ -54,23 +32,26 @@ type AuditLogRepository struct {
 func (r *AuditLogRepository) Get(ctx context.Context, id string) (*auditlog.AuditLog, error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", r.BaseURL+"/audit-logs/"+id, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("auditlog get: %w", err)
 	}
 	req.SetBasicAuth(r.APIKey, r.APISecret)
 	resp, err := r.Client.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("auditlog get: %w", err)
 	}
-	defer resp.Body.Close()
+	errClose := resp.Body.Close()
+	if errClose != nil {
+		return nil, fmt.Errorf("auditlog get: error closing response body: %w", errClose)
+	}
 	if resp.StatusCode == http.StatusNotFound {
 		return nil, common.NewDomainError(common.ErrCodeNotFound, "audit log not found", nil)
 	}
 	if resp.StatusCode != http.StatusOK {
-		return nil, common.NewDomainError("AUDITLOG_API_ERROR", "unexpected status", nil)
+		return nil, fmt.Errorf("auditlog get: unexpected status: %d", resp.StatusCode)
 	}
 	var out auditlog.AuditLog
 	if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("auditlog get: decode: %w", err)
 	}
 	return &out, nil
 }
@@ -109,7 +90,7 @@ func (r *AuditLogRepository) List(ctx context.Context, params *auditlog.ListPara
 	}
 	req, err := http.NewRequestWithContext(ctx, "GET", r.BaseURL+"/audit-logs", nil)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, fmt.Errorf("auditlog list: %w", err)
 	}
 	query := req.URL.Query()
 	for k, v := range q {
@@ -119,17 +100,20 @@ func (r *AuditLogRepository) List(ctx context.Context, params *auditlog.ListPara
 	req.SetBasicAuth(r.APIKey, r.APISecret)
 	resp, err := r.Client.Do(req)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, fmt.Errorf("auditlog list: %w", err)
 	}
-	defer resp.Body.Close()
+	errClose := resp.Body.Close()
+	if errClose != nil {
+		return nil, nil, fmt.Errorf("auditlog list: error closing response body: %w", errClose)
+	}
 	if resp.StatusCode != http.StatusOK {
-		return nil, nil, common.NewDomainError("AUDITLOG_API_ERROR", "unexpected status", nil)
+		return nil, nil, fmt.Errorf("auditlog list: unexpected status: %d", resp.StatusCode)
 	}
 	var out struct {
 		Data []*auditlog.AuditLog `json:"data"`
 	}
 	if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
-		return nil, nil, err
+		return nil, nil, fmt.Errorf("auditlog list: decode: %w", err)
 	}
 	pagination := &common.Pagination{
 		Page:       params.Page,

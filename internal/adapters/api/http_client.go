@@ -3,6 +3,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 )
 
@@ -11,6 +12,12 @@ type HTTPClientAdapter struct {
 	Client *http.Client
 }
 
-func (a *HTTPClientAdapter) Do(ctx context.Context, req *http.Request) (*http.Response, error) {
-	return a.Client.Do(req)
+// Do executes the HTTP request using the underlying http.Client.
+// The ctx parameter is currently unused.
+func (a *HTTPClientAdapter) Do(_ context.Context, req *http.Request) (*http.Response, error) {
+	resp, err := a.Client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("http client adapter do: %w", err)
+	}
+	return resp, nil
 }

@@ -2,6 +2,7 @@
 package huntress
 
 import (
+	"bytes"
 	"context"
 	"encoding/base64"
 	"encoding/json"
@@ -13,8 +14,11 @@ import (
 	"github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/logging"
 )
 
+// BulkService provides bulk actions for agents and organizations.
 type BulkService interface {
+	// BulkAgentAction performs a bulk action on agents.
 	BulkAgentAction(ctx context.Context, action string, agentIDs []string, payload interface{}) (map[string]interface{}, error)
+	// BulkOrgAction performs a bulk action on organizations.
 	BulkOrgAction(ctx context.Context, action string, orgIDs []string, payload interface{}) (map[string]interface{}, error)
 }
 
@@ -124,10 +128,14 @@ func (c *Client) NewRequest(ctx context.Context, method, path string, body inter
 	url := c.baseURL + path
 	var bodyReader io.Reader
 	if body != nil {
-		var ok bool
-		bodyReader, ok = body.(io.Reader)
-		if !ok {
-			return nil, fmt.Errorf("body must implement io.Reader")
+		if rdr, ok := body.(io.Reader); ok {
+			bodyReader = rdr
+		} else {
+			jsonBody, err := json.Marshal(body)
+			if err != nil {
+				return nil, fmt.Errorf("failed to marshal request body: %w", err)
+			}
+			bodyReader = bytes.NewReader(jsonBody)
 		}
 	}
 	req, err := http.NewRequestWithContext(ctx, method, url, bodyReader)
@@ -148,7 +156,7 @@ func (c *Client) NewRequest(ctx context.Context, method, path string, body inter
 	return req, nil
 }
 
-// Do sends an API request and returns the response
+// Do sends an API request and returns the response.
 func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*http.Response, error) {
 	// Response caching for GET requests
 	if c.cache != nil && req.Method == http.MethodGet && v != nil {
@@ -158,7 +166,7 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 				if c.Logger != nil {
 					c.Logger.Debug("Cache hit", logging.String("url", req.URL.String()))
 				}
-				return nil, nil // No HTTP response, but data is filled
+				return nil, fmt.Errorf("response served from cache") // No HTTP response, but data is filled
 			}
 		}
 	}
@@ -181,7 +189,10 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 		return nil, fmt.Errorf("request failed: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return nil, fmt.Errorf("client doJSON: error closing response body: %w", errClose)
+		}
 	}
 
 	if v == nil {

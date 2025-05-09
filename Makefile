@@ -1,3 +1,8 @@
+# Generate mocks using Mockery
+generate-mocks:
+	@echo "Generating mocks with Mockery using .mockery.yml..."
+	@mockery --config=.mockery.yml
+	@echo "Mocks generated."
 # Makefile for Bishoujo-Huntress
 # A comprehensive Go client library for the Huntress API following DDD principles
 
@@ -28,8 +33,8 @@ BUILD_DATE ?= $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 
 # LDFLAGS for version information
 LD_FLAGS = -X '$(PKG)/pkg/huntress.Version=$(VERSION)' \
-           -X '$(PKG)/pkg/huntress.Commit=$(COMMIT)' \
-           -X '$(PKG)/pkg/huntress.BuildDate=$(BUILD_DATE)'
+		   -X '$(PKG)/pkg/huntress.Commit=$(COMMIT)' \
+		   -X '$(PKG)/pkg/huntress.BuildDate=$(BUILD_DATE)'
 
 # Build targets
 .PHONY: all build clean deps examples test test-race test-cover lint vet fmt tidy check vendor doc security-check help

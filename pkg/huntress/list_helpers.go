@@ -28,7 +28,7 @@ func listResource[T any](ctx context.Context, client *Client, path string, param
 		return nil, fmt.Errorf("failed to execute request for List: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		_ = resp.Body.Close()
 	}
 
 	pagination := extractPagination(resp)

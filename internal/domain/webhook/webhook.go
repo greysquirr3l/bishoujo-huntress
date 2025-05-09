@@ -8,12 +8,12 @@ import (
 
 // Webhook represents a Huntress webhook registration.
 type Webhook struct {
-	ID         int64
-	URL        string
-	EventTypes []string
-	Enabled    bool
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
+	ID         int64     `json:"id"`
+	URL        string    `json:"url"`
+	EventTypes []string  `json:"event_types"`
+	Enabled    bool      `json:"enabled"`
+	CreatedAt  time.Time `json:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
 }
 
 // Validate checks the webhook for domain validity.

@@ -86,7 +86,7 @@ func WithUserAgent(userAgent string) ClientOption {
 // WithPerRequestUserAgent allows setting a custom User-Agent per request via context or RequestOptions
 func WithPerRequestUserAgent() ClientOption {
 	// This is a no-op; actual per-request logic is handled in Do()
-	return func(c *Client) {}
+	return func(_ *Client) {}
 }
 
 // WithRetryConfig sets the retry configuration

@@ -69,11 +69,20 @@ const (
 	ErrCodeConflict     = "CONFLICT"
 )
 
-var (
-	ErrInvalidID         = NewDomainError(ErrCodeValidation, "invalid ID", nil)
-	ErrInvalidTimestamp  = NewDomainError(ErrCodeValidation, "invalid timestamp", nil)
-	ErrEmptyActor        = NewDomainError(ErrCodeValidation, "actor is required", nil)
-	ErrEmptyAction       = NewDomainError(ErrCodeValidation, "action is required", nil)
-	ErrEmptyResourceType = NewDomainError(ErrCodeValidation, "resource type is required", nil)
-	ErrEmptyResourceID   = NewDomainError(ErrCodeValidation, "resource ID is required", nil)
-)
+// ErrInvalidID is returned when an ID is invalid.
+var ErrInvalidID = NewDomainError(ErrCodeValidation, "invalid ID", nil)
+
+// ErrInvalidTimestamp is returned when a timestamp is invalid.
+var ErrInvalidTimestamp = NewDomainError(ErrCodeValidation, "invalid timestamp", nil)
+
+// ErrEmptyActor is returned when the actor field is empty.
+var ErrEmptyActor = NewDomainError(ErrCodeValidation, "actor is required", nil)
+
+// ErrEmptyAction is returned when the action field is empty.
+var ErrEmptyAction = NewDomainError(ErrCodeValidation, "action is required", nil)
+
+// ErrEmptyResourceType is returned when the resource type is empty.
+var ErrEmptyResourceType = NewDomainError(ErrCodeValidation, "resource type is required", nil)
+
+// ErrEmptyResourceID is returned when the resource ID is empty.
+var ErrEmptyResourceID = NewDomainError(ErrCodeValidation, "resource ID is required", nil)

@@ -26,7 +26,10 @@ func (s *accountService) Get(ctx context.Context) (*Account, error) {
 		return nil, fmt.Errorf("failed to execute request for Get: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return nil, fmt.Errorf("account get: error closing response body: %w", errClose)
+		}
 	}
 
 	return account, nil
@@ -51,7 +54,10 @@ func (s *accountService) Update(ctx context.Context, account *AccountUpdateParam
 		return nil, fmt.Errorf("failed to execute request for Update: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return nil, fmt.Errorf("account update: error closing response body: %w", errClose)
+		}
 	}
 
 	return updatedAccount, nil
@@ -71,7 +77,10 @@ func (s *accountService) GetStats(ctx context.Context) (*AccountStats, error) {
 		return nil, fmt.Errorf("failed to execute request for GetStats: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return nil, fmt.Errorf("account get statistics: error closing response body: %w", errClose)
+		}
 	}
 
 	return stats, nil
@@ -109,7 +118,10 @@ func (s *accountService) AddUser(ctx context.Context, user *UserCreateParams) (*
 		return nil, fmt.Errorf("failed to execute request for AddUser: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return nil, fmt.Errorf("account add user: error closing response body: %w", errClose)
+		}
 	}
 
 	return newUser, nil
@@ -132,7 +144,10 @@ func (s *accountService) UpdateUser(ctx context.Context, userID string, user *Us
 		return nil, fmt.Errorf("failed to execute request for UpdateUser: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return nil, fmt.Errorf("account update user: error closing response body: %w", errClose)
+		}
 	}
 
 	return updatedUser, nil
@@ -151,7 +166,10 @@ func (s *accountService) RemoveUser(ctx context.Context, userID string) error {
 		return fmt.Errorf("failed to execute request for RemoveUser: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return fmt.Errorf("account remove user: error closing response body: %w", errClose)
+		}
 	}
 	return nil
 }
@@ -174,7 +192,10 @@ func (s *accountService) InviteUser(ctx context.Context, params *UserInviteParam
 		return nil, fmt.Errorf("failed to execute request for InviteUser: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return nil, fmt.Errorf("account invite user: error closing response body: %w", errClose)
+		}
 	}
 
 	return newUser, nil

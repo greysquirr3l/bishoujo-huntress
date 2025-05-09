@@ -3,6 +3,7 @@ package auditlog
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/greysquirr3l/bishoujo-huntress/internal/domain/auditlog"
 	"github.com/greysquirr3l/bishoujo-huntress/internal/domain/common"
@@ -19,10 +20,16 @@ type ListAuditLogsHandler struct {
 	Repo repository.AuditLogRepository
 }
 
+// NewListAuditLogsHandler creates a new ListAuditLogsHandler.
 func NewListAuditLogsHandler(repo repository.AuditLogRepository) *ListAuditLogsHandler {
 	return &ListAuditLogsHandler{Repo: repo}
 }
 
+// Handle lists audit logs using the provided query parameters.
 func (h *ListAuditLogsHandler) Handle(ctx context.Context, query ListAuditLogsQuery) ([]*auditlog.AuditLog, *common.Pagination, error) {
-	return h.Repo.List(ctx, query.Params)
+	logs, pagination, err := h.Repo.List(ctx, query.Params)
+	if err != nil {
+		return nil, nil, fmt.Errorf("list audit logs handler: %w", err)
+	}
+	return logs, pagination, nil
 }

@@ -3,7 +3,7 @@ package webhook
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
 )
 
 // Event represents a generic Huntress webhook event payload.
@@ -18,10 +18,10 @@ type Event struct {
 func ParseEvent(payload []byte) (*Event, error) {
 	var evt Event
 	if err := json.Unmarshal(payload, &evt); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("unmarshaling webhook event: %w", err)
 	}
 	if evt.Type == "" {
-		return nil, errors.New("missing event type in webhook payload")
+		return nil, fmt.Errorf("missing event type in webhook payload")
 	}
 	return &evt, nil
 }
@@ -29,13 +29,13 @@ func ParseEvent(payload []byte) (*Event, error) {
 // ValidateEvent checks if the event payload is valid.
 func ValidateEvent(evt *Event) error {
 	if evt == nil {
-		return errors.New("event is nil")
+		return fmt.Errorf("event is nil")
 	}
 	if evt.Type == "" {
-		return errors.New("event type is required")
+		return fmt.Errorf("event type is required")
 	}
 	if evt.ID == "" {
-		return errors.New("event id is required")
+		return fmt.Errorf("event id is required")
 	}
 	return nil
 }

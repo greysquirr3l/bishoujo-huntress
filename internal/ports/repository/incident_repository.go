@@ -1,3 +1,4 @@
+// Package repository defines the repository interface for incident data operations.
 package repository
 
 import (

@@ -24,6 +24,18 @@
 - [ ] **OpenAPI/Swagger Codegen**
   - [ ] Consider using Swagger/OpenAPI codegen to cross-check your models and endpoints for completeness and accuracy.
 
+### Mock Generation & Testing
+
+- [x] **Mockery v3.2.5+ Config-Driven Mock Generation**
+  - [x] `.mockery.yml` uses `filename: mocks_test.go` for a single per-package mock file (preferred Go/testify style)
+  - [x] `packages:` block present for Mockery v3.2.5+ compatibility
+  - [x] Mocks are generated into each package as `mocks_test.go` (not per-interface)
+  - [x] All generated mocks are test-only (`_test.go`), not included in production builds
+  - [x] Makefile target `generate-mocks` runs mockery with the config
+  - [x] Verified: mocks are present in e.g. `pkg/huntress/mocks_test.go`, `internal/ports/repository/mocks_test.go`, etc.
+  - [x] No `//go:generate` directives needed in source files
+  - [x] Tool-tracking `mocks_test.go` (root) is separate and not affected
+
 ### Next Steps
 
 - Expand advanced filtering in all list methods (date ranges, enums, search, tags)

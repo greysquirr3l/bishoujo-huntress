@@ -3,19 +3,26 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 )
 
-// APIClient defines the interface for making API requests.
-type APIClient interface {
+// Client defines the interface for making API requests.
+type Client interface {
 	Do(ctx context.Context, req *http.Request) (*http.Response, error)
 }
 
-// DefaultAPIClient is a basic implementation of APIClient using http.Client.
-type DefaultAPIClient struct {
+// DefaultClient is a basic implementation of Client using http.Client.
+type DefaultClient struct {
 	HTTPClient *http.Client
 }
 
-func (c *DefaultAPIClient) Do(ctx context.Context, req *http.Request) (*http.Response, error) {
-	return c.HTTPClient.Do(req)
+// Do executes the HTTP request using the underlying http.Client.
+// The ctx parameter is currently unused.
+func (c *DefaultClient) Do(_ context.Context, req *http.Request) (*http.Response, error) {
+	resp, err := c.HTTPClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("client do: %w", err)
+	}
+	return resp, nil
 }

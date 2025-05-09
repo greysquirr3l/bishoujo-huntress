@@ -26,7 +26,10 @@ func (s *incidentService) Get(ctx context.Context, id string) (*Incident, error)
 		return nil, fmt.Errorf("failed to execute request for Get: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return nil, fmt.Errorf("incident get: error closing response body: %w", errClose)
+		}
 	}
 
 	return incident, nil
@@ -61,7 +64,10 @@ func (s *incidentService) UpdateStatus(ctx context.Context, id string, status st
 		return nil, fmt.Errorf("failed to execute request for UpdateStatus: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return nil, fmt.Errorf("incident update status: error closing response body: %w", errClose)
+		}
 	}
 
 	return incident, nil

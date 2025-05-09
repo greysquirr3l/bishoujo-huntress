@@ -2,6 +2,7 @@ package huntress
 
 import (
 	"context"
+	"fmt"
 
 	api "github.com/greysquirr3l/bishoujo-huntress/internal/adapters/api"
 	internal_auditlog "github.com/greysquirr3l/bishoujo-huntress/internal/domain/auditlog"
@@ -40,7 +41,7 @@ func (s *auditLogService) List(ctx context.Context, params *AuditLogListParams) 
 	}
 	logs, pag, err := s.repo.List(ctx, internalParams)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, fmt.Errorf("listing audit logs: %w", err)
 	}
 	// Convert internal to public
 	result := make([]*AuditLog, len(logs))
@@ -68,7 +69,7 @@ func (s *auditLogService) List(ctx context.Context, params *AuditLogListParams) 
 func (s *auditLogService) Get(ctx context.Context, id string) (*AuditLog, error) {
 	log, err := s.repo.Get(ctx, id)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("getting audit log by id: %w", err)
 	}
 	return &AuditLog{
 		ID:           log.ID,
@@ -90,12 +91,20 @@ type internalAuditLogRepoAdapter struct {
 // Implement repository.AuditLogRepository methods by delegating to internal/adapters/api.AuditLogRepository
 func (a *internalAuditLogRepoAdapter) Get(ctx context.Context, id string) (*internal_auditlog.AuditLog, error) {
 	apiRepo := a.getAPIRepo()
-	return apiRepo.Get(ctx, id)
+	log, err := apiRepo.Get(ctx, id)
+	if err != nil {
+		return nil, fmt.Errorf("apiRepo.Get: %w", err)
+	}
+	return log, nil
 }
 
 func (a *internalAuditLogRepoAdapter) List(ctx context.Context, params *internal_auditlog.ListParams) ([]*internal_auditlog.AuditLog, *common.Pagination, error) {
 	apiRepo := a.getAPIRepo()
-	return apiRepo.List(ctx, params)
+	logs, pag, err := apiRepo.List(ctx, params)
+	if err != nil {
+		return nil, nil, fmt.Errorf("apiRepo.List: %w", err)
+	}
+	return logs, pag, nil
 }
 
 // getAPIRepo returns an instance of the internal API adapter for audit logs.

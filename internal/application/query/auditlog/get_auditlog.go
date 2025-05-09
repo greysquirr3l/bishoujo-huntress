@@ -3,6 +3,7 @@ package auditlog
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/greysquirr3l/bishoujo-huntress/internal/domain/auditlog"
 	"github.com/greysquirr3l/bishoujo-huntress/internal/ports/repository"
@@ -18,10 +19,16 @@ type GetAuditLogHandler struct {
 	Repo repository.AuditLogRepository
 }
 
+// NewGetAuditLogHandler creates a new GetAuditLogHandler.
 func NewGetAuditLogHandler(repo repository.AuditLogRepository) *GetAuditLogHandler {
 	return &GetAuditLogHandler{Repo: repo}
 }
 
+// Handle retrieves a single audit log entry by ID.
 func (h *GetAuditLogHandler) Handle(ctx context.Context, query GetAuditLogQuery) (*auditlog.AuditLog, error) {
-	return h.Repo.Get(ctx, query.ID)
+	entry, err := h.Repo.Get(ctx, query.ID)
+	if err != nil {
+		return nil, fmt.Errorf("get audit log handler: %w", err)
+	}
+	return entry, nil
 }

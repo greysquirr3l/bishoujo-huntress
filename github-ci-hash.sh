@@ -45,7 +45,11 @@ EOF
           echo "Updated $repo@$ref to $sha in $wf"
         fi
       else
-        echo "WARNING: Could not resolve SHA for $repo@$ref"
+        # Only warn if the current ref is NOT already a SHA
+        if [[ ! "$current_sha_or_ref" =~ ^[a-f0-9]{40}$ ]]; then
+          echo "WARNING: Could not resolve SHA for $repo@$ref"
+        fi
+        # If already pinned by SHA, do not warn
       fi
     fi
   done

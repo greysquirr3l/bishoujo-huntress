@@ -3,6 +3,7 @@ package huntress
 import (
 	"context"
 	"errors"
+	"fmt"
 	"testing"
 	"time"
 
@@ -20,17 +21,34 @@ type mockAuditLogRepo struct {
 func (m *mockAuditLogRepo) Get(ctx context.Context, id string) (*auditlog.AuditLog, error) {
 	args := m.Called(ctx, id)
 	if v := args.Get(0); v != nil {
-		return v.(*auditlog.AuditLog), args.Error(1)
+		err := args.Error(1)
+		if err != nil {
+			return v.(*auditlog.AuditLog), fmt.Errorf("mock Get error: %w", err)
+		}
+		return v.(*auditlog.AuditLog), nil
 	}
-	return nil, args.Error(1)
+	err := args.Error(1)
+	if err != nil {
+		return nil, fmt.Errorf("mock Get error: %w", err)
+	}
+	// Return a sentinel error to avoid returning (nil, nil)
+	return nil, errors.New("mock Get: no value and no error provided (invalid test setup)")
 }
 
 func (m *mockAuditLogRepo) List(ctx context.Context, params *auditlog.ListParams) ([]*auditlog.AuditLog, *common.Pagination, error) {
 	args := m.Called(ctx, params)
 	if v := args.Get(0); v != nil {
-		return v.([]*auditlog.AuditLog), args.Get(1).(*common.Pagination), args.Error(2)
+		err := args.Error(2)
+		if err != nil {
+			return v.([]*auditlog.AuditLog), args.Get(1).(*common.Pagination), fmt.Errorf("mock List error: %w", err)
+		}
+		return v.([]*auditlog.AuditLog), args.Get(1).(*common.Pagination), nil
 	}
-	return nil, nil, args.Error(2)
+	err := args.Error(2)
+	if err != nil {
+		return nil, nil, fmt.Errorf("mock List error: %w", err)
+	}
+	return nil, nil, nil
 }
 
 func TestAuditLogService_List(t *testing.T) {

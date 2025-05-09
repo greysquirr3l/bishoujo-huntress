@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:5c97d552-2883-44ae-ad37-fcbd573c2e2c",
+  "serialNumber": "urn:uuid:8f393271-5b95-4cd7-bb83-a4b83f5c1f98",
   "version": 1,
   "metadata": {
-    "timestamp": "2025-05-06T09:15:06-04:00",
+    "timestamp": "2025-05-09T06:00:23-04:00",
     "tools": {
       "components": [
         {
@@ -29,7 +29,7 @@
   },
   "components": [
     {
-      "bom-ref": "pkg:github/actions/cache@v4.0.2?package-id=9f307cbed28e23f8",
+      "bom-ref": "pkg:github/actions/cache@v4.0.2?package-id=3b75cca42cc5e3a0",
       "type": "library",
       "name": "actions/cache",
       "version": "v4.0.2",
@@ -199,12 +199,12 @@
       ]
     },
     {
-      "bom-ref": "pkg:golang/github.com/davecgh/go-spew@v1.1.1?package-id=4fff1eaa0bc0be66",
+      "bom-ref": "pkg:golang/github.com/davecgh/go-spew@v1.1.2-0.20180830191138-d8f796af33cc?package-id=e1e0f1232be39ea0",
       "type": "library",
       "name": "github.com/davecgh/go-spew",
-      "version": "v1.1.1",
-      "cpe": "cpe:2.3:a:davecgh:go-spew:v1.1.1:*:*:*:*:*:*:*",
-      "purl": "pkg:golang/github.com/davecgh/go-spew@v1.1.1",
+      "version": "v1.1.2-0.20180830191138-d8f796af33cc",
+      "cpe": "cpe:2.3:a:davecgh:go-spew:v1.1.2-0.20180830191138-d8f796af33cc:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/davecgh/go-spew@v1.1.2-0.20180830191138-d8f796af33cc",
       "properties": [
         {
           "name": "syft:package:foundBy",
@@ -224,7 +224,7 @@
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:davecgh:go_spew:v1.1.1:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:davecgh:go_spew:v1.1.2-0.20180830191138-d8f796af33cc:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:location:0:path",
@@ -232,7 +232,7 @@
         },
         {
           "name": "syft:metadata:h1Digest",
-          "value": "h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c="
+          "value": "h1:U9qPSI2PIWSS1VwoXQT9A3Wy9MM3WgvqSxFWenqJduM="
         }
       ]
     },
@@ -271,12 +271,46 @@
       ]
     },
     {
-      "bom-ref": "pkg:golang/github.com/pmezard/go-difflib@v1.0.0?package-id=2e9153c8c5a4f906",
+      "bom-ref": "pkg:golang/github.com/kr/pretty@v0.3.1?package-id=b76d4050a948c5b8",
+      "type": "library",
+      "name": "github.com/kr/pretty",
+      "version": "v0.3.1",
+      "cpe": "cpe:2.3:a:kr:pretty:v0.3.1:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/kr/pretty@v0.3.1",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "go-module-file-cataloger"
+        },
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-entry"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/go.mod"
+        },
+        {
+          "name": "syft:metadata:h1Digest",
+          "value": "h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE="
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/pmezard/go-difflib@v1.0.1-0.20181226105442-5d4384ee4fb2?package-id=687547b3b9e2c718",
       "type": "library",
       "name": "github.com/pmezard/go-difflib",
-      "version": "v1.0.0",
-      "cpe": "cpe:2.3:a:pmezard:go-difflib:v1.0.0:*:*:*:*:*:*:*",
-      "purl": "pkg:golang/github.com/pmezard/go-difflib@v1.0.0",
+      "version": "v1.0.1-0.20181226105442-5d4384ee4fb2",
+      "cpe": "cpe:2.3:a:pmezard:go-difflib:v1.0.1-0.20181226105442-5d4384ee4fb2:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/pmezard/go-difflib@v1.0.1-0.20181226105442-5d4384ee4fb2",
       "properties": [
         {
           "name": "syft:package:foundBy",
@@ -296,7 +330,7 @@
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:pmezard:go_difflib:v1.0.0:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:pmezard:go_difflib:v1.0.1-0.20181226105442-5d4384ee4fb2:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:location:0:path",
@@ -304,7 +338,45 @@
         },
         {
           "name": "syft:metadata:h1Digest",
-          "value": "h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM="
+          "value": "h1:Jamvg5psRIccs7FGNTlIRMkT8wgtp5eCXdBlqhYGL6U="
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/rogpeppe/go-internal@v1.14.1?package-id=a7723e2c1ea652b3",
+      "type": "library",
+      "name": "github.com/rogpeppe/go-internal",
+      "version": "v1.14.1",
+      "cpe": "cpe:2.3:a:rogpeppe:go-internal:v1.14.1:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/rogpeppe/go-internal@v1.14.1",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "go-module-file-cataloger"
+        },
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-entry"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:rogpeppe:go_internal:v1.14.1:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/go.mod"
+        },
+        {
+          "name": "syft:metadata:h1Digest",
+          "value": "h1:UQB4HGPB6osV0SQTLymcB4TgvyWu6ZyliaW0tI/otEQ="
         }
       ]
     },
@@ -563,6 +635,39 @@
       ]
     },
     {
+      "bom-ref": "pkg:golang/gopkg.in/check.v1@v1.0.0-20201130134442-10cb98267c6c?package-id=f3606cbd54002165",
+      "type": "library",
+      "name": "gopkg.in/check.v1",
+      "version": "v1.0.0-20201130134442-10cb98267c6c",
+      "purl": "pkg:golang/gopkg.in/check.v1@v1.0.0-20201130134442-10cb98267c6c",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "go-module-file-cataloger"
+        },
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-entry"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/go.mod"
+        },
+        {
+          "name": "syft:metadata:h1Digest",
+          "value": "h1:Hei/4ADfdWqJk1ZMxUNpqntNwaWcugrBjAiHlqqRiVk="
+        }
+      ]
+    },
+    {
       "bom-ref": "pkg:golang/gopkg.in/yaml.v3@v3.0.1?package-id=716c668b92999095",
       "type": "library",
       "name": "gopkg.in/yaml.v3",
@@ -643,12 +748,12 @@
       ]
     },
     {
-      "bom-ref": "pkg:github/securego/gosec@270b5ce8680a9b04afb94d7b5f2b32b9675e379a?package-id=7ff2380f398bf115",
+      "bom-ref": "pkg:github/securego/gosec@6decf96c3d272d5a8bbdcf9fddb5789d0be16a8d?package-id=6e2676de5e602bf8",
       "type": "library",
       "name": "securego/gosec",
-      "version": "270b5ce8680a9b04afb94d7b5f2b32b9675e379a",
-      "cpe": "cpe:2.3:a:securego\\/gosec:securego\\/gosec:270b5ce8680a9b04afb94d7b5f2b32b9675e379a:*:*:*:*:*:*:*",
-      "purl": "pkg:github/securego/gosec@270b5ce8680a9b04afb94d7b5f2b32b9675e379a",
+      "version": "6decf96c3d272d5a8bbdcf9fddb5789d0be16a8d",
+      "cpe": "cpe:2.3:a:securego\\/gosec:securego\\/gosec:6decf96c3d272d5a8bbdcf9fddb5789d0be16a8d:*:*:*:*:*:*:*",
+      "purl": "pkg:github/securego/gosec@6decf96c3d272d5a8bbdcf9fddb5789d0be16a8d",
       "properties": [
         {
           "name": "syft:package:foundBy",
@@ -675,11 +780,11 @@
       "hashes": [
         {
           "alg": "SHA-1",
-          "content": "3105581a163d17effae77bf30ffa0239268863ee"
+          "content": "3da0e365106242c5df50a672b0576ac33974cd92"
         },
         {
           "alg": "SHA-256",
-          "content": "b9751f0f4c704c57941e504ad950da4b6e1f3d2bf4a3111ace28a78faf47a94c"
+          "content": "a0eb0a23d50c84f2986bcf3e60afcbba316d48a9e5da40c3431a3cb1f07e6723"
         }
       ]
     },
@@ -705,11 +810,11 @@
       "hashes": [
         {
           "alg": "SHA-1",
-          "content": "c8a48efd79df66f3934b65f639248deb3f5709fe"
+          "content": "6eda9fd3d83da18231ac9f8bce4c87f40ba1df38"
         },
         {
           "alg": "SHA-256",
-          "content": "ffa0e488f842c621ddcd14dbd697249fa4f2d3ea98f440ad37b71824a2ff1e9a"
+          "content": "11ed301c70ca9eef234c4809d6ac140fc2c1e70d7f74c1ce26f9040b15937ffd"
         }
       ]
     }

@@ -1,26 +1,30 @@
-# github.com/greysquirr3l/bishoujo-huntress/cmd/examples/basic
-pkg/huntress/organization_service_test.go:1:1: expected 'package', found 'func'
-FAIL	github.com/greysquirr3l/bishoujo-huntress/cmd/examples/basic [setup failed]
-# github.com/greysquirr3l/bishoujo-huntress/pkg/huntress
-pkg/huntress/organization_service_test.go:1:1: expected 'package', found 'func'
-FAIL	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress [setup failed]
+	github.com/greysquirr3l/bishoujo-huntress/cmd/examples/basic		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/api		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/api/httpclient		coverage: 0.0% of statements
-	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/repository		coverage: 0.0% of statements
-	github.com/greysquirr3l/bishoujo-huntress/internal/application/command/organization		coverage: 0.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/repository	0.406s	coverage: 11.7% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/application/command/organization	0.151s	coverage: 62.3% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/application/query/auditlog		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/application/query/organization		coverage: 0.0% of statements
-	github.com/greysquirr3l/bishoujo-huntress/internal/domain/account		coverage: 0.0% of statements
-	github.com/greysquirr3l/bishoujo-huntress/internal/domain/agent		coverage: 0.0% of statements
-	github.com/greysquirr3l/bishoujo-huntress/internal/domain/auditlog		coverage: 0.0% of statements
-	github.com/greysquirr3l/bishoujo-huntress/internal/domain/common		coverage: 0.0% of statements
-	github.com/greysquirr3l/bishoujo-huntress/internal/domain/errors		coverage: 0.0% of statements
-?   	github.com/greysquirr3l/bishoujo-huntress/internal/domain/incident	[no test files]
-	github.com/greysquirr3l/bishoujo-huntress/internal/domain/organization		coverage: 0.0% of statements
-	github.com/greysquirr3l/bishoujo-huntress/internal/domain/webhook		coverage: 0.0% of statements
-	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http		coverage: 0.0% of statements
-	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/retry		coverage: 0.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/account	0.526s	coverage: 100.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/agent	0.276s	coverage: 100.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/auditlog	0.750s	coverage: 100.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/common	0.641s	coverage: 96.4% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/errors	0.849s	coverage: 75.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/incident	0.989s	coverage: [no statements]
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/organization	0.882s	coverage: 100.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/webhook	1.097s	coverage: 100.0% of statements
+--- FAIL: TestClient_Do_RetryLogic (0.00s)
+    client_test.go:124: expected no error, got API error: 503 - unavailable
+FAIL
+coverage: 68.2% of statements
+FAIL	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http	1.114s
+--- FAIL: TestRetrier_Do_ContextCancel (0.01s)
+    retrier_test.go:59: expected error due to context timeout
+FAIL
+coverage: 78.3% of statements
+FAIL	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/retry	1.150s
 	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/logging		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/ports/repository		coverage: 0.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress	1.146s	coverage: 29.7% of statements
 	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress/types		coverage: 0.0% of statements
 FAIL

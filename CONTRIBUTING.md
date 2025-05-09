@@ -17,13 +17,26 @@ Thank you for your interest in contributing to Bishoujo-Huntress! We welcome con
    go mod download
    ```
 
-4. **Run tests and linters:**
+4. **Run tests, linters, and generate mocks:**
 
    ```bash
    make test
    make lint
+   make generate-mocks   # Regenerate mocks if you change interfaces
    ./ossf-attest.sh
    ```
+
+## Mocking & Test Doubles
+
+- We use [Mockery](https://github.com/vektra/mockery) for generating mocks for interfaces.
+- To regenerate mocks after changing interfaces, run:
+
+  ```bash
+  make generate-mocks
+  ```
+
+- Mocks are generated in `internal/mocks/` (for internal interfaces) and `pkg/huntress/mocks/` (for public API interfaces).
+- See the `//go:generate` directives in interface files for details.
 
 5. **Make your changes.**
 6. **Add or update tests** to ensure coverage for your changes.

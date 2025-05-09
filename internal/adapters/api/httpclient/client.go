@@ -10,14 +10,14 @@ import (
 	"time"
 )
 
-// Client is a reusable HTTP client with timeout, context, rate limiting, and retry support.
-// Retrier defines the interface for retry logic.
+// Retrier defines the interface for retry logic in HTTP clients.
 type Retrier interface {
 	MaxRetries() int
 	IsRetryableStatusCode(int) bool
 	CalculateBackoff(int) time.Duration
 }
 
+// Client is a reusable HTTP client with timeout, context, rate limiting, and retry support.
 type Client struct {
 	HTTPClient  *http.Client
 	Timeout     time.Duration
@@ -54,7 +54,7 @@ func (c *Client) Do(ctx context.Context, req *http.Request) (*http.Response, err
 	}
 	for attempt := 0; attempt <= maxRetries; attempt++ {
 		if ctx.Err() != nil {
-			return nil, ctx.Err()
+			return nil, fmt.Errorf("httpclient: context error: %w", ctx.Err())
 		}
 		resp, err = c.HTTPClient.Do(req.WithContext(ctx))
 		if err == nil && (resp.StatusCode < 500 || resp.StatusCode > 599) && resp.StatusCode != 429 {
@@ -67,11 +67,14 @@ func (c *Client) Do(ctx context.Context, req *http.Request) (*http.Response, err
 		delay := c.Retrier.CalculateBackoff(attempt)
 		select {
 		case <-ctx.Done():
-			return nil, ctx.Err()
+			return nil, fmt.Errorf("httpclient: context error: %w", ctx.Err())
 		case <-time.After(delay):
 		}
 	}
-	return resp, err
+	if err != nil {
+		return resp, fmt.Errorf("httpclient: http client do: %w", err)
+	}
+	return resp, nil
 }
 
 // DoJSON executes an HTTP request and decodes the JSON response into v.
@@ -93,7 +96,10 @@ func (c *Client) DoJSON(ctx context.Context, req *http.Request, v interface{}) (
 
 func decodeJSON(r io.Reader, v interface{}) error {
 	dec := json.NewDecoder(r)
-	return dec.Decode(v)
+	if err := dec.Decode(v); err != nil {
+		return fmt.Errorf("httpclient: decode json: %w", err)
+	}
+	return nil
 }
 
 // RateLimitError is returned when the API rate limit is exceeded.

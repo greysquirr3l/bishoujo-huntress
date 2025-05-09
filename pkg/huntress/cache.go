@@ -12,6 +12,7 @@ type cacheEntry struct {
 	expiry   time.Time
 }
 
+// Cache is a simple in-memory cache for GET requests.
 type Cache struct {
 	mu      sync.RWMutex
 	entries map[string]*cacheEntry

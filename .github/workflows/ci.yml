@@ -22,7 +22,7 @@ jobs:
           go-version: "1.22"
 
       - name: Cache Go modules
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.0.2
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
           path: |
             ~/.cache/go-build
@@ -50,6 +50,6 @@ jobs:
         run: make test
 
       - name: Run security scanner (gosec)
-        uses: securego/gosec@270b5ce8680a9b04afb94d7b5f2b32b9675e379a # master
+        uses: securego/gosec@6decf96c3d272d5a8bbdcf9fddb5789d0be16a8d # master
         with:
           args: ./...

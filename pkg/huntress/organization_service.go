@@ -26,7 +26,10 @@ func (s *organizationService) Get(ctx context.Context, id string) (*Organization
 		return nil, fmt.Errorf("failed to execute request for Get: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return nil, fmt.Errorf("organization get: error closing response body: %w", errClose)
+		}
 	}
 
 	return org, nil
@@ -59,7 +62,10 @@ func (s *organizationService) Create(ctx context.Context, org *OrganizationCreat
 		return nil, fmt.Errorf("failed to execute request for Create: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return nil, fmt.Errorf("organization create: error closing response body: %w", errClose)
+		}
 	}
 
 	return createdOrg, nil
@@ -82,7 +88,10 @@ func (s *organizationService) Update(ctx context.Context, id string, org *Organi
 		return nil, err
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return nil, fmt.Errorf("organization update: error closing response body: %w", errClose)
+		}
 	}
 
 	return updatedOrg, nil
@@ -101,7 +110,10 @@ func (s *organizationService) Delete(ctx context.Context, orgID string) error {
 		return fmt.Errorf("failed to execute request for Delete: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return fmt.Errorf("organization delete: error closing response body: %w", errClose)
+		}
 	}
 	return nil
 }
@@ -128,7 +140,10 @@ func (s *organizationService) ListUsers(ctx context.Context, orgID string, param
 		return nil, nil, err
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return nil, nil, fmt.Errorf("organization list: error closing response body: %w", errClose)
+		}
 	}
 
 	pagination := extractPagination(resp)
@@ -152,7 +167,10 @@ func (s *organizationService) AddUser(ctx context.Context, orgID string, user *U
 		return nil, err
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return nil, fmt.Errorf("organization add user: error closing response body: %w", errClose)
+		}
 	}
 
 	return newUser, nil
@@ -171,7 +189,10 @@ func (s *organizationService) RemoveUser(ctx context.Context, orgID string, user
 		return fmt.Errorf("failed to execute request for RemoveUser: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return fmt.Errorf("organization remove user: error closing response body: %w", errClose)
+		}
 	}
 	return nil
 }
@@ -194,7 +215,10 @@ func (s *organizationService) InviteUser(ctx context.Context, orgID string, para
 		return nil, fmt.Errorf("failed to execute request for InviteUser: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return nil, fmt.Errorf("organization invite user: error closing response body: %w", errClose)
+		}
 	}
 
 	return newUser, nil

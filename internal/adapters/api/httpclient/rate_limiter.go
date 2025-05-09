@@ -3,6 +3,7 @@ package httpclient
 
 import (
 	"context"
+	"fmt"
 	"sync"
 	"time"
 )
@@ -52,7 +53,7 @@ func (r *RateLimiter) Wait(ctx context.Context) error {
 		}
 		select {
 		case <-ctx.Done():
-			return ctx.Err()
+			return fmt.Errorf("rate limiter: context error: %w", ctx.Err())
 		case <-time.After(100 * time.Millisecond):
 		}
 	}
