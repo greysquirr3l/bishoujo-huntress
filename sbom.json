@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:04987ddb-4867-4cab-a6a3-1d71431add91",
+  "serialNumber": "urn:uuid:80ef2d81-c18a-4ef6-955b-dfe2d4524067",
   "version": 1,
   "metadata": {
-    "timestamp": "2025-05-12T15:34:07-04:00",
+    "timestamp": "2025-05-12T15:37:41-04:00",
     "tools": {
       "components": [
         {
@@ -30,8 +30,12 @@
   "components": [
     {
       "bom-ref": "pkg:github/actions/cache@v4.2.3?package-id=5bb4122d67d656dd",
+      "bom-ref": "pkg:github/actions/cache@v4.2.3?package-id=5bb4122d67d656dd",
       "type": "library",
       "name": "actions/cache",
+      "version": "v4.2.3",
+      "cpe": "cpe:2.3:a:actions\\/cache:actions\\/cache:v4.2.3:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/cache@v4.2.3",
       "version": "v4.2.3",
       "cpe": "cpe:2.3:a:actions\\/cache:actions\\/cache:v4.2.3:*:*:*:*:*:*:*",
       "purl": "pkg:github/actions/cache@v4.2.3",
@@ -56,8 +60,12 @@
     },
     {
       "bom-ref": "pkg:github/actions/checkout@v4.2.2?package-id=7cc33d3342343b53",
+      "bom-ref": "pkg:github/actions/checkout@v4.2.2?package-id=7cc33d3342343b53",
       "type": "library",
       "name": "actions/checkout",
+      "version": "v4.2.2",
+      "cpe": "cpe:2.3:a:actions\\/checkout:actions\\/checkout:v4.2.2:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/checkout@v4.2.2",
       "version": "v4.2.2",
       "cpe": "cpe:2.3:a:actions\\/checkout:actions\\/checkout:v4.2.2:*:*:*:*:*:*:*",
       "purl": "pkg:github/actions/checkout@v4.2.2",
@@ -82,8 +90,12 @@
     },
     {
       "bom-ref": "pkg:github/actions/checkout@v4.2.2?package-id=b141e14d24d2eb52",
+      "bom-ref": "pkg:github/actions/checkout@v4.2.2?package-id=b141e14d24d2eb52",
       "type": "library",
       "name": "actions/checkout",
+      "version": "v4.2.2",
+      "cpe": "cpe:2.3:a:actions\\/checkout:actions\\/checkout:v4.2.2:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/checkout@v4.2.2",
       "version": "v4.2.2",
       "cpe": "cpe:2.3:a:actions\\/checkout:actions\\/checkout:v4.2.2:*:*:*:*:*:*:*",
       "purl": "pkg:github/actions/checkout@v4.2.2",
@@ -108,8 +120,12 @@
     },
     {
       "bom-ref": "pkg:github/actions/setup-go@v5.5.0?package-id=c03ed90805d72354",
+      "bom-ref": "pkg:github/actions/setup-go@v5.5.0?package-id=c03ed90805d72354",
       "type": "library",
       "name": "actions/setup-go",
+      "version": "v5.5.0",
+      "cpe": "cpe:2.3:a:actions\\/setup-go:actions\\/setup-go:v5.5.0:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/setup-go@v5.5.0",
       "version": "v5.5.0",
       "cpe": "cpe:2.3:a:actions\\/setup-go:actions\\/setup-go:v5.5.0:*:*:*:*:*:*:*",
       "purl": "pkg:github/actions/setup-go@v5.5.0",
@@ -129,21 +145,26 @@
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:actions\\/setup-go:actions\\/setup_go:v5.5.0:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/setup-go:actions\\/setup_go:v5.5.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/setup_go:actions\\/setup-go:v5.5.0:*:*:*:*:*:*:*"
           "value": "cpe:2.3:a:actions\\/setup_go:actions\\/setup-go:v5.5.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:actions\\/setup_go:actions\\/setup_go:v5.5.0:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/setup_go:actions\\/setup_go:v5.5.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:actions\\/setup:actions\\/setup-go:v5.5.0:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/setup:actions\\/setup-go:v5.5.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/setup:actions\\/setup_go:v5.5.0:*:*:*:*:*:*:*"
           "value": "cpe:2.3:a:actions\\/setup:actions\\/setup_go:v5.5.0:*:*:*:*:*:*:*"
         },
         {
@@ -154,8 +175,12 @@
     },
     {
       "bom-ref": "pkg:github/actions/upload-artifact@v4.6.2?package-id=bc82a3467ab24076",
+      "bom-ref": "pkg:github/actions/upload-artifact@v4.6.2?package-id=bc82a3467ab24076",
       "type": "library",
       "name": "actions/upload-artifact",
+      "version": "v4.6.2",
+      "cpe": "cpe:2.3:a:actions\\/upload-artifact:actions\\/upload-artifact:v4.6.2:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/upload-artifact@v4.6.2",
       "version": "v4.6.2",
       "cpe": "cpe:2.3:a:actions\\/upload-artifact:actions\\/upload-artifact:v4.6.2:*:*:*:*:*:*:*",
       "purl": "pkg:github/actions/upload-artifact@v4.6.2",
@@ -175,21 +200,26 @@
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:actions\\/upload-artifact:actions\\/upload_artifact:v4.6.2:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/upload-artifact:actions\\/upload_artifact:v4.6.2:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/upload_artifact:actions\\/upload-artifact:v4.6.2:*:*:*:*:*:*:*"
           "value": "cpe:2.3:a:actions\\/upload_artifact:actions\\/upload-artifact:v4.6.2:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:actions\\/upload_artifact:actions\\/upload_artifact:v4.6.2:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/upload_artifact:actions\\/upload_artifact:v4.6.2:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:actions\\/upload:actions\\/upload-artifact:v4.6.2:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/upload:actions\\/upload-artifact:v4.6.2:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/upload:actions\\/upload_artifact:v4.6.2:*:*:*:*:*:*:*"
           "value": "cpe:2.3:a:actions\\/upload:actions\\/upload_artifact:v4.6.2:*:*:*:*:*:*:*"
         },
         {
@@ -287,6 +317,56 @@
       ]
     },
     {
+      "bom-ref": "pkg:golang/github.com/google/uuid@v1.6.0?package-id=b40bb1bd3645425a",
+      "type": "library",
+      "name": "github.com/google/uuid",
+      "version": "v1.6.0",
+      "cpe": "cpe:2.3:a:google:uuid:v1.6.0:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/google/uuid@v1.6.0",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "go-module-binary-cataloger"
+        },
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/build/examples/basic"
+        },
+        {
+          "name": "syft:metadata:architecture",
+          "value": "arm64"
+        },
+        {
+          "name": "syft:metadata:goCompiledVersion",
+          "value": "go1.24.3"
+        },
+        {
+          "name": "syft:metadata:goCryptoSettings:0",
+          "value": "standard-crypto"
+        },
+        {
+          "name": "syft:metadata:h1Digest",
+          "value": "h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0="
+        },
+        {
+          "name": "syft:metadata:mainModule",
+          "value": "github.com/greysquirr3l/bishoujo-huntress"
+        }
+      ]
+    },
+    {
       "bom-ref": "pkg:golang/github.com/google/uuid@v1.6.0?package-id=f6424607fde0264b",
       "type": "library",
       "name": "github.com/google/uuid",
@@ -317,6 +397,56 @@
         {
           "name": "syft:metadata:h1Digest",
           "value": "h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0="
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/greysquirr3l/bishoujo-huntress@v0.1.4-0.20250512012456-410cf9f9e1d7%2Bdirty?package-id=dcfa49b7ffaec492",
+      "type": "library",
+      "name": "github.com/greysquirr3l/bishoujo-huntress",
+      "version": "v0.1.4-0.20250512012456-410cf9f9e1d7+dirty",
+      "cpe": "cpe:2.3:a:greysquirr3l:bishoujo-huntress:v0.1.4-0.20250512012456-410cf9f9e1d7\\+dirty:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/greysquirr3l/bishoujo-huntress@v0.1.4-0.20250512012456-410cf9f9e1d7%2Bdirty",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "go-module-binary-cataloger"
+        },
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:greysquirr3l:bishoujo_huntress:v0.1.4-0.20250512012456-410cf9f9e1d7\\+dirty:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/build/examples/basic"
+        },
+        {
+          "name": "syft:metadata:architecture",
+          "value": "arm64"
+        },
+        {
+          "name": "syft:metadata:goCompiledVersion",
+          "value": "go1.24.3"
+        },
+        {
+          "name": "syft:metadata:goCryptoSettings:0",
+          "value": "standard-crypto"
+        },
+        {
+          "name": "syft:metadata:mainModule",
+          "value": "github.com/greysquirr3l/bishoujo-huntress"
         }
       ]
     },
@@ -550,8 +680,12 @@
     },
     {
       "bom-ref": "pkg:github/github/codeql-action@3d392940475e4c472e143ff2fd41aaffb1178094?package-id=c8131ca1fc639dfa#upload-sarif",
+      "bom-ref": "pkg:github/github/codeql-action@3d392940475e4c472e143ff2fd41aaffb1178094?package-id=c8131ca1fc639dfa#upload-sarif",
       "type": "library",
       "name": "github/codeql-action/upload-sarif",
+      "version": "3d392940475e4c472e143ff2fd41aaffb1178094",
+      "cpe": "cpe:2.3:a:github\\/codeql-action\\/upload-sarif:github\\/codeql-action\\/upload-sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*",
+      "purl": "pkg:github/github/codeql-action@3d392940475e4c472e143ff2fd41aaffb1178094#upload-sarif",
       "version": "3d392940475e4c472e143ff2fd41aaffb1178094",
       "cpe": "cpe:2.3:a:github\\/codeql-action\\/upload-sarif:github\\/codeql-action\\/upload-sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*",
       "purl": "pkg:github/github/codeql-action@3d392940475e4c472e143ff2fd41aaffb1178094#upload-sarif",
@@ -571,37 +705,46 @@
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:github\\/codeql-action\\/upload-sarif:github\\/codeql_action\\/upload_sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:github\\/codeql-action\\/upload-sarif:github\\/codeql_action\\/upload_sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
+          "value": "cpe:2.3:a:github\\/codeql_action\\/upload_sarif:github\\/codeql-action\\/upload-sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*"
           "value": "cpe:2.3:a:github\\/codeql_action\\/upload_sarif:github\\/codeql-action\\/upload-sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:github\\/codeql_action\\/upload_sarif:github\\/codeql_action\\/upload_sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:github\\/codeql_action\\/upload_sarif:github\\/codeql_action\\/upload_sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
+          "value": "cpe:2.3:a:github\\/codeql-action\\/upload:github\\/codeql-action\\/upload-sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*"
           "value": "cpe:2.3:a:github\\/codeql-action\\/upload:github\\/codeql-action\\/upload-sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:github\\/codeql-action\\/upload:github\\/codeql_action\\/upload_sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:github\\/codeql-action\\/upload:github\\/codeql_action\\/upload_sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
+          "value": "cpe:2.3:a:github\\/codeql_action\\/upload:github\\/codeql-action\\/upload-sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*"
           "value": "cpe:2.3:a:github\\/codeql_action\\/upload:github\\/codeql-action\\/upload-sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:github\\/codeql_action\\/upload:github\\/codeql_action\\/upload_sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:github\\/codeql_action\\/upload:github\\/codeql_action\\/upload_sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:github\\/codeql:github\\/codeql-action\\/upload-sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:github\\/codeql:github\\/codeql-action\\/upload-sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
+          "value": "cpe:2.3:a:github\\/codeql:github\\/codeql_action\\/upload_sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*"
           "value": "cpe:2.3:a:github\\/codeql:github\\/codeql_action\\/upload_sarif:3d392940475e4c472e143ff2fd41aaffb1178094:*:*:*:*:*:*:*"
         },
         {
@@ -612,8 +755,12 @@
     },
     {
       "bom-ref": "pkg:github/golangci/golangci-lint-action@v8.0.0?package-id=020f69f70941b83f",
+      "bom-ref": "pkg:github/golangci/golangci-lint-action@v8.0.0?package-id=020f69f70941b83f",
       "type": "library",
       "name": "golangci/golangci-lint-action",
+      "version": "v8.0.0",
+      "cpe": "cpe:2.3:a:golangci\\/golangci-lint-action:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*",
+      "purl": "pkg:github/golangci/golangci-lint-action@v8.0.0",
       "version": "v8.0.0",
       "cpe": "cpe:2.3:a:golangci\\/golangci-lint-action:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*",
       "purl": "pkg:github/golangci/golangci-lint-action@v8.0.0",
@@ -633,37 +780,46 @@
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:golangci\\/golangci-lint-action:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci-lint-action:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
+          "value": "cpe:2.3:a:golangci\\/golangci_lint_action:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*"
           "value": "cpe:2.3:a:golangci\\/golangci_lint_action:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:golangci\\/golangci_lint_action:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci_lint_action:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
+          "value": "cpe:2.3:a:golangci\\/golangci-lint:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*"
           "value": "cpe:2.3:a:golangci\\/golangci-lint:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:golangci\\/golangci-lint:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci-lint:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
+          "value": "cpe:2.3:a:golangci\\/golangci_lint:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*"
           "value": "cpe:2.3:a:golangci\\/golangci_lint:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:golangci\\/golangci_lint:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci_lint:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:golangci\\/golangci:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
+          "value": "cpe:2.3:a:golangci\\/golangci:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
           "value": "cpe:2.3:a:golangci\\/golangci:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
         },
         {
@@ -674,8 +830,12 @@
     },
     {
       "bom-ref": "pkg:github/golangci/golangci-lint-action@v8.0.0?package-id=62f8bf2beae4cf40",
+      "bom-ref": "pkg:github/golangci/golangci-lint-action@v8.0.0?package-id=62f8bf2beae4cf40",
       "type": "library",
       "name": "golangci/golangci-lint-action",
+      "version": "v8.0.0",
+      "cpe": "cpe:2.3:a:golangci\\/golangci-lint-action:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*",
+      "purl": "pkg:github/golangci/golangci-lint-action@v8.0.0",
       "version": "v8.0.0",
       "cpe": "cpe:2.3:a:golangci\\/golangci-lint-action:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*",
       "purl": "pkg:github/golangci/golangci-lint-action@v8.0.0",
@@ -695,37 +855,46 @@
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:golangci\\/golangci-lint-action:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci-lint-action:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
+          "value": "cpe:2.3:a:golangci\\/golangci_lint_action:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*"
           "value": "cpe:2.3:a:golangci\\/golangci_lint_action:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:golangci\\/golangci_lint_action:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci_lint_action:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
+          "value": "cpe:2.3:a:golangci\\/golangci-lint:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*"
           "value": "cpe:2.3:a:golangci\\/golangci-lint:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:golangci\\/golangci-lint:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci-lint:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
+          "value": "cpe:2.3:a:golangci\\/golangci_lint:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*"
           "value": "cpe:2.3:a:golangci\\/golangci_lint:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:golangci\\/golangci_lint:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci_lint:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
           "value": "cpe:2.3:a:golangci\\/golangci:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:golangci\\/golangci:golangci\\/golangci-lint-action:v8.0.0:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
+          "value": "cpe:2.3:a:golangci\\/golangci:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
           "value": "cpe:2.3:a:golangci\\/golangci:golangci\\/golangci_lint_action:v8.0.0:*:*:*:*:*:*:*"
         },
         {
@@ -803,6 +972,7 @@
     },
     {
       "bom-ref": "pkg:github/ossf/scorecard-action@v2.4.1?package-id=d6d7333a1080056e",
+      "bom-ref": "pkg:github/ossf/scorecard-action@v2.4.1?package-id=d6d7333a1080056e",
       "type": "library",
       "name": "ossf/scorecard-action",
       "version": "v2.4.1",
@@ -849,8 +1019,12 @@
     },
     {
       "bom-ref": "pkg:github/securego/gosec@v2.22.4?package-id=0357014ef53b1895",
+      "bom-ref": "pkg:github/securego/gosec@v2.22.4?package-id=0357014ef53b1895",
       "type": "library",
       "name": "securego/gosec",
+      "version": "v2.22.4",
+      "cpe": "cpe:2.3:a:securego\\/gosec:securego\\/gosec:v2.22.4:*:*:*:*:*:*:*",
+      "purl": "pkg:github/securego/gosec@v2.22.4",
       "version": "v2.22.4",
       "cpe": "cpe:2.3:a:securego\\/gosec:securego\\/gosec:v2.22.4:*:*:*:*:*:*:*",
       "purl": "pkg:github/securego/gosec@v2.22.4",
@@ -915,6 +1089,47 @@
       ]
     },
     {
+      "bom-ref": "pkg:golang/stdlib@1.24.3?package-id=ded74404751c5413",
+      "type": "library",
+      "name": "stdlib",
+      "version": "go1.24.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "cpe": "cpe:2.3:a:golang:go:1.24.3:-:*:*:*:*:*:*",
+      "purl": "pkg:golang/stdlib@1.24.3",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "go-module-binary-cataloger"
+        },
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/build/examples/basic"
+        },
+        {
+          "name": "syft:metadata:goCompiledVersion",
+          "value": "go1.24.3"
+        }
+      ]
+    },
+    {
       "bom-ref": "7561d461b00ff11d",
       "type": "file",
       "name": "/Users/nickcampbell/Projects/go/bishoujo-huntress/.github/workflows/ci.yml",
@@ -922,9 +1137,11 @@
         {
           "alg": "SHA-1",
           "content": "1683043843f6c0ce5d2e6ffe831b7da7fe85ebbc"
+          "content": "1683043843f6c0ce5d2e6ffe831b7da7fe85ebbc"
         },
         {
           "alg": "SHA-256",
+          "content": "0c8a547323baf865443090d97318fbfbff3f8931b4b08b3a781737108fafb955"
           "content": "0c8a547323baf865443090d97318fbfbff3f8931b4b08b3a781737108fafb955"
         }
       ]
@@ -936,11 +1153,11 @@
       "hashes": [
         {
           "alg": "SHA-1",
-          "content": "b188ef0b5ca9118bdb785adf2a9e96c1bb791fbd"
+          "content": "1ba0009c2b39d8ab15dac86b7ce89a9817a6e90a"
         },
         {
           "alg": "SHA-256",
-          "content": "1e928805d49470c63b66c6abbda20da9962b503f1f609c56802eee4ebedbf4ce"
+          "content": "006c973d7499d6c7938d5f8933c60fb939b343759cae0e7a39a0a786d8c873b4"
         }
       ]
     },
@@ -972,6 +1189,15 @@
           "alg": "SHA-256",
           "content": "11ed301c70ca9eef234c4809d6ac140fc2c1e70d7f74c1ce26f9040b15937ffd"
         }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:golang/github.com/greysquirr3l/bishoujo-huntress@v0.1.4-0.20250512012456-410cf9f9e1d7%2Bdirty?package-id=dcfa49b7ffaec492",
+      "dependsOn": [
+        "pkg:golang/github.com/google/uuid@v1.6.0?package-id=b40bb1bd3645425a",
+        "pkg:golang/stdlib@1.24.3?package-id=ded74404751c5413"
       ]
     }
   ],
