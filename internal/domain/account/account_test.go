@@ -1,6 +1,7 @@
 package account
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/google/uuid"
@@ -36,7 +37,7 @@ func TestAccount_Validate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.acct.Validate()
-			if err != tt.wantErr {
+			if !errorIs(err, tt.wantErr) {
 				t.Errorf("got %v, want %v", err, tt.wantErr)
 			}
 		})
@@ -56,11 +57,22 @@ func TestContact_Validate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.c.Validate()
-			if err != tt.wantErr {
+			if !errorIs(err, tt.wantErr) {
 				t.Errorf("got %v, want %v", err, tt.wantErr)
 			}
 		})
 	}
+}
+
+// errorIs matches nil and uses errors.Is for wrapped errors (errorlint compliant)
+func errorIs(err, target error) bool {
+	if err == nil && target == nil {
+		return true
+	}
+	if err == nil || target == nil {
+		return false
+	}
+	return errors.Is(err, target)
 }
 
 func TestAccount_IsActive(t *testing.T) {

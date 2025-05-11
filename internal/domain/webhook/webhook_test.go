@@ -1,6 +1,7 @@
 package webhook
 
 import (
+	"errors"
 	"testing"
 	"time"
 )
@@ -11,12 +12,12 @@ func TestWebhook_Validate(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 	}
 	w.URL = ""
-	if err := w.Validate(); err != ErrInvalidWebhookURL {
+	if err := w.Validate(); !errors.Is(err, ErrInvalidWebhookURL) {
 		t.Errorf("expected ErrInvalidWebhookURL, got %v", err)
 	}
 	w.URL = "https://foo"
 	w.EventTypes = nil
-	if err := w.Validate(); err != ErrNoEventTypes {
+	if err := w.Validate(); !errors.Is(err, ErrNoEventTypes) {
 		t.Errorf("expected ErrNoEventTypes, got %v", err)
 	}
 }

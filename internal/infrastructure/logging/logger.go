@@ -45,19 +45,44 @@ type Logger interface {
 type NoopLogger struct{}
 
 // Debug does nothing for NoopLogger.
-func (NoopLogger) Debug(string, ...Field) {}
+// Debug does nothing for NoopLogger.
+func (NoopLogger) Debug(msg string, fields ...Field) {
+	// intentionally left blank (noop)
+	_ = msg
+	_ = fields
+}
 
 // Info does nothing for NoopLogger.
-func (NoopLogger) Info(string, ...Field) {}
+// Info does nothing for NoopLogger.
+func (NoopLogger) Info(msg string, fields ...Field) {
+	// intentionally left blank (noop)
+	_ = msg
+	_ = fields
+}
 
 // Warn does nothing for NoopLogger.
-func (NoopLogger) Warn(string, ...Field) {}
+// Warn does nothing for NoopLogger.
+func (NoopLogger) Warn(msg string, fields ...Field) {
+	// intentionally left blank (noop)
+	_ = msg
+	_ = fields
+}
 
 // Error does nothing for NoopLogger.
-func (NoopLogger) Error(string, ...Field) {}
+// Error does nothing for NoopLogger.
+func (NoopLogger) Error(msg string, fields ...Field) {
+	// intentionally left blank (noop)
+	_ = msg
+	_ = fields
+}
 
 // Fatal does nothing for NoopLogger.
-func (NoopLogger) Fatal(string, ...Field) {}
+// Fatal does nothing for NoopLogger.
+func (NoopLogger) Fatal(msg string, fields ...Field) {
+	// intentionally left blank (noop)
+	_ = msg
+	_ = fields
+}
 
 // WithContext returns NoopLogger for context.
 func (NoopLogger) WithContext(context.Context) Logger { return NoopLogger{} }

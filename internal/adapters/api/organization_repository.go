@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"os"
 	"time"
 
 	// Correct the import path for the HTTP client
@@ -43,7 +44,11 @@ func (r *OrganizationRepository) Get(ctx context.Context, id string) (*organizat
 		return nil, fmt.Errorf("failed to get organization: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		defer func() {
+			if err := resp.Body.Close(); err != nil {
+				fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+			}
+		}()
 	}
 	// Check response status code if needed, though Do might handle it
 	if resp.StatusCode != http.StatusOK {

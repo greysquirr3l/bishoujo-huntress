@@ -12,7 +12,7 @@ func TestOrganizationService_InviteUser(t *testing.T) {
 	client := huntress.New(huntress.WithBaseURL("http://localhost:12345")) // or use a test client
 	svc := client.Organization
 
-	orgID := "org-123"
+	const orgID = "org-123"
 	params := &huntress.UserInviteParams{
 		Email:     "invitee@example.com",
 		FirstName: "Invitee",

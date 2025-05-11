@@ -61,8 +61,8 @@ func TestUser_FullName(t *testing.T) {
 
 func TestUser_Validate(t *testing.T) {
 	tests := []struct {
-		name string
-		u    User
+		name    string
+		u       User
 		wantErr bool
 	}{
 		{"valid", User{Email: "a@b.com", Role: RoleAdmin}, false},

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -27,9 +28,8 @@ func (s *reportService) Generate(ctx context.Context, input *ReportGenerateInput
 		return nil, fmt.Errorf("failed to execute request for Generate: %w", err)
 	}
 	if resp != nil {
-		errClose := resp.Body.Close()
-		if errClose != nil {
-			return nil, fmt.Errorf("report get: error closing response body: %w", errClose)
+		if err := resp.Body.Close(); err != nil {
+			return nil, fmt.Errorf("report get: error closing response body: %w", err)
 		}
 	}
 	return report, nil
@@ -49,9 +49,8 @@ func (s *reportService) Get(ctx context.Context, id string) (*Report, error) {
 		return nil, fmt.Errorf("failed to execute request for Get: %w", err)
 	}
 	if resp != nil {
-		errClose := resp.Body.Close()
-		if errClose != nil {
-			return nil, fmt.Errorf("report create: error closing response body: %w", errClose)
+		if err := resp.Body.Close(); err != nil {
+			return nil, fmt.Errorf("report create: error closing response body: %w", err)
 		}
 	}
 	return report, nil
@@ -117,9 +116,8 @@ func (s *reportService) Download(ctx context.Context, id string, format string) 
 		return nil, fmt.Errorf("failed to execute HTTP request for Download: %w", err)
 	}
 	if resp != nil {
-		errClose := resp.Body.Close()
-		if errClose != nil {
-			return nil, fmt.Errorf("report download: error closing response body: %w", errClose)
+		if err := resp.Body.Close(); err != nil {
+			return nil, fmt.Errorf("report download: error closing response body: %w", err)
 		}
 	}
 
@@ -158,9 +156,8 @@ func (s *reportService) GetSummary(ctx context.Context, params *ReportParams) (*
 		return nil, fmt.Errorf("failed to execute request for GetSummary: %w", err)
 	}
 	if resp != nil {
-		errClose := resp.Body.Close()
-		if errClose != nil {
-			return nil, fmt.Errorf("report export: error closing response body: %w", errClose)
+		if err := resp.Body.Close(); err != nil {
+			return nil, fmt.Errorf("report export: error closing response body: %w", err)
 		}
 	}
 	return report, nil
@@ -188,9 +185,8 @@ func (s *reportService) GetDetails(ctx context.Context, params *ReportParams) (*
 		return nil, fmt.Errorf("failed to execute request for GetDetails: %w", err)
 	}
 	if resp != nil {
-		errClose := resp.Body.Close()
-		if errClose != nil {
-			return nil, fmt.Errorf("report get schedule: error closing response body: %w", errClose)
+		if err := resp.Body.Close(); err != nil {
+			return nil, fmt.Errorf("report get schedule: error closing response body: %w", err)
 		}
 	}
 	return report, nil
@@ -210,9 +206,8 @@ func (s *reportService) Schedule(ctx context.Context, params *ReportSchedulePara
 		return nil, fmt.Errorf("failed to execute request for Schedule: %w", err)
 	}
 	if resp != nil {
-		errClose := resp.Body.Close()
-		if errClose != nil {
-			return nil, fmt.Errorf("report update schedule: error closing response body: %w", errClose)
+		if err := resp.Body.Close(); err != nil {
+			return nil, fmt.Errorf("report update schedule: error closing response body: %w", err)
 		}
 	}
 	return schedule, nil
@@ -252,7 +247,11 @@ func (s *reportService) Export(ctx context.Context, params *ReportExportParams) 
 		return nil, fmt.Errorf("failed to execute HTTP request for Export: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		defer func() {
+			if err := resp.Body.Close(); err != nil {
+				fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+			}
+		}()
 	}
 
 	// Check for errors

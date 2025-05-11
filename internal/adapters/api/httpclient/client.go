@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -54,14 +55,16 @@ func (c *Client) Do(ctx context.Context, req *http.Request) (*http.Response, err
 	}
 	for attempt := 0; attempt <= maxRetries; attempt++ {
 		if ctx.Err() != nil {
+			// Always wrap with %w so errors.Is works
 			return nil, fmt.Errorf("httpclient: context error: %w", ctx.Err())
 		}
 		resp, err = c.HTTPClient.Do(req.WithContext(ctx))
-		if err == nil && (resp.StatusCode < 500 || resp.StatusCode > 599) && resp.StatusCode != 429 {
+		if err == nil && resp != nil && (resp.StatusCode < 500 || resp.StatusCode > 599) && resp.StatusCode != 429 {
 			return resp, nil
 		}
 		// Only retry on retryable status codes (5xx, 429)
-		if c.Retrier == nil || !c.Retrier.IsRetryableStatusCode(resp.StatusCode) {
+		// If resp is nil, do not retry (network or context error)
+		if resp == nil || c.Retrier == nil || !c.Retrier.IsRetryableStatusCode(resp.StatusCode) {
 			break
 		}
 		delay := c.Retrier.CalculateBackoff(attempt)
@@ -83,7 +86,11 @@ func (c *Client) DoJSON(ctx context.Context, req *http.Request, v interface{}) (
 	if err != nil {
 		return resp, err
 	}
-	defer func() { _ = resp.Body.Close() }()
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 	if v == nil {
 		return resp, nil
 	}
@@ -109,4 +116,10 @@ type RateLimitError struct {
 
 func (e *RateLimitError) Error() string {
 	return e.Message
+}
+
+// Is allows errors.Is(err, &RateLimitError{}) to work for type checks.
+func (e *RateLimitError) Is(target error) bool {
+	_, ok := target.(*RateLimitError)
+	return ok
 }

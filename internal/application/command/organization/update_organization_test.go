@@ -11,8 +11,9 @@ import (
 
 func TestUpdateOrganizationHandler_Handle_Success(t *testing.T) {
 	ctx := context.Background()
+	const orgID = "org-123"
 	cmd := UpdateOrganizationCommand{
-		ID:   "org-123",
+		ID:   orgID,
 		Name: "UpdatedOrg",
 		ContactInfo: struct {
 			Name        string
@@ -24,17 +25,17 @@ func TestUpdateOrganizationHandler_Handle_Success(t *testing.T) {
 			Email: "contact@example.com",
 		},
 	}
-	org := &orgdomain.Organization{ID: "org-123", AccountID: 1, Name: "UpdatedOrg", ContactInfo: orgdomain.ContactInfo{Name: "Contact", Email: "contact@example.com"}, Status: orgdomain.StatusActive}
+	org := &orgdomain.Organization{ID: orgID, AccountID: 1, Name: "UpdatedOrg", ContactInfo: orgdomain.ContactInfo{Name: "Contact", Email: "contact@example.com"}, Status: orgdomain.StatusActive}
 
 	repo := &FakeOrganizationRepository{
 		GetFunc: func(_ context.Context, id string) (*orgdomain.Organization, error) {
-			if id == "org-123" {
-				return &orgdomain.Organization{ID: "org-123", AccountID: 1, Name: "OldOrg", ContactInfo: orgdomain.ContactInfo{}}, nil
+			if id == orgID {
+				return &orgdomain.Organization{ID: orgID, AccountID: 1, Name: "OldOrg", ContactInfo: orgdomain.ContactInfo{}}, nil
 			}
 			return nil, errors.New("not found")
 		},
 		UpdateFunc: func(_ context.Context, o *orgdomain.Organization) (*orgdomain.Organization, error) {
-			if o.ID == "org-123" && o.Name == "UpdatedOrg" && o.ContactInfo.Name == "Contact" && o.ContactInfo.Email == "contact@example.com" && o.AccountID == 1 {
+			if o.ID == orgID && o.Name == "UpdatedOrg" && o.ContactInfo.Name == "Contact" && o.ContactInfo.Email == "contact@example.com" && o.AccountID == 1 {
 				return org, nil
 			}
 			return nil, errors.New("update mismatch")

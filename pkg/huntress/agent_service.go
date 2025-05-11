@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 )
 
 // agentService implements the AgentService interface
@@ -27,7 +28,11 @@ func (s *agentService) Get(ctx context.Context, id string) (*Agent, error) {
 		return nil, fmt.Errorf("failed to execute request for Get: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		defer func() {
+			if err := resp.Body.Close(); err != nil {
+				fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+			}
+		}()
 	}
 
 	return agent, nil

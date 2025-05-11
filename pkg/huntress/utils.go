@@ -228,6 +228,9 @@ func (o tagOptions) Contains(opt string) bool {
 
 // isEmptyValue checks if a value is empty according to Go's notion of empty.
 func isEmptyValue(v reflect.Value) bool {
+	if !v.IsValid() {
+		return true
+	}
 	switch v.Kind() {
 	case reflect.Array, reflect.Map, reflect.Slice, reflect.String:
 		return v.Len() == 0

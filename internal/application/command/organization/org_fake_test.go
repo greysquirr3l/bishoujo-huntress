@@ -3,6 +3,7 @@ package organization
 
 import (
 	"context"
+	"errors"
 
 	orgdomain "github.com/greysquirr3l/bishoujo-huntress/internal/domain/organization"
 	repo "github.com/greysquirr3l/bishoujo-huntress/internal/ports/repository"
@@ -20,19 +21,19 @@ func (f *FakeOrganizationRepository) Create(ctx context.Context, org *orgdomain.
 	if f.CreateFunc != nil {
 		return f.CreateFunc(ctx, org)
 	}
-	return nil, nil
+	return nil, errors.New("not found")
 }
 func (f *FakeOrganizationRepository) Get(ctx context.Context, id string) (*orgdomain.Organization, error) {
 	if f.GetFunc != nil {
 		return f.GetFunc(ctx, id)
 	}
-	return nil, nil
+	return nil, errors.New("not found")
 }
 func (f *FakeOrganizationRepository) Update(ctx context.Context, org *orgdomain.Organization) (*orgdomain.Organization, error) {
 	if f.UpdateFunc != nil {
 		return f.UpdateFunc(ctx, org)
 	}
-	return nil, nil
+	return nil, errors.New("not found")
 }
 func (f *FakeOrganizationRepository) Delete(ctx context.Context, id string) error {
 	if f.DeleteFunc != nil {
@@ -44,5 +45,5 @@ func (f *FakeOrganizationRepository) List(ctx context.Context, filters map[strin
 	if f.ListFunc != nil {
 		return f.ListFunc(ctx, filters)
 	}
-	return nil, nil, nil
+	return nil, nil, errors.New("not found")
 }

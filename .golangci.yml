@@ -1,73 +1,46 @@
-# yaml-language-server: $schema=https://golangci-lint.run/jsonschema/golangci.jsonschema.json
-
-# Version is required for v2+ configs to distinguish from v1
 version: "2"
 
-# Run configuration
 run:
-  # Timeout for analysis, e.g. 30s, 5m, default is 1m
   timeout: 5m
-
-  # Include test files or not, default is true
   tests: true
-
-  # Exit code when at least one issue was found, default is 1
   issues-exit-code: 1
-
-  # Use Go modules for analysis
   modules-download-mode: readonly
-
-  # Default concurrency is a available CPU number
   concurrency: 4
-
-  # Build tags
   build-tags: []
-
-  # Skip directories
-  skip-dirs:
-    - internal/mocks
-    - vendor/
-    - bin/
-    - .git/
-    - third_party/
-
-  # Skip files matching the given patterns
-  skip-files:
-    - ".*\\.generated\\.go$"
-    - ".*\\.pb\\.go$"
-
-  # Allow multiple golangci-lint instances running
   allow-parallel-runners: true
 
-# Output configuration options
 output:
-  # colored-line-number|line-number|json|tab|checkstyle|code-climate|junit-xml|github-actions|teamcity
   format: colored-line-number
-
-  # Sort results by: filepath, line and column
   sort-results: true
-
-  # Print lines of code with issue, default is true
   print-issued-lines: true
-
-  # Print linter name in the end of issue text, default is true
   print-linter-name: true
 
-# Linters settings
 linters-settings:
   errcheck:
-    # Exclude specific functions from errcheck
     exclude-functions: []
     ignore: fmt:.*,io/ioutil:^Read.*
-
   gofmt:
-    # Simplify code: gofmt with `-s` option
     simplify: true
-
   goimports:
-    # Put imports beginning with prefix after 3rd-party packages
-    local-prefixes: github.com/greysquirr3l/oregon-trail
-
+    local-prefixes: github.com/greysquirr3l/bishoujo-huntress
+  gocyclo:
+    min-complexity: 15
+  goconst:
+    min-len: 2
+    min-occurrences: 3
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - style
+      - performance
+  gosec:
+    severity: medium
+    confidence: medium
+    excludes:
+      - G104
+      - G404
+    includes: []
+    config: {}
   revive:
     rules:
       - name: exported
@@ -78,117 +51,63 @@ linters-settings:
           - "disableStutteringCheck"
       - name: var-naming
         disabled: false
-
-  gosec:
-    excludes:
-      - G104 # Audit errors not checked
-      - G404 # Use of weak random number generator
-    includes: []
-    config: {}
-
   staticcheck:
-    # Use current Go version instead of 1.24 which doesn't exist yet
     go: "1.22"
     checks: [all]
-
   govet:
     check-shadowing: true
-
-  gocyclo:
-    min-complexity: 15
-
   dupl:
     threshold: 100
-
-  goconst:
-    min-len: 2
-    min-occurrences: 3
-
   misspell:
     locale: US
 
-  gocritic:
-    enabled-tags:
-      - diagnostic
-      - style
-      - performance
-
-# Configure specific linters
 linters:
-  # Disable all linters by default and then enable specific ones
-  disable-all: true
+  enable-all: false
   enable:
-    # Default Go linters
-    - errcheck        # Check for unchecked errors
-    - govet           # Reports suspicious constructs
-    - ineffassign     # Detects unused assignments
-    - staticcheck     # Comprehensive static analyzer
-    - unused          # Check for unused code
+    - errcheck
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - goconst
+    - gocyclo
+    - revive
+    - misspell
+    - unparam
+    - prealloc
+    - gosec
+    - bodyclose
+    - noctx
+    - errorlint
+    - wrapcheck
+    - nilnil
+    - sqlclosecheck
+    - dogsled
+    - dupl
+    - durationcheck
+    - thelper
+    - whitespace
+    - asasalint
+    - bidichk
+    - contextcheck
+    - musttag
+    - nakedret
 
-    # Code quality linters
-    # - gosimple        # Simplify code
-    - goconst         # Find repeated strings that could be constants
-    - gocyclo         # Check cyclomatic complexity
-    - revive          # Replacement for golint
-    - misspell        # Check for spelling mistakes
-    - unparam         # Find unused function parameters
-    - prealloc        # Find slice declarations that could be preallocated
-    # - exportloopref   # Prevent exporting loop variables
-
-    # Security and correctness
-    - gosec           # Security problems detector
-    - bodyclose       # Check HTTP response body is closed
-    - noctx           # Find HTTP requests without context
-    - errorlint       # Error wrapping lint checks
-    - wrapcheck       # Ensure errors from external packages are wrapped
-    - nilnil          # Check for nil error + nil value returns
-    - sqlclosecheck   # Checks that sql.Rows and sql.Stmt are closed
-
-    # Additional helpful linters
-    - dogsled         # Check for too many blank identifiers
-    - dupl            # Detect duplicated code
-    - durationcheck   # Check for duration multiplication mistakes
-    - thelper         # Ensure test helpers call t.Helper()
-    - whitespace      # Check whitespace is used correctly
-
-    # New recommended linters
-    - asasalint       # Check for pass []any as any in variadic func(...any)
-    - bidichk         # Checks for dangerous unicode character sequences
-    - contextcheck    # Check whether the function uses a non-inherited context
-    # - godot           # Check if comments end in a period
-    - musttag         # Enforce field tags in (un)marshaled structs
-    - nakedret        # Flags functions with naked returns over a size threshold
-
-# Issues configuration
 issues:
-  # Don't use default excludes
   exclude-use-default: false
-
-  # Maximum issues count per one linter (0 = no limit)
   max-issues-per-linter: 0
-
-  # Maximum count of issues with the same text (0 = no limit)
   max-same-issues: 0
-
-  # Exclude patterns
   exclude:
     - "should have a package comment"
-
-  # Include specific exclusion patterns
   include:
     - EXC0002
-
-  # Excluding configuration per-path, per-linter, per-text and per-source
   exclude-rules:
-    # Exclude some linters from running on tests files
     - path: _test\.go
       linters:
         - gocyclo
         - errcheck
         - dupl
         - gosec
-
-    # Exclude certain linters from mock files
     - path: internal/mocks/.*\.go
       linters:
         - gomnd

@@ -1,30 +1,484 @@
 	github.com/greysquirr3l/bishoujo-huntress/cmd/examples/basic		coverage: 0.0% of statements
-	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/api		coverage: 0.0% of statements
-	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/api/httpclient		coverage: 0.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/repository	0.150s	coverage: 11.7% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/application/command/organization	0.259s	coverage: 62.3% of statements
+=== RUN   TestAuditLogRepository_Get_Success
+--- PASS: TestAuditLogRepository_Get_Success (0.00s)
+=== RUN   TestBulkRepository_BulkAgentAction_Error
+--- PASS: TestBulkRepository_BulkAgentAction_Error (0.00s)
+=== RUN   TestBulkRepository_BulkAgentAction_Success
+--- PASS: TestBulkRepository_BulkAgentAction_Success (0.00s)
+=== RUN   TestBulkRepository_BulkOrgAction_Error
+--- PASS: TestBulkRepository_BulkOrgAction_Error (0.00s)
+=== RUN   TestBulkRepository_BulkOrgAction_Success
+--- PASS: TestBulkRepository_BulkOrgAction_Success (0.00s)
+=== RUN   TestDefaultClient_Do_Success
+--- PASS: TestDefaultClient_Do_Success (0.00s)
+=== RUN   TestDefaultClient_Do_Error
+--- PASS: TestDefaultClient_Do_Error (0.00s)
+=== RUN   TestDoGetWithQueryAndDecode_ErrorStatus_CloseError
+--- PASS: TestDoGetWithQueryAndDecode_ErrorStatus_CloseError (0.00s)
+=== RUN   TestDoGetWithQueryAndDecode_BadJSON_CloseError
+--- PASS: TestDoGetWithQueryAndDecode_BadJSON_CloseError (0.00s)
+=== RUN   TestDoPostBulkActionAndDecode_ErrorStatus_CloseError
+--- PASS: TestDoPostBulkActionAndDecode_ErrorStatus_CloseError (0.00s)
+=== RUN   TestDoGetWithQueryAndDecode_Success
+--- PASS: TestDoGetWithQueryAndDecode_Success (0.00s)
+=== RUN   TestDoGetWithQueryAndDecode_ErrorStatus
+--- PASS: TestDoGetWithQueryAndDecode_ErrorStatus (0.00s)
+=== RUN   TestDoGetWithQueryAndDecode_BadJSON
+--- PASS: TestDoGetWithQueryAndDecode_BadJSON (0.00s)
+=== RUN   TestDoPostBulkActionAndDecode_Success
+--- PASS: TestDoPostBulkActionAndDecode_Success (0.00s)
+=== RUN   TestDoPostBulkActionAndDecode_ErrorStatus
+--- PASS: TestDoPostBulkActionAndDecode_ErrorStatus (0.00s)
+=== RUN   TestDoPostBulkActionAndDecode_BadJSON
+--- PASS: TestDoPostBulkActionAndDecode_BadJSON (0.00s)
+=== RUN   TestBuildQueryParams_Empty
+--- PASS: TestBuildQueryParams_Empty (0.00s)
+=== RUN   TestBuildQueryParams_Basic
+--- PASS: TestBuildQueryParams_Basic (0.00s)
+=== RUN   TestBuildQueryParams_IgnoreEmpty
+--- PASS: TestBuildQueryParams_IgnoreEmpty (0.00s)
+=== RUN   TestHTTPClient_Do
+--- PASS: TestHTTPClient_Do (0.00s)
+=== RUN   TestIntegrationRepository_Update_Success
+--- PASS: TestIntegrationRepository_Update_Success (0.00s)
+=== RUN   TestIntegrationRepository_Update_HTTPError
+--- PASS: TestIntegrationRepository_Update_HTTPError (0.00s)
+=== RUN   TestIntegrationRepository_Update_BadJSON
+--- PASS: TestIntegrationRepository_Update_BadJSON (0.00s)
+=== RUN   TestIntegrationRepository_Delete_Success
+--- PASS: TestIntegrationRepository_Delete_Success (0.00s)
+=== RUN   TestIntegrationRepository_Delete_HTTPError
+--- PASS: TestIntegrationRepository_Delete_HTTPError (0.00s)
+=== RUN   TestIntegrationRepository_Delete_CloseError
+--- PASS: TestIntegrationRepository_Delete_CloseError (0.00s)
+=== RUN   TestIntegrationRepository_Delete_WrongStatus
+--- PASS: TestIntegrationRepository_Delete_WrongStatus (0.00s)
+=== RUN   TestIntegrationRepository_List_Success
+--- PASS: TestIntegrationRepository_List_Success (0.00s)
+=== RUN   TestIntegrationRepository_List_Error
+--- PASS: TestIntegrationRepository_List_Error (0.00s)
+=== RUN   TestIntegrationRepository_Get_Success
+--- PASS: TestIntegrationRepository_Get_Success (0.00s)
+=== RUN   TestIntegrationRepository_Get_HTTPError
+--- PASS: TestIntegrationRepository_Get_HTTPError (0.00s)
+=== RUN   TestIntegrationRepository_Get_BadJSON
+--- PASS: TestIntegrationRepository_Get_BadJSON (0.00s)
+=== RUN   TestIntegrationRepository_Create_Success
+--- PASS: TestIntegrationRepository_Create_Success (0.00s)
+=== RUN   TestIntegrationRepository_Create_HTTPError
+--- PASS: TestIntegrationRepository_Create_HTTPError (0.00s)
+=== RUN   TestIntegrationRepository_Create_BadJSON
+--- PASS: TestIntegrationRepository_Create_BadJSON (0.00s)
+=== RUN   TestOrganizationRepository_List_HTTPError
+--- PASS: TestOrganizationRepository_List_HTTPError (4.59s)
+=== RUN   TestOrganizationRepository_List_BadJSON
+--- PASS: TestOrganizationRepository_List_BadJSON (0.00s)
+=== RUN   TestOrganizationRepository_Delete_HTTPError
+--- PASS: TestOrganizationRepository_Delete_HTTPError (0.00s)
+=== RUN   TestOrganizationRepository_Delete_Success
+--- PASS: TestOrganizationRepository_Delete_Success (0.00s)
+=== RUN   TestOrganizationRepository_Get_Success
+--- PASS: TestOrganizationRepository_Get_Success (0.00s)
+=== RUN   TestOrganizationRepository_Get_HTTPError
+--- PASS: TestOrganizationRepository_Get_HTTPError (0.00s)
+=== RUN   TestOrganizationRepository_Get_BadJSON
+--- PASS: TestOrganizationRepository_Get_BadJSON (0.00s)
+=== RUN   TestWebhookRepository_List_HTTPError
+--- PASS: TestWebhookRepository_List_HTTPError (0.00s)
+=== RUN   TestWebhookRepository_List_BadJSON
+--- PASS: TestWebhookRepository_List_BadJSON (0.00s)
+=== RUN   TestWebhookRepository_Delete_HTTPError
+--- PASS: TestWebhookRepository_Delete_HTTPError (0.00s)
+=== RUN   TestWebhookRepository_Delete_Success
+--- PASS: TestWebhookRepository_Delete_Success (0.00s)
+=== RUN   TestWebhookRepository_List_Success
+--- PASS: TestWebhookRepository_List_Success (0.00s)
+=== RUN   TestWebhookRepository_Create_HTTPError
+--- PASS: TestWebhookRepository_Create_HTTPError (0.00s)
+=== RUN   TestWebhookRepository_Create_BadJSON
+--- PASS: TestWebhookRepository_Create_BadJSON (0.00s)
+=== RUN   TestWebhookRepository_Create_Success
+--- PASS: TestWebhookRepository_Create_Success (0.00s)
+PASS
+coverage: 49.6% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/api	5.201s	coverage: 49.6% of statements
+=== RUN   TestClient_Do_Success
+--- PASS: TestClient_Do_Success (0.00s)
+=== RUN   TestClient_Do_RateLimit
+--- PASS: TestClient_Do_RateLimit (0.01s)
+=== RUN   TestClient_Do_Retry
+--- PASS: TestClient_Do_Retry (0.02s)
+=== RUN   TestClient_Do_ContextCancel
+--- PASS: TestClient_Do_ContextCancel (0.10s)
+=== RUN   TestClient_DoJSON_Success
+--- PASS: TestClient_DoJSON_Success (0.00s)
+=== RUN   TestClient_DoJSON_ErrorStatus
+--- PASS: TestClient_DoJSON_ErrorStatus (0.00s)
+=== RUN   Test_decodeJSON_Error
+--- PASS: Test_decodeJSON_Error (0.00s)
+=== RUN   TestRateLimitError_Error
+--- PASS: TestRateLimitError_Error (0.00s)
+=== RUN   TestBasicAuthHeader
+--- PASS: TestBasicAuthHeader (0.00s)
+=== RUN   TestAddBasicAuth
+--- PASS: TestAddBasicAuth (0.00s)
+=== RUN   TestRateLimiter_Allow
+--- PASS: TestRateLimiter_Allow (0.11s)
+=== RUN   TestRateLimiter_Wait_AllowsEventually
+--- PASS: TestRateLimiter_Wait_AllowsEventually (0.10s)
+=== RUN   TestRateLimiter_Wait_ContextCancel
+--- PASS: TestRateLimiter_Wait_ContextCancel (0.03s)
+PASS
+coverage: 90.6% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/api/httpclient	1.105s	coverage: 90.6% of statements
+=== RUN   TestExtractPagination
+--- PASS: TestExtractPagination (0.00s)
+=== RUN   TestParseTime
+--- PASS: TestParseTime (0.00s)
+=== RUN   TestBuildQueryParams
+--- PASS: TestBuildQueryParams (0.00s)
+=== RUN   TestCreateRequest
+--- PASS: TestCreateRequest (0.00s)
+=== RUN   TestCreateRequest_NoBody
+--- PASS: TestCreateRequest_NoBody (0.00s)
+=== RUN   TestHandleErrorResponse_JSON
+--- PASS: TestHandleErrorResponse_JSON (0.00s)
+=== RUN   TestHandleErrorResponse_BadJSON
+--- PASS: TestHandleErrorResponse_BadJSON (0.00s)
+=== RUN   TestPagination_Next
+--- PASS: TestPagination_Next (0.00s)
+=== RUN   TestPagination_Previous
+--- PASS: TestPagination_Previous (0.00s)
+=== RUN   TestPagination_HasNextAndPrevious
+--- PASS: TestPagination_HasNextAndPrevious (0.00s)
+=== RUN   TestPagination_IsFirstAndLastPage
+--- PASS: TestPagination_IsFirstAndLastPage (0.00s)
+PASS
+coverage: 11.6% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/repository	0.968s	coverage: 11.6% of statements
+=== RUN   TestCreateOrganizationHandler_Handle_Success
+--- PASS: TestCreateOrganizationHandler_Handle_Success (0.00s)
+=== RUN   TestCreateOrganizationHandler_Handle_ValidationError
+--- PASS: TestCreateOrganizationHandler_Handle_ValidationError (0.00s)
+=== RUN   TestCreateOrganizationHandler_Handle_RepoError
+--- PASS: TestCreateOrganizationHandler_Handle_RepoError (0.00s)
+=== RUN   TestDeleteOrganizationHandler_Handle_Success
+--- PASS: TestDeleteOrganizationHandler_Handle_Success (0.00s)
+=== RUN   TestDeleteOrganizationHandler_Handle_MissingID
+--- PASS: TestDeleteOrganizationHandler_Handle_MissingID (0.00s)
+=== RUN   TestDeleteOrganizationHandler_Handle_RepoError
+--- PASS: TestDeleteOrganizationHandler_Handle_RepoError (0.00s)
+=== RUN   TestUpdateOrganizationHandler_Handle_Success
+--- PASS: TestUpdateOrganizationHandler_Handle_Success (0.00s)
+=== RUN   TestUpdateOrganizationHandler_Handle_ValidationError
+--- PASS: TestUpdateOrganizationHandler_Handle_ValidationError (0.00s)
+=== RUN   TestUpdateOrganizationHandler_Handle_RepoError
+--- PASS: TestUpdateOrganizationHandler_Handle_RepoError (0.00s)
+PASS
+coverage: 62.3% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/application/command/organization	0.847s	coverage: 62.3% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/application/query/auditlog		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/application/query/organization		coverage: 0.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/account	0.593s	coverage: 100.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/agent	0.372s	coverage: 100.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/auditlog	0.707s	coverage: 100.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/common	0.484s	coverage: 96.4% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/errors	0.802s	coverage: 75.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/incident	0.908s	coverage: [no statements]
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/organization	1.008s	coverage: 100.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/webhook	1.066s	coverage: 100.0% of statements
---- FAIL: TestClient_Do_RetryLogic (0.00s)
-    client_test.go:124: expected no error, got API error: 503 - unavailable
-FAIL
-coverage: 68.2% of statements
-FAIL	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http	1.169s
---- FAIL: TestRetrier_Do_ContextCancel (0.01s)
-    retrier_test.go:59: expected error due to context timeout
-FAIL
-coverage: 78.3% of statements
-FAIL	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/retry	1.213s
+=== RUN   TestAccount_Validate
+=== RUN   TestAccount_Validate/valid_account
+=== RUN   TestAccount_Validate/empty_name
+=== RUN   TestAccount_Validate/invalid_primary_contact
+=== RUN   TestAccount_Validate/invalid_billing_contact
+--- PASS: TestAccount_Validate (0.00s)
+    --- PASS: TestAccount_Validate/valid_account (0.00s)
+    --- PASS: TestAccount_Validate/empty_name (0.00s)
+    --- PASS: TestAccount_Validate/invalid_primary_contact (0.00s)
+    --- PASS: TestAccount_Validate/invalid_billing_contact (0.00s)
+=== RUN   TestContact_Validate
+=== RUN   TestContact_Validate/valid
+=== RUN   TestContact_Validate/empty_name
+=== RUN   TestContact_Validate/empty_email
+--- PASS: TestContact_Validate (0.00s)
+    --- PASS: TestContact_Validate/valid (0.00s)
+    --- PASS: TestContact_Validate/empty_name (0.00s)
+    --- PASS: TestContact_Validate/empty_email (0.00s)
+=== RUN   TestAccount_IsActive
+--- PASS: TestAccount_IsActive (0.00s)
+=== RUN   TestStatus_String
+--- PASS: TestStatus_String (0.00s)
+=== RUN   TestStatus_IsValid
+--- PASS: TestStatus_IsValid (0.00s)
+PASS
+coverage: 100.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/account	0.344s	coverage: 100.0% of statements
+=== RUN   TestAgent_Validate
+=== RUN   TestAgent_Validate/valid
+=== RUN   TestAgent_Validate/empty_id
+=== RUN   TestAgent_Validate/empty_hostname
+=== RUN   TestAgent_Validate/invalid_org
+--- PASS: TestAgent_Validate (0.00s)
+    --- PASS: TestAgent_Validate/valid (0.00s)
+    --- PASS: TestAgent_Validate/empty_id (0.00s)
+    --- PASS: TestAgent_Validate/empty_hostname (0.00s)
+    --- PASS: TestAgent_Validate/invalid_org (0.00s)
+=== RUN   TestAgent_IsWindows
+--- PASS: TestAgent_IsWindows (0.00s)
+=== RUN   TestAgent_IsMac
+--- PASS: TestAgent_IsMac (0.00s)
+=== RUN   TestAgent_IsLinux
+--- PASS: TestAgent_IsLinux (0.00s)
+=== RUN   TestAgent_IsOnline
+--- PASS: TestAgent_IsOnline (0.00s)
+=== RUN   TestAgent_IsRecentlySeen
+--- PASS: TestAgent_IsRecentlySeen (0.00s)
+=== RUN   TestAgent_HasTag
+--- PASS: TestAgent_HasTag (0.00s)
+=== RUN   TestAgent_AddTag
+--- PASS: TestAgent_AddTag (0.00s)
+=== RUN   TestAgent_RemoveTag
+--- PASS: TestAgent_RemoveTag (0.00s)
+PASS
+coverage: 100.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/agent	0.224s	coverage: 100.0% of statements
+=== RUN   TestAuditLog_Validate
+=== RUN   TestAuditLog_Validate/empty_id
+=== RUN   TestAuditLog_Validate/zero_timestamp
+=== RUN   TestAuditLog_Validate/empty_actor
+=== RUN   TestAuditLog_Validate/empty_action
+=== RUN   TestAuditLog_Validate/empty_resource_type
+=== RUN   TestAuditLog_Validate/empty_resource_id
+--- PASS: TestAuditLog_Validate (0.00s)
+    --- PASS: TestAuditLog_Validate/empty_id (0.00s)
+    --- PASS: TestAuditLog_Validate/zero_timestamp (0.00s)
+    --- PASS: TestAuditLog_Validate/empty_actor (0.00s)
+    --- PASS: TestAuditLog_Validate/empty_action (0.00s)
+    --- PASS: TestAuditLog_Validate/empty_resource_type (0.00s)
+    --- PASS: TestAuditLog_Validate/empty_resource_id (0.00s)
+PASS
+coverage: 100.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/auditlog	1.081s	coverage: 100.0% of statements
+=== RUN   TestDomainError_ErrorAndUnwrap
+--- PASS: TestDomainError_ErrorAndUnwrap (0.00s)
+=== RUN   TestNewDomainError
+--- PASS: TestNewDomainError (0.00s)
+=== RUN   TestValidationErrors
+--- PASS: TestValidationErrors (0.00s)
+=== RUN   TestPagination_HasNextAndPrevious
+--- PASS: TestPagination_HasNextAndPrevious (0.00s)
+=== RUN   TestPagination_NextPage_PreviousPage
+--- PASS: TestPagination_NextPage_PreviousPage (0.00s)
+=== RUN   TestPagination_IsFirstAndLastPage
+--- PASS: TestPagination_IsFirstAndLastPage (0.00s)
+=== RUN   TestNewAndDefaultPagination
+--- PASS: TestNewAndDefaultPagination (0.00s)
+=== RUN   TestUUID_Basics
+--- PASS: TestUUID_Basics (0.00s)
+PASS
+coverage: 96.4% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/common	0.459s	coverage: 96.4% of statements
+=== RUN   TestAPIError_Error
+--- PASS: TestAPIError_Error (0.00s)
+=== RUN   TestNewAPIError
+--- PASS: TestNewAPIError (0.00s)
+PASS
+coverage: 75.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/errors	1.183s	coverage: 75.0% of statements
+=== RUN   TestIndicatorOfCompromise_Struct
+--- PASS: TestIndicatorOfCompromise_Struct (0.00s)
+=== RUN   TestArtifact_Struct
+--- PASS: TestArtifact_Struct (0.00s)
+=== RUN   TestNote_Struct
+--- PASS: TestNote_Struct (0.00s)
+=== RUN   TestIncident_Struct
+--- PASS: TestIncident_Struct (0.00s)
+PASS
+coverage: [no statements]
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/incident	1.228s	coverage: [no statements]
+=== RUN   TestOrganization_Validate
+=== RUN   TestOrganization_Validate/valid
+=== RUN   TestOrganization_Validate/empty_name
+=== RUN   TestOrganization_Validate/invalid_account_id
+=== RUN   TestOrganization_Validate/invalid_status
+=== RUN   TestOrganization_Validate/invalid_contact_email
+--- PASS: TestOrganization_Validate (0.00s)
+    --- PASS: TestOrganization_Validate/valid (0.00s)
+    --- PASS: TestOrganization_Validate/empty_name (0.00s)
+    --- PASS: TestOrganization_Validate/invalid_account_id (0.00s)
+    --- PASS: TestOrganization_Validate/invalid_status (0.00s)
+    --- PASS: TestOrganization_Validate/invalid_contact_email (0.00s)
+=== RUN   TestOrganization_IsActive
+--- PASS: TestOrganization_IsActive (0.00s)
+=== RUN   TestOrganization_CanHaveAgents
+--- PASS: TestOrganization_CanHaveAgents (0.00s)
+=== RUN   TestUser_FullName
+--- PASS: TestUser_FullName (0.00s)
+=== RUN   TestUser_Validate
+=== RUN   TestUser_Validate/valid
+=== RUN   TestUser_Validate/empty_email
+=== RUN   TestUser_Validate/invalid_email
+=== RUN   TestUser_Validate/invalid_role
+--- PASS: TestUser_Validate (0.00s)
+    --- PASS: TestUser_Validate/valid (0.00s)
+    --- PASS: TestUser_Validate/empty_email (0.00s)
+    --- PASS: TestUser_Validate/invalid_email (0.00s)
+    --- PASS: TestUser_Validate/invalid_role (0.00s)
+=== RUN   TestUser_HasAdminAccess
+--- PASS: TestUser_HasAdminAccess (0.00s)
+=== RUN   TestUser_HasManagerAccess
+--- PASS: TestUser_HasManagerAccess (0.00s)
+=== RUN   Test_isValidStatus
+--- PASS: Test_isValidStatus (0.00s)
+=== RUN   Test_isValidRole
+--- PASS: Test_isValidRole (0.00s)
+=== RUN   Test_isValidEmail
+--- PASS: Test_isValidEmail (0.00s)
+PASS
+coverage: 100.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/organization	1.326s	coverage: 100.0% of statements
+=== RUN   TestParseEvent
+--- PASS: TestParseEvent (0.00s)
+=== RUN   TestValidateEvent
+--- PASS: TestValidateEvent (0.00s)
+=== RUN   TestWebhook_Validate
+--- PASS: TestWebhook_Validate (0.00s)
+PASS
+coverage: 100.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/webhook	1.203s	coverage: 100.0% of statements
+=== RUN   TestClient_Do_Success
+--- PASS: TestClient_Do_Success (0.00s)
+=== RUN   TestClient_Do_ErrorResponse
+--- PASS: TestClient_Do_ErrorResponse (0.00s)
+=== RUN   TestClient_Do_ContextCancel
+--- PASS: TestClient_Do_ContextCancel (0.01s)
+=== RUN   TestClient_Do_AuthHeader
+--- PASS: TestClient_Do_AuthHeader (0.00s)
+=== RUN   TestClient_Do_RetryLogic
+--- PASS: TestClient_Do_RetryLogic (0.04s)
+=== RUN   TestClient_Get_Post_Put_Delete
+--- PASS: TestClient_Get_Post_Put_Delete (0.00s)
+=== RUN   TestGetPagination_Defaults
+--- PASS: TestGetPagination_Defaults (0.00s)
+PASS
+coverage: 65.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http	1.209s	coverage: 65.0% of statements
+=== RUN   TestRetrier_Do_Success
+--- PASS: TestRetrier_Do_Success (0.00s)
+=== RUN   TestRetrier_Do_RetryOnStatus
+--- PASS: TestRetrier_Do_RetryOnStatus (0.00s)
+=== RUN   TestRetrier_Do_ContextCancel
+--- PASS: TestRetrier_Do_ContextCancel (0.05s)
+=== RUN   TestExecuteWithRetry_Success
+--- PASS: TestExecuteWithRetry_Success (0.00s)
+=== RUN   TestExecuteWithRetry_RetryAndFail
+--- PASS: TestExecuteWithRetry_RetryAndFail (0.01s)
+PASS
+coverage: 73.5% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/retry	1.260s	coverage: 73.5% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/logging		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/ports/repository		coverage: 0.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress	1.289s	coverage: 29.7% of statements
-	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress/types		coverage: 0.0% of statements
-FAIL
+=== RUN   TestAgentService_Get
+--- PASS: TestAgentService_Get (0.00s)
+=== RUN   TestAgentService_Get_HTTPError
+--- PASS: TestAgentService_Get_HTTPError (0.00s)
+=== RUN   TestAgentService_List
+--- PASS: TestAgentService_List (0.00s)
+=== RUN   TestAgentService_List_HTTPError
+--- PASS: TestAgentService_List_HTTPError (0.00s)
+=== RUN   TestAgentService_List_InvalidParams
+--- PASS: TestAgentService_List_InvalidParams (0.00s)
+=== RUN   TestAgentService_GetStats
+--- PASS: TestAgentService_GetStats (0.00s)
+=== RUN   TestAgentService_GetStats_HTTPError
+--- PASS: TestAgentService_GetStats_HTTPError (0.00s)
+=== RUN   TestAgentService_Update
+--- PASS: TestAgentService_Update (0.00s)
+=== RUN   TestAgentService_Update_HTTPError
+--- PASS: TestAgentService_Update_HTTPError (0.00s)
+=== RUN   TestAgentService_Delete
+--- PASS: TestAgentService_Delete (0.00s)
+=== RUN   TestAgentService_Delete_HTTPError
+--- PASS: TestAgentService_Delete_HTTPError (0.00s)
+=== RUN   TestAuditLogService_List
+--- PASS: TestAuditLogService_List (0.00s)
+=== RUN   TestAuditLogService_Get
+--- PASS: TestAuditLogService_Get (0.00s)
+=== RUN   TestAuditLogService_Get_NotFound
+--- PASS: TestAuditLogService_Get_NotFound (0.00s)
+=== RUN   TestBillingService_GetSummary
+--- PASS: TestBillingService_GetSummary (0.00s)
+=== RUN   TestBillingService_GetSummary_HTTPError
+--- PASS: TestBillingService_GetSummary_HTTPError (0.00s)
+=== RUN   TestClient_New
+--- PASS: TestClient_New (0.00s)
+=== RUN   TestAccountService_Get_NotImplemented
+--- PASS: TestAccountService_Get_NotImplemented (0.26s)
+=== RUN   TestClient_NewRequest_sets_headers
+--- PASS: TestClient_NewRequest_sets_headers (0.00s)
+=== RUN   TestClient_NewRequest_with_body
+--- PASS: TestClient_NewRequest_with_body (0.00s)
+=== RUN   TestClient_Do_success
+--- PASS: TestClient_Do_success (0.00s)
+=== RUN   TestClient_Do_error_status
+--- PASS: TestClient_Do_error_status (0.00s)
+=== RUN   TestClient_Do_cache
+--- PASS: TestClient_Do_cache (0.00s)
+=== RUN   TestIncidentService_Get
+--- PASS: TestIncidentService_Get (0.00s)
+=== RUN   TestIncidentService_Get_HTTPError
+--- PASS: TestIncidentService_Get_HTTPError (0.00s)
+=== RUN   TestReportService_Generate
+--- PASS: TestReportService_Generate (0.00s)
+=== RUN   TestReportService_Generate_HTTPError
+--- PASS: TestReportService_Generate_HTTPError (0.00s)
+=== RUN   TestEncodeURLValues_EdgeCases
+--- PASS: TestEncodeURLValues_EdgeCases (0.00s)
+=== RUN   TestAddQueryParams
+--- PASS: TestAddQueryParams (0.00s)
+=== RUN   TestExtractPagination
+--- PASS: TestExtractPagination (0.00s)
+=== RUN   TestParseInt
+--- PASS: TestParseInt (0.00s)
+=== RUN   TestEncodeURLValues
+    utils_test.go:121: encoded query: a=foo&b=42&c=x&c=y&d=%22bar%22&e=7
+--- PASS: TestEncodeURLValues (0.00s)
+=== RUN   TestAddValues_EmbeddedStruct
+--- PASS: TestAddValues_EmbeddedStruct (0.00s)
+=== RUN   TestParseTag
+--- PASS: TestParseTag (0.00s)
+=== RUN   TestTagOptions_Contains
+--- PASS: TestTagOptions_Contains (0.00s)
+=== RUN   TestIsEmptyValue
+--- PASS: TestIsEmptyValue (0.00s)
+=== RUN   TestAccountService_InviteUser
+--- PASS: TestAccountService_InviteUser (0.00s)
+=== RUN   TestUserCreateParams_Validate
+--- PASS: TestUserCreateParams_Validate (0.00s)
+=== RUN   TestUserUpdateParams_Validate
+--- PASS: TestUserUpdateParams_Validate (0.00s)
+=== RUN   TestOrganizationService_InviteUser
+--- PASS: TestOrganizationService_InviteUser (0.00s)
+=== RUN   TestOrganizationCreateParams_Validate
+--- PASS: TestOrganizationCreateParams_Validate (0.00s)
+=== RUN   TestOrganizationUpdateParams_Validate
+--- PASS: TestOrganizationUpdateParams_Validate (0.00s)
+=== RUN   TestPaginationStruct
+--- PASS: TestPaginationStruct (0.00s)
+=== RUN   TestAgentListOptions_Validate
+--- PASS: TestAgentListOptions_Validate (0.00s)
+=== RUN   TestIncidentListOptions_Validate
+--- PASS: TestIncidentListOptions_Validate (0.00s)
+=== RUN   TestWebhookServiceStubbedMethods
+--- PASS: TestWebhookServiceStubbedMethods (0.00s)
+PASS
+coverage: 39.1% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress	1.151s	coverage: 39.1% of statements
+=== RUN   TestPagination_HasNext
+--- PASS: TestPagination_HasNext (0.00s)
+=== RUN   TestPagination_HasPrevious
+--- PASS: TestPagination_HasPrevious (0.00s)
+=== RUN   TestPagination_NextPage
+--- PASS: TestPagination_NextPage (0.00s)
+=== RUN   TestPagination_PreviousPage
+--- PASS: TestPagination_PreviousPage (0.00s)
+=== RUN   TestPagination_IsFirstPage
+--- PASS: TestPagination_IsFirstPage (0.00s)
+=== RUN   TestPagination_IsLastPage
+--- PASS: TestPagination_IsLastPage (0.00s)
+PASS
+coverage: 100.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress/types	0.747s	coverage: 100.0% of statements

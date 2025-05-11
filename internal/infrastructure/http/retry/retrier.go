@@ -67,8 +67,11 @@ func (r *Retrier) Do(ctx context.Context, fn func() (*http.Response, error)) (*h
 			return resp, nil
 		}
 
-		// Last attempt, return the error
+		// Last attempt, return the error, but check context one more time
 		if attempt == r.config.MaxRetries {
+			if ctx.Err() != nil {
+				return resp, fmt.Errorf("context error: %w", ctx.Err())
+			}
 			return resp, err
 		}
 

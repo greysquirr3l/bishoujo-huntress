@@ -144,8 +144,9 @@ func (c *Client) NewRequest(ctx context.Context, method, path string, body inter
 	}
 
 	// Set headers
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	const jsonMime = "application/json"
+	req.Header.Set("Content-Type", jsonMime)
+	req.Header.Set("Accept", jsonMime)
 	req.Header.Set("Authorization", "Basic "+basicAuth(c.apiKey, c.apiSecret))
 	req.Header.Set("User-Agent", c.userAgent)
 

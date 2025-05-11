@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 )
 
 // listResource is a generic helper for paginated GET endpoints.
@@ -28,7 +29,9 @@ func listResource[T any](ctx context.Context, client *Client, path string, param
 		return nil, fmt.Errorf("failed to execute request for List: %w", err)
 	}
 	if resp != nil {
-		_ = resp.Body.Close()
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
 	}
 
 	pagination := extractPagination(resp)

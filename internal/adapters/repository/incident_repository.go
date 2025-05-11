@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -43,7 +44,11 @@ func (r *IncidentRepositoryImpl) Get(ctx context.Context, id string) (*incident.
 		return nil, fmt.Errorf("failed to execute request: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		defer func() {
+			if err := resp.Body.Close(); err != nil {
+				fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+			}
+		}()
 	}
 
 	if resp.StatusCode != http.StatusOK {

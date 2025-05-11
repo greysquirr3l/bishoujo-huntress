@@ -161,19 +161,12 @@ func (c *Client) Do(ctx context.Context, method, path string, body, result inter
 		req.URL.RawQuery = q.Encode()
 	}
 
-	// Perform the request with retries
+	// Use Retrier.Do to retry on both errors and retryable status codes
+	retrier := retry.NewRetrier(*c.RetryConfig)
 	var resp *http.Response
-	err = retry.ExecuteWithRetry(ctx, func() error {
-		tmpResp, tmpErr := c.HTTPClient.Do(req)
-		if tmpErr != nil {
-			if tmpResp != nil {
-				_ = tmpResp.Body.Close()
-			}
-			return fmt.Errorf("http client do failed: %w", tmpErr)
-		}
-		resp = tmpResp // Only assign to resp if successful
-		return nil
-	}, c.RetryConfig)
+	resp, err = retrier.Do(ctx, func() (*http.Response, error) {
+		return c.HTTPClient.Do(req)
+	})
 	if err != nil {
 		if resp != nil {
 			_ = resp.Body.Close()

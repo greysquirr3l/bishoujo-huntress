@@ -1,6 +1,7 @@
 package auditlog
 
 import (
+	"errors"
 	"testing"
 	"time"
 
@@ -36,9 +37,20 @@ func TestAuditLog_Validate(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			err := tc.log.Validate()
-			if err != tc.err {
+			if !errorIs(err, tc.err) {
 				t.Errorf("got %v, want %v", err, tc.err)
 			}
 		})
 	}
+}
+
+// errorIs matches nil and uses errors.Is for wrapped errors (errorlint compliant)
+func errorIs(err, target error) bool {
+	if err == nil && target == nil {
+		return true
+	}
+	if err == nil || target == nil {
+		return false
+	}
+	return errors.Is(err, target)
 }

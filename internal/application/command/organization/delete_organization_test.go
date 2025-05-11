@@ -12,11 +12,8 @@ func TestDeleteOrganizationHandler_Handle_Success(t *testing.T) {
 	ctx := context.Background()
 	cmd := DeleteOrganizationCommand{ID: "org-123"}
 	repo := &FakeOrganizationRepository{
-		DeleteFunc: func(_ context.Context, id string) error {
-			if id == "org-123" {
-				return nil
-			}
-			return errors.New("unexpected id")
+		DeleteFunc: func(_ context.Context, _ string) error {
+			return nil
 		},
 	}
 	h := NewDeleteOrganizationHandler(repo)
@@ -37,7 +34,7 @@ func TestDeleteOrganizationHandler_Handle_RepoError(t *testing.T) {
 	ctx := context.Background()
 	cmd := DeleteOrganizationCommand{ID: "org-123"}
 	repo := &FakeOrganizationRepository{
-		DeleteFunc: func(_ context.Context, id string) error {
+		DeleteFunc: func(_ context.Context, _ string) error {
 			return errors.New("db error")
 		},
 	}

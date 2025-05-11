@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/greysquirr3l/bishoujo-huntress/internal/domain/auditlog"
@@ -39,10 +40,11 @@ func (r *AuditLogRepository) Get(ctx context.Context, id string) (*auditlog.Audi
 	if err != nil {
 		return nil, fmt.Errorf("auditlog get: %w", err)
 	}
-	errClose := resp.Body.Close()
-	if errClose != nil {
-		return nil, fmt.Errorf("auditlog get: error closing response body: %w", errClose)
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 	if resp.StatusCode == http.StatusNotFound {
 		return nil, common.NewDomainError(common.ErrCodeNotFound, "audit log not found", nil)
 	}
@@ -55,8 +57,6 @@ func (r *AuditLogRepository) Get(ctx context.Context, id string) (*auditlog.Audi
 	}
 	return &out, nil
 }
-
-// (Removed duplicate List method)
 
 // List returns all audit log entries (optionally with filters).
 func (r *AuditLogRepository) List(ctx context.Context, params *auditlog.ListParams) ([]*auditlog.AuditLog, *common.Pagination, error) {
@@ -102,10 +102,11 @@ func (r *AuditLogRepository) List(ctx context.Context, params *auditlog.ListPara
 	if err != nil {
 		return nil, nil, fmt.Errorf("auditlog list: %w", err)
 	}
-	errClose := resp.Body.Close()
-	if errClose != nil {
-		return nil, nil, fmt.Errorf("auditlog list: error closing response body: %w", errClose)
-	}
+	defer func() {
+		if cerr := resp.Body.Close(); cerr != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", cerr)
+		}
+	}()
 	if resp.StatusCode != http.StatusOK {
 		return nil, nil, fmt.Errorf("auditlog list: unexpected status: %d", resp.StatusCode)
 	}

@@ -25,9 +25,8 @@ func (s *billingService) GetSummary(ctx context.Context) (*BillingSummary, error
 		return nil, fmt.Errorf("failed to execute request for GetSummary: %w", err)
 	}
 	if resp != nil {
-		errClose := resp.Body.Close()
-		if errClose != nil {
-			return nil, fmt.Errorf("billing get summary: error closing response body: %w", errClose)
+		if err := resp.Body.Close(); err != nil {
+			return nil, fmt.Errorf("billing get summary: error closing response body: %w", err)
 		}
 	}
 
@@ -58,9 +57,8 @@ func (s *billingService) GetInvoice(ctx context.Context, id string) (*Invoice, e
 		return nil, fmt.Errorf("failed to execute request for GetInvoice: %w", err)
 	}
 	if resp != nil {
-		errClose := resp.Body.Close()
-		if errClose != nil {
-			return nil, fmt.Errorf("billing get invoice: error closing response body: %w", errClose)
+		if err := resp.Body.Close(); err != nil {
+			return nil, fmt.Errorf("billing get invoice: error closing response body: %w", err)
 		}
 	}
 
@@ -89,9 +87,8 @@ func (s *billingService) GetUsage(ctx context.Context, params *UsageParams) (*Us
 		return nil, fmt.Errorf("failed to execute request for GetUsage: %w", err)
 	}
 	if resp != nil {
-		errClose := resp.Body.Close()
-		if errClose != nil {
-			return nil, fmt.Errorf("billing get usage: error closing response body: %w", errClose)
+		if err := resp.Body.Close(); err != nil {
+			return nil, fmt.Errorf("billing get usage: error closing response body: %w", err)
 		}
 	}
 

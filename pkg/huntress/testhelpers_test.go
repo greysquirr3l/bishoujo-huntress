@@ -4,14 +4,15 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 )
 
-type roundTripFunc func(*http.Request) *http.Response
+type roundTripFunc func(_ *http.Request) *http.Response
 
-func (f roundTripFunc) RoundTrip(req *http.Request) (*http.Response, error) {
-	return f(req), nil
+func (f roundTripFunc) RoundTrip(_ *http.Request) (*http.Response, error) {
+	return f(nil), nil
 }
 
 type testClient struct {
@@ -39,14 +40,14 @@ func (c *testClient) NewRequest(ctx context.Context, method, path string, body i
 		} else {
 			b, err := json.Marshal(body)
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("marshalBody: %w", err)
 			}
 			bodyReader = bytes.NewReader(b)
 		}
 	}
 	req, err := http.NewRequestWithContext(ctx, method, url, bodyReader)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("newRequestWithBody: %w", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")

@@ -33,16 +33,24 @@ func (r *WebhookRepository) List(ctx context.Context) ([]*webhook.Webhook, error
 	if err != nil {
 		return nil, fmt.Errorf("webhook list: %w", err)
 	}
-	errClose := resp.Body.Close()
-	if errClose != nil {
-		return nil, fmt.Errorf("webhook list: error closing response body: %w", errClose)
-	}
 	if resp.StatusCode != http.StatusOK {
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return nil, fmt.Errorf("webhook list: error closing response body: %w", errClose)
+		}
 		return nil, fmt.Errorf("webhook list: unexpected status: %d", resp.StatusCode)
 	}
 	var out []*webhook.Webhook
 	if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return nil, fmt.Errorf("webhook list: error closing response body: %w", errClose)
+		}
 		return nil, fmt.Errorf("webhook list: decode: %w", err)
+	}
+	errClose := resp.Body.Close()
+	if errClose != nil {
+		return nil, fmt.Errorf("webhook list: error closing response body: %w", errClose)
 	}
 	return out, nil
 }

@@ -10,6 +10,13 @@ import (
 	"time"
 )
 
+const (
+	fooKey = "foo"
+	barVal = "bar"
+)
+
+// Use roundTripFunc from testhelpers_test.go (do not redeclare here)
+
 func TestClient_New(t *testing.T) {
 	client := New(
 		WithCredentials("test-key", "test-secret"),
@@ -70,7 +77,7 @@ func TestClient_Do_success(t *testing.T) {
 	body, _ := json.Marshal(respBody)
 	client := New(
 		WithCredentials("foo", "bar"),
-		WithHTTPClient(&http.Client{Transport: roundTripFunc(func(r *http.Request) *http.Response {
+		WithHTTPClient(&http.Client{Transport: roundTripFunc(func(_ *http.Request) *http.Response {
 			return &http.Response{
 				StatusCode: 200,
 				Body:       io.NopCloser(bytes.NewReader(body)),
@@ -80,11 +87,16 @@ func TestClient_Do_success(t *testing.T) {
 	)
 	req, _ := client.NewRequest(context.Background(), "GET", "/test", nil)
 	var out map[string]string
-	_, err := client.Do(context.Background(), req, &out)
+	resp, err := client.Do(context.Background(), req, &out)
+	if resp != nil && resp.Body != nil {
+		if err := resp.Body.Close(); err != nil {
+			t.Errorf("error closing response body: %v", err)
+		}
+	}
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if out["foo"] != "bar" {
+	if out[fooKey] != barVal {
 		t.Errorf("expected foo=bar, got %v", out)
 	}
 }
@@ -92,7 +104,7 @@ func TestClient_Do_success(t *testing.T) {
 func TestClient_Do_error_status(t *testing.T) {
 	client := New(
 		WithCredentials("foo", "bar"),
-		WithHTTPClient(&http.Client{Transport: roundTripFunc(func(r *http.Request) *http.Response {
+		WithHTTPClient(&http.Client{Transport: roundTripFunc(func(_ *http.Request) *http.Response {
 			return &http.Response{
 				StatusCode: 500,
 				Body:       io.NopCloser(bytes.NewReader([]byte("fail"))),
@@ -102,7 +114,12 @@ func TestClient_Do_error_status(t *testing.T) {
 	)
 	req, _ := client.NewRequest(context.Background(), "GET", "/fail", nil)
 	var out map[string]string
-	_, err := client.Do(context.Background(), req, &out)
+	resp, err := client.Do(context.Background(), req, &out)
+	if resp != nil && resp.Body != nil {
+		if err := resp.Body.Close(); err != nil {
+			t.Errorf("error closing response body: %v", err)
+		}
+	}
 	if err == nil || err.Error() == "" {
 		t.Error("expected error for HTTP 500")
 	}
@@ -115,7 +132,7 @@ func TestClient_Do_cache(t *testing.T) {
 	client := New(
 		WithCredentials("foo", "bar"),
 		WithCacheTTL(1*time.Minute),
-		WithHTTPClient(&http.Client{Transport: roundTripFunc(func(r *http.Request) *http.Response {
+		WithHTTPClient(&http.Client{Transport: roundTripFunc(func(_ *http.Request) *http.Response {
 			called++
 			return &http.Response{
 				StatusCode: 200,
@@ -126,18 +143,28 @@ func TestClient_Do_cache(t *testing.T) {
 	)
 	req, _ := client.NewRequest(context.Background(), "GET", "/cache", nil)
 	var out map[string]string
-	_, err := client.Do(context.Background(), req, &out)
+	resp, err := client.Do(context.Background(), req, &out)
+	if resp != nil && resp.Body != nil {
+		if err := resp.Body.Close(); err != nil {
+			t.Errorf("error closing response body: %v", err)
+		}
+	}
 	if err != nil && err.Error() != "response served from cache" {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	// Second call should hit cache
 	req2, _ := client.NewRequest(context.Background(), "GET", "/cache", nil)
 	var out2 map[string]string
-	_, err2 := client.Do(context.Background(), req2, &out2)
+	resp2, err2 := client.Do(context.Background(), req2, &out2)
+	if resp2 != nil && resp2.Body != nil {
+		if err := resp2.Body.Close(); err != nil {
+			t.Errorf("error closing response body: %v", err)
+		}
+	}
 	if err2 == nil || err2.Error() != "response served from cache" {
 		t.Errorf("expected cache error, got %v", err2)
 	}
-	if out2["foo"] != "bar" {
+	if out2[fooKey] != barVal {
 		t.Errorf("expected foo=bar from cache, got %v", out2)
 	}
 	if called != 1 {

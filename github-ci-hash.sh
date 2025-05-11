@@ -5,9 +5,16 @@ set -euo pipefail
 resolve_sha() {
   local repo="$1"
   local ref="$2"
-  # Special case for github/codeql-action: tags are codeql-bundle-vX.Y.Z
-  if [[ "$repo" == "github/codeql-action"* && "$ref" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    ref="codeql-bundle-${ref}"
+  # If ref is 'latest', get the latest release tag
+  if [[ "$ref" == "latest" ]]; then
+    ref=$(curl -s "https://api.github.com/repos/$repo/releases/latest" | jq -r .tag_name)
+  fi
+  # If ref is a version (vX.Y.Z), try to resolve to the tag
+  if [[ "$ref" =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+$ ]]; then
+    # Special case for github/codeql-action: tags are codeql-bundle-vX.Y.Z
+    if [[ "$repo" == "github/codeql-action"* ]]; then
+      ref="codeql-bundle-${ref}"
+    fi
   fi
   # Try tag first, then branch
   sha=$(curl -s "https://api.github.com/repos/$repo/git/refs/tags/$ref" | jq -r .object.sha 2>/dev/null)
@@ -33,6 +40,13 @@ for wf in .github/workflows/*.yml .github/workflows/*.yaml; do
       else
         ref="$current_sha_or_ref"
       fi
+      # If ref is 'latest', resolve to the latest release tag
+      if [[ "$ref" == "latest" ]]; then
+        latest_tag=$(curl -s "https://api.github.com/repos/$repo/releases/latest" | jq -r .tag_name)
+        if [[ "$latest_tag" != "null" && -n "$latest_tag" ]]; then
+          ref="$latest_tag"
+        fi
+      fi
       sha=$(resolve_sha "$repo" "$ref")
       if [[ "$sha" =~ ^[a-f0-9]{40}$ ]]; then
         if [[ "$current_sha_or_ref" != "$sha" ]]; then
@@ -49,7 +63,6 @@ EOF
         if [[ ! "$current_sha_or_ref" =~ ^[a-f0-9]{40}$ ]]; then
           echo "WARNING: Could not resolve SHA for $repo@$ref"
         fi
-        # If already pinned by SHA, do not warn
       fi
     fi
   done
@@ -62,7 +75,7 @@ if [[ $changed -eq 1 ]]; then
 fi
 
 # Block commit if any unpinned actions remain
-if grep -E 'uses: .+@(v[0-9]+|main|master|HEAD)' .github/workflows/*.yml .github/workflows/*.yaml 2>/dev/null | grep -v '@[a-f0-9]\{40\}'; then
+if grep -E 'uses: .+@(v[0-9]+|main|master|HEAD|latest)' .github/workflows/*.yml .github/workflows/*.yaml 2>/dev/null | grep -v '@[a-f0-9]\{40\}'; then
   echo "ERROR: Some GitHub Actions are not pinned by SHA. Please fix before committing."
   exit 1
 fi

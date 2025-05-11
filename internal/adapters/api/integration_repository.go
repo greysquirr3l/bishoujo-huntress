@@ -28,16 +28,24 @@ func (r *IntegrationRepository) Get(ctx context.Context, id string) (map[string]
 	if err != nil {
 		return nil, fmt.Errorf("integration get: %w", err)
 	}
-	errClose := resp.Body.Close()
-	if errClose != nil {
-		return nil, fmt.Errorf("integration get: error closing response body: %w", errClose)
-	}
 	if resp.StatusCode != http.StatusOK {
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return nil, fmt.Errorf("integration get: error closing response body: %w", errClose)
+		}
 		return nil, fmt.Errorf("integration get: unexpected status: %d", resp.StatusCode)
 	}
 	var out map[string]interface{}
 	if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
+		errClose := resp.Body.Close()
+		if errClose != nil {
+			return nil, fmt.Errorf("integration get: error closing response body: %w", errClose)
+		}
 		return nil, fmt.Errorf("integration get: decode: %w", err)
+	}
+	errClose := resp.Body.Close()
+	if errClose != nil {
+		return nil, fmt.Errorf("integration get: error closing response body: %w", errClose)
 	}
 	return out, nil
 }

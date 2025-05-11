@@ -1,7 +1,5 @@
 Running linter...
 golangci-lint run ./...
-level=warning msg="[config_reader] The configuration option `run.skip-files` is deprecated, please use `issues.exclude-files`."
-level=warning msg="[config_reader] The configuration option `run.skip-dirs` is deprecated, please use `issues.exclude-dirs`."
 level=warning msg="[config_reader] The configuration option `output.format` is deprecated, please use `output.formats`"
 level=warning msg="[config_reader] The configuration option `linters.govet.check-shadowing` is deprecated. Please enable `shadow` instead, if you are not using `enable-all`."
 level=warning msg="[config_reader] The configuration option `linters.errcheck.ignore` is deprecated, please use `linters.errcheck.exclude-functions`."

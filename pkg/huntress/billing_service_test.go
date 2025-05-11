@@ -9,17 +9,19 @@ import (
 	"testing"
 )
 
+// Use roundTripFunc from testhelpers_test.go (do not redeclare here)
+
 func TestBillingService_GetSummary(t *testing.T) {
 	respSummary := &BillingSummary{CurrentBalance: 42.0}
 	body, _ := json.Marshal(respSummary)
-	client := newTestClient(roundTripFunc(func(r *http.Request) *http.Response {
+	client := newTestClient(roundTripFunc(func(_ *http.Request) *http.Response {
 		return &http.Response{
 			StatusCode: 200,
 			Body:       io.NopCloser(bytes.NewReader(body)),
 			Header:     make(http.Header),
 		}
 	}))
-	svc := &billingService{client: &Client{httpClient: client.Client.httpClient}}
+	svc := &billingService{client: &Client{httpClient: client.httpClient}}
 	sum, err := svc.GetSummary(context.Background())
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -30,10 +32,10 @@ func TestBillingService_GetSummary(t *testing.T) {
 }
 
 func TestBillingService_GetSummary_HTTPError(t *testing.T) {
-	client := newTestClient(roundTripFunc(func(r *http.Request) *http.Response {
+	client := newTestClient(roundTripFunc(func(_ *http.Request) *http.Response {
 		return &http.Response{StatusCode: 500, Body: io.NopCloser(bytes.NewReader([]byte("fail")))}
 	}))
-	svc := &billingService{client: &Client{httpClient: client.Client.httpClient}}
+	svc := &billingService{client: &Client{httpClient: client.httpClient}}
 	_, err := svc.GetSummary(context.Background())
 	if err == nil {
 		t.Error("expected error for HTTP 500")

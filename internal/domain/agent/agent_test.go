@@ -1,6 +1,7 @@
 package agent
 
 import (
+	"errors"
 	"testing"
 	"time"
 )
@@ -19,11 +20,23 @@ func TestAgent_Validate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.a.Validate()
-			if err != tt.wantErr {
+			if !errorIs(err, tt.wantErr) {
 				t.Errorf("got %v, want %v", err, tt.wantErr)
 			}
 		})
 	}
+}
+
+// errorIs is a helper for errorlint compliance: matches nil and errors.Is
+// errorIs matches nil and uses errors.Is for wrapped errors (errorlint compliant)
+func errorIs(err, target error) bool {
+	if err == nil && target == nil {
+		return true
+	}
+	if err == nil || target == nil {
+		return false
+	}
+	return errors.Is(err, target)
 }
 
 func TestAgent_IsWindows(t *testing.T) {

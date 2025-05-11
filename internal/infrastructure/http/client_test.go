@@ -19,15 +19,22 @@ func newTestClient(handler http.Handler) *Client {
 }
 
 func TestClient_Do_Success(t *testing.T) {
-	client := newTestClient(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	client := newTestClient(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("X-Request-Id", "req-123")
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"ok":true}`))
+		if _, err := w.Write([]byte(`{"ok":true}`)); err != nil {
+			t.Errorf("error writing response: %v", err)
+		}
 	}))
 	var result map[string]interface{}
 	resp, err := client.Do(context.Background(), http.MethodGet, "/test", nil, &result, nil)
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
+	}
+	if resp != nil && resp.Body != nil {
+		if err := resp.Body.Close(); err != nil {
+			t.Errorf("error closing response body: %v", err)
+		}
 	}
 	if resp.StatusCode != http.StatusOK {
 		t.Errorf("expected 200, got %d", resp.StatusCode)
@@ -38,18 +45,25 @@ func TestClient_Do_Success(t *testing.T) {
 }
 
 func TestClient_Do_ErrorResponse(t *testing.T) {
-	client := newTestClient(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	client := newTestClient(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("X-Request-Id", "req-err")
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(`{"message":"bad request"}`))
+		if _, err := w.Write([]byte(`{"message":"bad request"}`)); err != nil {
+			t.Errorf("error writing response: %v", err)
+		}
 	}))
 	var result map[string]interface{}
 	resp, err := client.Do(context.Background(), http.MethodGet, "/fail", nil, &result, nil)
+	if resp != nil && resp.Body != nil {
+		if err := resp.Body.Close(); err != nil {
+			t.Errorf("error closing response body: %v", err)
+		}
+	}
 	if err == nil {
 		t.Fatal("expected error, got nil")
 	}
-	apiErr, ok := err.(*APIError)
-	if !ok {
+	var apiErr *APIError
+	if !errors.As(err, &apiErr) {
 		t.Fatalf("expected APIError, got %T", err)
 	}
 	if apiErr.StatusCode != http.StatusBadRequest {
@@ -67,14 +81,19 @@ func TestClient_Do_ErrorResponse(t *testing.T) {
 }
 
 func TestClient_Do_ContextCancel(t *testing.T) {
-	client := newTestClient(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	client := newTestClient(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		time.Sleep(100 * time.Millisecond)
 		w.WriteHeader(http.StatusOK)
 	}))
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Millisecond)
 	defer cancel()
 	var result map[string]interface{}
-	_, err := client.Do(ctx, http.MethodGet, "/timeout", nil, &result, nil)
+	resp, err := client.Do(ctx, http.MethodGet, "/timeout", nil, &result, nil)
+	if resp != nil && resp.Body != nil {
+		if err := resp.Body.Close(); err != nil {
+			t.Errorf("error closing response body: %v", err)
+		}
+	}
 	if err == nil {
 		t.Fatal("expected error due to context timeout")
 	}
@@ -88,10 +107,17 @@ func TestClient_Do_AuthHeader(t *testing.T) {
 	client := newTestClient(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		gotAuth = r.Header.Get("Authorization")
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"ok":true}`))
+		if _, err := w.Write([]byte(`{"ok":true}`)); err != nil {
+			t.Errorf("error writing response: %v", err)
+		}
 	}))
 	var result map[string]interface{}
-	_, err := client.Do(context.Background(), http.MethodGet, "/auth", nil, &result, nil)
+	resp, err := client.Do(context.Background(), http.MethodGet, "/auth", nil, &result, nil)
+	if resp != nil && resp.Body != nil {
+		if err := resp.Body.Close(); err != nil {
+			t.Errorf("error closing response body: %v", err)
+		}
+	}
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
 	}
@@ -102,15 +128,19 @@ func TestClient_Do_AuthHeader(t *testing.T) {
 
 func TestClient_Do_RetryLogic(t *testing.T) {
 	calls := 0
-	client := newTestClient(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	client := newTestClient(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		calls++
 		if calls < 3 {
 			w.WriteHeader(http.StatusServiceUnavailable)
-			w.Write([]byte(`{"message":"unavailable"}`))
+			if _, err := w.Write([]byte(`{"message":"unavailable"}`)); err != nil {
+				t.Errorf("error writing response: %v", err)
+			}
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"ok":true}`))
+		if _, err := w.Write([]byte(`{"ok":true}`)); err != nil {
+			t.Errorf("error writing response: %v", err)
+		}
 	}))
 	client.RetryConfig = &retry.Config{
 		MaxRetries:           2,
@@ -123,6 +153,11 @@ func TestClient_Do_RetryLogic(t *testing.T) {
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
 	}
+	if resp != nil && resp.Body != nil {
+		if err := resp.Body.Close(); err != nil {
+			t.Errorf("error closing response body: %v", err)
+		}
+	}
 	if resp.StatusCode != http.StatusOK {
 		t.Errorf("expected 200, got %d", resp.StatusCode)
 	}
@@ -132,24 +167,46 @@ func TestClient_Do_RetryLogic(t *testing.T) {
 }
 
 func TestClient_Get_Post_Put_Delete(t *testing.T) {
-	client := newTestClient(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	client := newTestClient(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"ok":true}`))
+		if _, err := w.Write([]byte(`{"ok":true}`)); err != nil {
+			t.Errorf("error writing response: %v", err)
+		}
 	}))
 	var result map[string]interface{}
-	_, err := client.Get(context.Background(), "/get", &result, nil)
+	resp, err := client.Get(context.Background(), "/get", &result, nil)
+	if resp != nil && resp.Body != nil {
+		if err := resp.Body.Close(); err != nil {
+			t.Errorf("error closing response body: %v", err)
+		}
+	}
 	if err != nil {
 		t.Errorf("Get failed: %v", err)
 	}
-	_, err = client.Post(context.Background(), "/post", map[string]string{"foo": "bar"}, &result, nil)
+	resp, err = client.Post(context.Background(), "/post", map[string]string{"foo": "bar"}, &result, nil)
+	if resp != nil && resp.Body != nil {
+		if err := resp.Body.Close(); err != nil {
+			t.Errorf("error closing response body: %v", err)
+		}
+	}
 	if err != nil {
 		t.Errorf("Post failed: %v", err)
 	}
-	_, err = client.Put(context.Background(), "/put", map[string]string{"foo": "baz"}, &result, nil)
+	resp, err = client.Put(context.Background(), "/put", map[string]string{"foo": "baz"}, &result, nil)
+	if resp != nil && resp.Body != nil {
+		if err := resp.Body.Close(); err != nil {
+			t.Errorf("error closing response body: %v", err)
+		}
+	}
 	if err != nil {
 		t.Errorf("Put failed: %v", err)
 	}
-	_, err = client.Delete(context.Background(), "/delete", &result, nil)
+	resp, err = client.Delete(context.Background(), "/delete", &result, nil)
+	if resp != nil && resp.Body != nil {
+		if err := resp.Body.Close(); err != nil {
+			t.Errorf("error closing response body: %v", err)
+		}
+	}
 	if err != nil {
 		t.Errorf("Delete failed: %v", err)
 	}

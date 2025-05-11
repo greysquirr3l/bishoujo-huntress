@@ -118,13 +118,14 @@ func TestCreateRequest(t *testing.T) {
 	if req.Method != http.MethodPost {
 		t.Errorf("expected POST, got %s", req.Method)
 	}
-	if req.Header.Get("Content-Type") != "application/json" {
+	bjson := "application/json"
+	if req.Header.Get("Content-Type") != bjson {
 		t.Errorf("expected Content-Type=application/json")
 	}
 	if req.Header.Get("X-Test") != "1" {
 		t.Errorf("expected X-Test=1")
 	}
-	if req.Header.Get("Accept") != "application/json" {
+	if req.Header.Get("Accept") != bjson {
 		t.Errorf("expected Accept=application/json")
 	}
 	b, _ := io.ReadAll(req.Body)
