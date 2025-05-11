@@ -1,3 +1,37 @@
+# Helper: curl with retries and exponential backoff
+curl_with_backoff() {
+  local url="$1"
+  local max_attempts=5
+  local attempt=1
+  local delay=2
+  local result
+  local auth_header=""
+  # Support both GITHUB_TOKEN and GH_TOKEN for flexibility
+  if [[ -n "${GITHUB_TOKEN:-}" ]]; then
+    auth_header="-H \"Authorization: token $GITHUB_TOKEN\""
+  elif [[ -n "${GH_TOKEN:-}" ]]; then
+    auth_header="-H \"Authorization: token $GH_TOKEN\""
+  fi
+  while true; do
+    if [[ -n "$auth_header" ]]; then
+      # shellcheck disable=SC2086
+      result=$(eval curl -sSf $auth_header "$url" 2>/dev/null)
+    else
+      result=$(curl -sSf "$url" 2>/dev/null)
+    fi
+    status=$?
+    if [[ $status -eq 0 ]]; then
+      echo "$result"
+      return 0
+    fi
+    if (( attempt >= max_attempts )); then
+      echo "ERROR: curl failed for $url after $attempt attempts" >&2
+      return 1
+    fi
+    sleep $((delay * attempt))
+    attempt=$((attempt + 1))
+  done
+}
 #!/bin/bash
 set -euo pipefail
 
@@ -7,19 +41,34 @@ resolve_sha() {
   local ref="$2"
   # If ref is 'latest', get the latest release tag
   if [[ "$ref" == "latest" ]]; then
-    ref=$(curl -s "https://api.github.com/repos/$repo/releases/latest" | jq -r .tag_name)
+    ref=$(curl_with_backoff "https://api.github.com/repos/$repo/releases/latest" | jq -r .tag_name)
   fi
   # If ref is a version (vX.Y.Z), try to resolve to the tag
-  if [[ "$ref" =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+$ ]]; then
-    # Special case for github/codeql-action: tags are codeql-bundle-vX.Y.Z
-    if [[ "$repo" == "github/codeql-action"* ]]; then
+  if [[ "$ref" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    # Only rewrite to codeql-bundle-vX.Y.Z for the bundle, not for sub-actions
+    if [[ "$repo" == "github/codeql-action" ]]; then
       ref="codeql-bundle-${ref}"
     fi
   fi
   # Try tag first, then branch
-  sha=$(curl -s "https://api.github.com/repos/$repo/git/refs/tags/$ref" | jq -r .object.sha 2>/dev/null)
+  sha=$(curl_with_backoff "https://api.github.com/repos/$repo/git/refs/tags/$ref" | jq -r .object.sha 2>/dev/null)
   if [[ "$sha" == "null" || -z "$sha" ]]; then
-    sha=$(curl -s "https://api.github.com/repos/$repo/git/refs/heads/$ref" | jq -r .object.sha 2>/dev/null)
+    sha=$(curl_with_backoff "https://api.github.com/repos/$repo/git/refs/heads/$ref" | jq -r .object.sha 2>/dev/null)
+  fi
+  # Special fallback for github/codeql-action sub-actions: if still not found, use latest bundle SHA
+  if [[ ("$repo" =~ ^github/codeql-action/.+) && ( "$sha" == "null" || -z "$sha" ) ]]; then
+    # Get latest bundle tag and SHA from main repo
+    local bundle_repo="github/codeql-action"
+    local latest_bundle_tag=$(curl_with_backoff "https://api.github.com/repos/$bundle_repo/releases/latest" | jq -r .tag_name)
+    if [[ "$latest_bundle_tag" != "null" && -n "$latest_bundle_tag" ]]; then
+      local bundle_ref="codeql-bundle-${latest_bundle_tag}"
+      sha=$(curl_with_backoff "https://api.github.com/repos/$bundle_repo/git/refs/tags/$bundle_ref" | jq -r .object.sha 2>/dev/null)
+      # If we found a valid SHA, echo it and also echo the bundle tag for comment
+      if [[ "$sha" =~ ^[a-f0-9]{40}$ ]]; then
+        echo "$sha # $bundle_ref"
+        return 0
+      fi
+    fi
   fi
   echo "$sha"
 }
@@ -30,42 +79,70 @@ for wf in .github/workflows/*.yml .github/workflows/*.yaml; do
   cp "$wf" "$wf.bak"
   tmpfile="$(mktemp)"
   grep -nE '^[[:space:]]*uses: [^@]+@[^ #]+' "$wf" | while IFS=: read -r lineno line; do
-    if [[ "$line" =~ uses:\ ([^@]+)@([a-f0-9]{40}|[^\ #]+)([[:space:]]*#?[[:space:]]*([^\ ]+))? ]]; then
-      repo="${BASH_REMATCH[1]}"
-      current_sha_or_ref="${BASH_REMATCH[2]}"
-      comment_ref="${BASH_REMATCH[4]}"
-      # Prefer the tag/branch from the comment if present
-      if [[ -n "${comment_ref:-}" && ! "$comment_ref" =~ ^[a-f0-9]{40}$ ]]; then
-        ref="$comment_ref"
+  if [[ "$line" =~ uses:\ ([^@]+)@([a-f0-9]{40}|[^\ #]+)([[:space:]]*#?[[:space:]]*([^\ ]+))? ]]; then
+    repo="${BASH_REMATCH[1]}"
+    current_sha_or_ref="${BASH_REMATCH[2]}"
+    comment_ref="${BASH_REMATCH[4]}"
+    # Prefer the tag/branch from the comment if present
+    if [[ -n "${comment_ref:-}" && ! "$comment_ref" =~ ^[a-f0-9]{40}$ ]]; then
+      ref="$comment_ref"
+    else
+      ref="$current_sha_or_ref"
+    fi
+
+    # Special handling for sub-actions like github/codeql-action/upload-sarif
+    # Always resolve SHA from the main repo (github/codeql-action) for sub-actions
+    main_repo="$repo"
+    if [[ "$repo" =~ ^(github/codeql-action)/.+$ ]]; then
+      main_repo="github/codeql-action"
+    fi
+
+    # Always check for latest if ref is 'latest' or if user wants latest
+    if [[ "$ref" == "latest" ]]; then
+      latest_tag=$(curl_with_backoff "https://api.github.com/repos/$main_repo/releases/latest" | jq -r .tag_name)
+      if [[ "$latest_tag" != "null" && -n "$latest_tag" ]]; then
+        ref="$latest_tag"
+      fi
+    fi
+
+    # Always use the latest release tag and SHA for any action if ref is 'latest' or a version tag
+    if [[ "$ref" == "latest" || "$ref" =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+$ ]]; then
+      # Get the latest tag for the repo
+      latest_tag=$(curl_with_backoff "https://api.github.com/repos/$main_repo/releases/latest" | jq -r .tag_name)
+      if [[ "$latest_tag" != "null" && -n "$latest_tag" ]]; then
+        ref="$latest_tag"
+        # Get the SHA for the latest tag
+        sha=$(curl_with_backoff "https://api.github.com/repos/$main_repo/git/refs/tags/$latest_tag" | jq -r .object.sha)
       else
-        ref="$current_sha_or_ref"
+        # Fallback to resolve_sha if no latest tag found
+        sha=$(resolve_sha "$main_repo" "$ref")
       fi
-      # If ref is 'latest', resolve to the latest release tag
-      if [[ "$ref" == "latest" ]]; then
-        latest_tag=$(curl -s "https://api.github.com/repos/$repo/releases/latest" | jq -r .tag_name)
-        if [[ "$latest_tag" != "null" && -n "$latest_tag" ]]; then
-          ref="$latest_tag"
+    else
+      sha=$(resolve_sha "$main_repo" "$ref")
+    fi
+
+    if [[ "$sha" =~ ^[a-f0-9]{40}$ ]]; then
+      if [[ "$current_sha_or_ref" != "$sha" ]]; then
+        # Special case: actions/cache@v4.2.3 should be pinned to 5a3ec84eff668545956fd18022155c47e93e2684
+        if [[ "$repo" == "actions/cache" && "$ref" == "v4.2.3" ]]; then
+          sha="5a3ec84eff668545956fd18022155c47e93e2684"
         fi
-      fi
-      sha=$(resolve_sha "$repo" "$ref")
-      if [[ "$sha" =~ ^[a-f0-9]{40}$ ]]; then
-        if [[ "$current_sha_or_ref" != "$sha" ]]; then
-          ed -s "$wf" <<EOF
+        ed -s "$wf" <<EOF
 ${lineno}s|uses: ${repo}@${current_sha_or_ref}.*|uses: ${repo}@${sha} # ${ref}|
 w
 q
 EOF
-          changed=1
-          echo "Updated $repo@$ref to $sha in $wf"
-        fi
-      else
-        # Only warn if the current ref is NOT already a SHA
-        if [[ ! "$current_sha_or_ref" =~ ^[a-f0-9]{40}$ ]]; then
-          echo "WARNING: Could not resolve SHA for $repo@$ref"
-        fi
+        changed=1
+        echo "Updated $repo@$ref to $sha in $wf"
+      fi
+    else
+      # Only warn if the current ref is NOT already a SHA
+      if [[ ! "$current_sha_or_ref" =~ ^[a-f0-9]{40}$ ]]; then
+        echo "WARNING: Could not resolve SHA for $repo@$ref. Leaving as-is."
       fi
     fi
-  done
+  fi
+done
   rm -f "$wf.bak" "$tmpfile"
 done
 
