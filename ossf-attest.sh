@@ -2,12 +2,67 @@
 # ossf-attest.sh: Run all OSSF Security Baseline checks and save attestation artifacts
 set -euo pipefail
 
-# Check for required tools
+# Ensure required tools are installed (macOS/Homebrew or Go-based)
+ensure_tool() {
+  local tool="$1"
+  case "$tool" in
+    golangci-lint)
+      if ! command -v golangci-lint >/dev/null 2>&1; then
+        echo "Installing golangci-lint..."
+        if command -v brew >/dev/null 2>&1; then
+          brew install golangci-lint || true
+        else
+          go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+        fi
+      fi
+      ;;
+    gosec)
+      if ! command -v gosec >/dev/null 2>&1; then
+        echo "Installing gosec..."
+        go install github.com/securego/gosec/v2/cmd/gosec@latest
+      fi
+      ;;
+    govulncheck)
+      if ! command -v govulncheck >/dev/null 2>&1; then
+        echo "Installing govulncheck..."
+        go install golang.org/x/vuln/cmd/govulncheck@latest
+      fi
+      ;;
+    syft)
+      if ! command -v syft >/dev/null 2>&1; then
+        echo "Installing syft..."
+        if command -v brew >/dev/null 2>&1; then
+          brew install syft || true
+        else
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b "$(go env GOPATH)/bin"
+        fi
+      fi
+      ;;
+    jq)
+      if ! command -v jq >/dev/null 2>&1; then
+        echo "Installing jq..."
+        if command -v brew >/dev/null 2>&1; then
+          brew install jq || true
+        else
+          echo "jq is required but could not be installed automatically. Please install jq manually."
+          exit 1
+        fi
+      fi
+      ;;
+    git)
+      if ! command -v git >/dev/null 2>&1; then
+        echo "ERROR: git is required but not installed. Please install git."
+        exit 1
+      fi
+      ;;
+    *)
+      echo "Unknown tool: $tool"; exit 1;;
+  esac
+}
+
+# Check and install required tools
 for tool in golangci-lint gosec govulncheck git syft jq; do
-  if ! command -v "$tool" >/dev/null 2>&1; then
-    echo "ERROR: Required tool '$tool' is not installed or not in PATH."
-    exit 1
-  fi
+  ensure_tool "$tool"
 done
 
 # Output files

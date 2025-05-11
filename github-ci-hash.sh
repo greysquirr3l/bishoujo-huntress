@@ -74,10 +74,15 @@ if [[ $changed -eq 1 ]]; then
   echo "Workflows updated and staged with latest pinned SHAs."
 fi
 
-# Block commit if any unpinned actions remain
-if grep -E 'uses: .+@(v[0-9]+|main|master|HEAD|latest)' .github/workflows/*.yml .github/workflows/*.yaml 2>/dev/null | grep -v '@[a-f0-9]\{40\}'; then
-  echo "ERROR: Some GitHub Actions are not pinned by SHA. Please fix before committing."
+# Verification: Check for any unpinned actions after update
+unsha_lines=$(grep -E '^[[:space:]]*uses: .+@[^ ]+' .github/workflows/*.yml .github/workflows/*.yaml 2>/dev/null | grep -v '@[a-f0-9]\{40\}\b' || true)
+if [[ -n "$unsha_lines" ]]; then
+  echo "ERROR: The following GitHub Actions are not pinned by SHA:"
+  echo "$unsha_lines"
+  echo "Please ensure all actions are pinned to a 40-character commit SHA."
   exit 1
+else
+  echo "All GitHub Actions in workflow files are pinned by SHA."
 fi
 
 exit 0
