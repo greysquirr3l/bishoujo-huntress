@@ -26,6 +26,7 @@ jobs:
         with:
           results_file: results.sarif
           results_format: sarif
+          publish_results: true
 
       - name: Upload Scorecard results to GitHub Security tab
         # OSSF Scorecard: SHA pinning required for supply chain security
