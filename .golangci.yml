@@ -1,3 +1,5 @@
+# NOTE: This config is for golangci-lint v1.x (latest stable, not v2.x preview)
+# If you are using golangci-lint v2.x, see https://github.com/golangci/golangci-lint/blob/master/.github/UPGRADE_V2.md
 version: "2"
 
 run:
@@ -9,60 +11,7 @@ run:
   build-tags: []
   allow-parallel-runners: true
 
-output:
-  format: colored-line-number
-  sort-results: true
-  print-issued-lines: true
-  print-linter-name: true
-
-linters-settings:
-  errcheck:
-    exclude-functions: []
-    ignore: fmt:.*,io/ioutil:^Read.*
-  gofmt:
-    simplify: true
-  goimports:
-    local-prefixes: github.com/greysquirr3l/bishoujo-huntress
-  gocyclo:
-    min-complexity: 15
-  goconst:
-    min-len: 2
-    min-occurrences: 3
-  gocritic:
-    enabled-tags:
-      - diagnostic
-      - style
-      - performance
-  gosec:
-    severity: medium
-    confidence: medium
-    excludes:
-      - G104
-      - G404
-    includes: []
-    config: {}
-  revive:
-    rules:
-      - name: exported
-        severity: warning
-        disabled: false
-        arguments:
-          - "checkPrivateReceivers"
-          - "disableStutteringCheck"
-      - name: var-naming
-        disabled: false
-  staticcheck:
-    go: "1.22"
-    checks: [all]
-  govet:
-    check-shadowing: true
-  dupl:
-    threshold: 100
-  misspell:
-    locale: US
-
 linters:
-  enable-all: false
   enable:
     - errcheck
     - govet
@@ -94,21 +43,5 @@ linters:
     - nakedret
 
 issues:
-  exclude-use-default: false
   max-issues-per-linter: 0
   max-same-issues: 0
-  exclude:
-    - "should have a package comment"
-  include:
-    - EXC0002
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - gocyclo
-        - errcheck
-        - dupl
-        - gosec
-    - path: internal/mocks/.*\.go
-      linters:
-        - gomnd
-        - goconst

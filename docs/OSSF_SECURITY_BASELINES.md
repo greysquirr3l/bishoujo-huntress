@@ -226,6 +226,7 @@ To verify your adherence to the OSSF Security Baselines, run the following check
 ### 1. Static Analysis & Linting
 
 - Run `make lint` to check for code quality, security, and style issues (uses `golangci-lint` with security linters enabled).
+- If you do not have `golangci-lint` installed, the Makefile will install it automatically (see README for details).
 - Run `gosec ./...` for Go security static analysis.
 - Run `govulncheck ./...` for Go vulnerability scanning.
 

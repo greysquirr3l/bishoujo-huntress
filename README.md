@@ -1,4 +1,3 @@
-
 # Bishoujo Huntress
 
 <img src="docs/img/bishoujo-huntress_crop.png" alt="Bishoujo Huntress Logo" width="600">
@@ -22,6 +21,7 @@ A comprehensive Go client library for the Huntress API, designed with Domain-Dri
 
 ## 📋 Table of Contents
 
+- [Development Environment Setup](#linting-and-development-environment-setup)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [Architecture](#architecture)
@@ -30,6 +30,53 @@ A comprehensive Go client library for the Huntress API, designed with Domain-Dri
 - [Security](#security)
 - [Contributing](#contributing)
 - [License](#license)
+
+## Linting and Development Environment Setup
+
+### Automated golangci-lint Installation
+
+The Makefile and CI workflows will automatically install `golangci-lint` (v1.56.2) if it is not present in your `$PATH`.
+
+**Manual Installation (Recommended for Consistency):**
+
+To ensure you have the correct version and avoid issues with Homebrew or system package managers, run:
+
+```bash
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.56.2
+```
+
+Or, to install to `/usr/local/bin` (requires sudo):
+
+```bash
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v1.56.2
+```
+
+After installation, ensure your `$PATH` includes the install location (e.g., `$GOPATH/bin` or `/usr/local/bin`).
+
+**Verify installation:**
+
+```bash
+golangci-lint --version
+```
+
+The Makefile target `deps` will also install `golangci-lint` if missing. This ensures that both local and CI environments use the same linter version for consistent results.
+
+**Note:** If you previously installed `golangci-lint` via Homebrew or another package manager, you may need to remove or update it to avoid version conflicts. The official install script is preferred for reproducibility.
+
+### Linting and Testing
+
+To lint and test the codebase:
+
+```bash
+make lint   # Runs golangci-lint with project config
+make test   # Runs all unit and integration tests
+```
+
+For full code quality checks (format, vet, lint, test):
+
+```bash
+make check
+```
 
 ## 📥 Installation
 

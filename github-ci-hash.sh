@@ -51,8 +51,30 @@ resolve_sha() {
     fi
   fi
   # Try tag first, then branch
-  sha=$(curl_with_backoff "https://api.github.com/repos/$repo/git/refs/tags/$ref" | jq -r .object.sha 2>/dev/null)
-  if [[ "$sha" == "null" || -z "$sha" ]]; then
+  # Get the tag ref object (may be annotated or lightweight)
+  tag_json=$(curl_with_backoff "https://api.github.com/repos/$repo/git/refs/tags/$ref")
+  sha=""
+  if [[ -n "$tag_json" && "$tag_json" != "null" ]]; then
+    # If multiple tags (e.g. for v1.0.0 and v1.0.0^{}) in array, pick the one that matches exactly
+    tag_sha=$(echo "$tag_json" | jq -r '.object.sha // .[0].object.sha')
+    tag_type=$(echo "$tag_json" | jq -r '.object.type // .[0].object.type')
+    # If annotated tag, dereference to commit
+    if [[ "$tag_type" == "tag" ]]; then
+      # Get the tag object and extract the commit SHA
+      tag_obj=$(echo "$tag_json" | jq -r '.object.url // .[0].object.url')
+      if [[ -n "$tag_obj" && "$tag_obj" != "null" ]]; then
+        commit_sha=$(curl_with_backoff "$tag_obj" | jq -r '.object.sha')
+        if [[ "$commit_sha" =~ ^[a-f0-9]{40}$ ]]; then
+          sha="$commit_sha"
+        fi
+      fi
+    fi
+    # If lightweight tag or fallback
+    if [[ -z "$sha" && "$tag_sha" =~ ^[a-f0-9]{40}$ ]]; then
+      sha="$tag_sha"
+    fi
+  fi
+  if [[ -z "$sha" || "$sha" == "null" ]]; then
     sha=$(curl_with_backoff "https://api.github.com/repos/$repo/git/refs/heads/$ref" | jq -r .object.sha 2>/dev/null)
   fi
   # Special fallback for github/codeql-action sub-actions: if still not found, use latest bundle SHA
@@ -122,7 +144,13 @@ for wf in .github/workflows/*.yml .github/workflows/*.yaml; do
     fi
 
     if [[ "$sha" =~ ^[a-f0-9]{40}$ ]]; then
-      if [[ "$current_sha_or_ref" != "$sha" ]]; then
+      # Extract the current comment/tag (if any) from the line
+      current_comment=""
+      if [[ "$line" =~ uses:[^#]+#\s*([^\n ]+) ]]; then
+        current_comment="${BASH_REMATCH[1]}"
+      fi
+      # Only update if SHA or tag/comment is different
+      if [[ "$current_sha_or_ref" != "$sha" || "$current_comment" != "$ref" ]]; then
         # Special case: actions/cache@v4.2.3 should be pinned to 5a3ec84eff668545956fd18022155c47e93e2684
         if [[ "$repo" == "actions/cache" && "$ref" == "v4.2.3" ]]; then
           sha="5a3ec84eff668545956fd18022155c47e93e2684"

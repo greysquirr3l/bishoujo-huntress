@@ -1,10 +1,4 @@
-# Generate mocks using Mockery
-generate-mocks:
-	@echo "Generating mocks with Mockery using .mockery.yml..."
-	@mockery --config=.mockery.yml
-	@echo "Mocks generated."
 # Makefile for Bishoujo-Huntress
-# A comprehensive Go client library for the Huntress API following DDD principles
 
 # Go parameters
 GOCMD=go
@@ -72,7 +66,16 @@ deps:
 	@$(GOMOD) tidy
 	@$(GOMOD) download
 	@echo "Checking for golangci-lint..."
-	@which $(GOLINT) || curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $$(go env GOPATH)/bin v1.56.2
+	@if ! command -v $(GOLINT) >/dev/null 2>&1; then \
+	  echo "golangci-lint not found, installing v1.56.2..."; \
+	  curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $$(go env GOPATH)/bin v1.56.2; \
+	  if ! command -v $(GOLINT) >/dev/null 2>&1; then \
+		echo "golangci-lint still not found. Please ensure $(GOLINT) is in your PATH."; \
+		exit 1; \
+	  fi; \
+	else \
+	  echo "golangci-lint found: $$($(GOLINT) --version)"; \
+	fi
 	@echo "Dependencies installed"
 
 # Run tests

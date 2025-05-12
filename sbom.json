@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:6b0f71b3-089e-4e3e-bf6b-8d14b7a9a51d",
+  "serialNumber": "urn:uuid:04987ddb-4867-4cab-a6a3-1d71431add91",
   "version": 1,
   "metadata": {
-    "timestamp": "2025-05-11T21:25:02-04:00",
+    "timestamp": "2025-05-12T15:34:07-04:00",
     "tools": {
       "components": [
         {
@@ -153,7 +153,7 @@
       ]
     },
     {
-      "bom-ref": "pkg:github/actions/upload-artifact@v4.6.2?package-id=01648e9df2716302",
+      "bom-ref": "pkg:github/actions/upload-artifact@v4.6.2?package-id=bc82a3467ab24076",
       "type": "library",
       "name": "actions/upload-artifact",
       "version": "v4.6.2",
@@ -237,6 +237,56 @@
       ]
     },
     {
+      "bom-ref": "pkg:golang/github.com/google/uuid@v1.6.0?package-id=b40bb1bd3645425a",
+      "type": "library",
+      "name": "github.com/google/uuid",
+      "version": "v1.6.0",
+      "cpe": "cpe:2.3:a:google:uuid:v1.6.0:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/google/uuid@v1.6.0",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "go-module-binary-cataloger"
+        },
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/build/examples/basic"
+        },
+        {
+          "name": "syft:metadata:architecture",
+          "value": "arm64"
+        },
+        {
+          "name": "syft:metadata:goCompiledVersion",
+          "value": "go1.24.3"
+        },
+        {
+          "name": "syft:metadata:goCryptoSettings:0",
+          "value": "standard-crypto"
+        },
+        {
+          "name": "syft:metadata:h1Digest",
+          "value": "h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0="
+        },
+        {
+          "name": "syft:metadata:mainModule",
+          "value": "github.com/greysquirr3l/bishoujo-huntress"
+        }
+      ]
+    },
+    {
       "bom-ref": "pkg:golang/github.com/google/uuid@v1.6.0?package-id=f6424607fde0264b",
       "type": "library",
       "name": "github.com/google/uuid",
@@ -267,6 +317,56 @@
         {
           "name": "syft:metadata:h1Digest",
           "value": "h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0="
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/greysquirr3l/bishoujo-huntress@v0.1.4-0.20250512012456-410cf9f9e1d7%2Bdirty?package-id=dcfa49b7ffaec492",
+      "type": "library",
+      "name": "github.com/greysquirr3l/bishoujo-huntress",
+      "version": "v0.1.4-0.20250512012456-410cf9f9e1d7+dirty",
+      "cpe": "cpe:2.3:a:greysquirr3l:bishoujo-huntress:v0.1.4-0.20250512012456-410cf9f9e1d7\\+dirty:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/greysquirr3l/bishoujo-huntress@v0.1.4-0.20250512012456-410cf9f9e1d7%2Bdirty",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "go-module-binary-cataloger"
+        },
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:greysquirr3l:bishoujo_huntress:v0.1.4-0.20250512012456-410cf9f9e1d7\\+dirty:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/build/examples/basic"
+        },
+        {
+          "name": "syft:metadata:architecture",
+          "value": "arm64"
+        },
+        {
+          "name": "syft:metadata:goCompiledVersion",
+          "value": "go1.24.3"
+        },
+        {
+          "name": "syft:metadata:goCryptoSettings:0",
+          "value": "standard-crypto"
+        },
+        {
+          "name": "syft:metadata:mainModule",
+          "value": "github.com/greysquirr3l/bishoujo-huntress"
         }
       ]
     },
@@ -702,7 +802,7 @@
       ]
     },
     {
-      "bom-ref": "pkg:github/ossf/scorecard-action@v2.4.1?package-id=a2c6ed14305e4cd7",
+      "bom-ref": "pkg:github/ossf/scorecard-action@v2.4.1?package-id=d6d7333a1080056e",
       "type": "library",
       "name": "ossf/scorecard-action",
       "version": "v2.4.1",
@@ -748,7 +848,7 @@
       ]
     },
     {
-      "bom-ref": "pkg:github/securego/gosec@v2.22.4?package-id=d1653a951e85d586",
+      "bom-ref": "pkg:github/securego/gosec@v2.22.4?package-id=0357014ef53b1895",
       "type": "library",
       "name": "securego/gosec",
       "version": "v2.22.4",
@@ -774,17 +874,58 @@
       ]
     },
     {
+      "bom-ref": "pkg:golang/stdlib@1.24.3?package-id=ded74404751c5413",
+      "type": "library",
+      "name": "stdlib",
+      "version": "go1.24.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "cpe": "cpe:2.3:a:golang:go:1.24.3:-:*:*:*:*:*:*",
+      "purl": "pkg:golang/stdlib@1.24.3",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "go-module-binary-cataloger"
+        },
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/build/examples/basic"
+        },
+        {
+          "name": "syft:metadata:goCompiledVersion",
+          "value": "go1.24.3"
+        }
+      ]
+    },
+    {
       "bom-ref": "7561d461b00ff11d",
       "type": "file",
       "name": "/Users/nickcampbell/Projects/go/bishoujo-huntress/.github/workflows/ci.yml",
       "hashes": [
         {
           "alg": "SHA-1",
-          "content": "75c3a923fd6e58b34fb87e75af692718b63d5f55"
+          "content": "1683043843f6c0ce5d2e6ffe831b7da7fe85ebbc"
         },
         {
           "alg": "SHA-256",
-          "content": "0a40e9107552c058e887b40fbb467bfbc9fe408055379bfae70b605743920ddc"
+          "content": "0c8a547323baf865443090d97318fbfbff3f8931b4b08b3a781737108fafb955"
         }
       ]
     },
@@ -795,11 +936,26 @@
       "hashes": [
         {
           "alg": "SHA-1",
-          "content": "618be6ee0adbc2144a330ffc309b4c280b270d8a"
+          "content": "b188ef0b5ca9118bdb785adf2a9e96c1bb791fbd"
         },
         {
           "alg": "SHA-256",
-          "content": "54606a79311bcecbfa23f3b59f1637ac377f9d27671237ef7346efba8c635620"
+          "content": "1e928805d49470c63b66c6abbda20da9962b503f1f609c56802eee4ebedbf4ce"
+        }
+      ]
+    },
+    {
+      "bom-ref": "45e11a4d2360a6a8",
+      "type": "file",
+      "name": "/Users/nickcampbell/Projects/go/bishoujo-huntress/build/examples/basic",
+      "hashes": [
+        {
+          "alg": "SHA-1",
+          "content": "3fae7ba14c2515c2ffdf3104194273f81dcb9c54"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "15212c2d8d458f55f62dcc99d4db6a65e650d7d83ca93510ea191a23dfdd825f"
         }
       ]
     },
@@ -816,6 +972,15 @@
           "alg": "SHA-256",
           "content": "11ed301c70ca9eef234c4809d6ac140fc2c1e70d7f74c1ce26f9040b15937ffd"
         }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:golang/github.com/greysquirr3l/bishoujo-huntress@v0.1.4-0.20250512012456-410cf9f9e1d7%2Bdirty?package-id=dcfa49b7ffaec492",
+      "dependsOn": [
+        "pkg:golang/github.com/google/uuid@v1.6.0?package-id=b40bb1bd3645425a",
+        "pkg:golang/stdlib@1.24.3?package-id=ded74404751c5413"
       ]
     }
   ]

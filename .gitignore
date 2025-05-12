@@ -61,4 +61,7 @@ ehthumbs.db
 Thumbs.db
 
 # Project specific
+*.bak
+build/*
 /cmd/examples/config.yaml
+
