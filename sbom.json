@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:359b04c0-e3d3-479c-8c93-ddf26ea98105",
+  "serialNumber": "urn:uuid:6b0f71b3-089e-4e3e-bf6b-8d14b7a9a51d",
   "version": 1,
   "metadata": {
-    "timestamp": "2025-05-11T19:58:06-04:00",
+    "timestamp": "2025-05-11T21:25:02-04:00",
     "tools": {
       "components": [
         {
@@ -153,12 +153,12 @@
       ]
     },
     {
-      "bom-ref": "pkg:github/actions/upload-artifact@v4.3.2?package-id=3771a658f0e71847",
+      "bom-ref": "pkg:github/actions/upload-artifact@v4.6.2?package-id=01648e9df2716302",
       "type": "library",
       "name": "actions/upload-artifact",
-      "version": "v4.3.2",
-      "cpe": "cpe:2.3:a:actions\\/upload-artifact:actions\\/upload-artifact:v4.3.2:*:*:*:*:*:*:*",
-      "purl": "pkg:github/actions/upload-artifact@v4.3.2",
+      "version": "v4.6.2",
+      "cpe": "cpe:2.3:a:actions\\/upload-artifact:actions\\/upload-artifact:v4.6.2:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/upload-artifact@v4.6.2",
       "properties": [
         {
           "name": "syft:package:foundBy",
@@ -174,23 +174,23 @@
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/upload-artifact:actions\\/upload_artifact:v4.3.2:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/upload-artifact:actions\\/upload_artifact:v4.6.2:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/upload_artifact:actions\\/upload-artifact:v4.3.2:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/upload_artifact:actions\\/upload-artifact:v4.6.2:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/upload_artifact:actions\\/upload_artifact:v4.3.2:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/upload_artifact:actions\\/upload_artifact:v4.6.2:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/upload:actions\\/upload-artifact:v4.3.2:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/upload:actions\\/upload-artifact:v4.6.2:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:cpe23",
-          "value": "cpe:2.3:a:actions\\/upload:actions\\/upload_artifact:v4.3.2:*:*:*:*:*:*:*"
+          "value": "cpe:2.3:a:actions\\/upload:actions\\/upload_artifact:v4.6.2:*:*:*:*:*:*:*"
         },
         {
           "name": "syft:location:0:path",
@@ -511,7 +511,7 @@
       ]
     },
     {
-      "bom-ref": "pkg:github/golangci/golangci-lint-action@v8.0.0?package-id=2583d24f14a2be1b",
+      "bom-ref": "pkg:github/golangci/golangci-lint-action@v8.0.0?package-id=020f69f70941b83f",
       "type": "library",
       "name": "golangci/golangci-lint-action",
       "version": "v8.0.0",
@@ -573,7 +573,7 @@
       ]
     },
     {
-      "bom-ref": "pkg:github/golangci/golangci-lint-action@v8.0.0?package-id=92a7d69f000051e8",
+      "bom-ref": "pkg:github/golangci/golangci-lint-action@v8.0.0?package-id=62f8bf2beae4cf40",
       "type": "library",
       "name": "golangci/golangci-lint-action",
       "version": "v8.0.0",
@@ -780,11 +780,11 @@
       "hashes": [
         {
           "alg": "SHA-1",
-          "content": "5bdc5e395511c0e66876a500484a3ad16c2d3cc9"
+          "content": "75c3a923fd6e58b34fb87e75af692718b63d5f55"
         },
         {
           "alg": "SHA-256",
-          "content": "ee3508e4b9c7a5af78dd0546b1021ca18bbe7d76b80285a946be9291003b4762"
+          "content": "0a40e9107552c058e887b40fbb467bfbc9fe408055379bfae70b605743920ddc"
         }
       ]
     },
@@ -795,11 +795,11 @@
       "hashes": [
         {
           "alg": "SHA-1",
-          "content": "b04de9030908e6863baaf4c36b3bc2553b6d7e20"
+          "content": "618be6ee0adbc2144a330ffc309b4c280b270d8a"
         },
         {
           "alg": "SHA-256",
-          "content": "250587df867d88dbe1d61d35fdf1b26955a4e4e48832554d0872e7421f6aacc3"
+          "content": "54606a79311bcecbfa23f3b59f1637ac377f9d27671237ef7346efba8c635620"
         }
       ]
     },
