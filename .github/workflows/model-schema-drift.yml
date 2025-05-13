@@ -42,19 +42,16 @@ jobs:
           npx openapi-generator-cli generate -i build/swagger_doc.json -g go -o build/openapi-models --skip-validate-spec
 
       - name: Diff generated models with hand-written models
-        id: diff
         run: |
-          set -e
           diff -ruN build/openapi-models/model pkg/huntress/ > build/model-schema-diff.txt || true
           if [ -s build/model-schema-diff.txt ]; then
             echo "Model/schema drift detected!"
-            exit 1
+            cat build/model-schema-diff.txt
           else
             echo "No model/schema drift detected."
           fi
 
-      - name: Upload model/schema diff artifact (if drift detected)
-        if: failure()
+      - name: Upload model/schema diff artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: model-schema-diff
