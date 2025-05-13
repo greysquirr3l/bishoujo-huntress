@@ -1,8 +1,11 @@
-
 # Huntress API Model/Schema Compliance Checklist
 
 <!-- REF: https://api.huntress.io/docs/preview -->
 <!-- REF: https://api.huntress.io/docs#api-overview -->
+
+> **Note:** Model/schema drift detection is now automated in CI via [`.github/workflows/model-schema-drift.yml`](../.github/workflows/model-schema-drift.yml).
+> The workflow uploads a diff artifact (`model-schema-diff.txt`) comparing generated OpenAPI models to hand-written models in `pkg/huntress/`.
+> Review the artifact on each PR to track compliance and drift.
 
 This checklist is for tracking strict model validation and OpenAPI/Swagger codegen compliance for all Huntress API resources in the Bishoujo-Huntress Go client. Use this to ensure all request/response models match the latest Huntress OpenAPI/Swagger schema (field types, required/optional, enums) and that codegen/cross-checking is complete for every resource.
 

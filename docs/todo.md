@@ -12,8 +12,10 @@
 - [ ] **Strict Model Validation**
   - [ ] Ensure all request/response models match the latest Swagger schema (field types, required/optional, enums).
   - [ ] Some fields may be missing or have different types (e.g., time.Time vs. string).
+  - [ ] See [docs/model_schema_compliance_checklist.md](model_schema_compliance_checklist.md) for resource-by-resource tracking.
 - [ ] **OpenAPI/Swagger Codegen**
-  - [ ] Consider using Swagger/OpenAPI codegen to cross-check your models and endpoints for completeness and accuracy.
+  - [ ] Use Swagger/OpenAPI codegen to cross-check models and endpoints for completeness and accuracy.
+  - [x] Model/schema drift detection is now automated in CI via `.github/workflows/model-schema-drift.yml` (see workflow and diff artifact).
 
 ## Completed Items
 
@@ -145,10 +147,10 @@
 
 #### Integration & End-to-End
 
-- [ ] **Integration Tests**
-  - [ ] Test end-to-end flows for each resource (account, org, agent, incident, report, billing, webhook)
-  - [ ] Test error propagation across layers
-  - [ ] Test concurrent usage of the client (thread safety)
+- [x] **Integration Tests**
+  - [x] Test end-to-end flows for each resource (account, org, agent, incident, report, billing, webhook)
+  - [x] Test error propagation across layers
+  - [x] Test concurrent usage of the client (thread safety)
 
 ### Test Coverage Goals
 

@@ -24,7 +24,7 @@
  • Targets scanned: 117
  • Parsed lines: ~100.0%
  • Scan skipped: 
-   ◦ Files matching .semgrepignore patterns: 46
+   ◦ Files matching .semgrepignore patterns: 48
  • Scan was limited to files tracked by git
  • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
 Ran 130 rules on 117 files: 0 findings.
