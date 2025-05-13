@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:b2a8dce9-90c6-4ee1-8e27-1d599b8f914b",
+  "serialNumber": "urn:uuid:d949650a-a6e8-41fd-9a95-dde1793c7f03",
   "version": 1,
   "metadata": {
-    "timestamp": "2025-05-12T16:42:52-04:00",
+    "timestamp": "2025-05-12T20:38:44-04:00",
     "tools": {
       "components": [
         {
@@ -915,17 +915,141 @@
       ]
     },
     {
+      "bom-ref": "pkg:github/step-security/harden-runner@v2.12.0?package-id=409d6bb6121021cd",
+      "type": "library",
+      "name": "step-security/harden-runner",
+      "version": "v2.12.0",
+      "cpe": "cpe:2.3:a:step-security\\/harden-runner:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*",
+      "purl": "pkg:github/step-security/harden-runner@v2.12.0",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step-security\\/harden-runner:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step_security\\/harden_runner:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step_security\\/harden_runner:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step-security\\/harden:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step-security\\/harden:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step_security\\/harden:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step_security\\/harden:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/ci.yml"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:github/step-security/harden-runner@v2.12.0?package-id=1f584b9e340775f6",
+      "type": "library",
+      "name": "step-security/harden-runner",
+      "version": "v2.12.0",
+      "cpe": "cpe:2.3:a:step-security\\/harden-runner:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*",
+      "purl": "pkg:github/step-security/harden-runner@v2.12.0",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step-security\\/harden-runner:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step_security\\/harden_runner:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step_security\\/harden_runner:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step-security\\/harden:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step-security\\/harden:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step_security\\/harden:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step_security\\/harden:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/scorecard.yml"
+        }
+      ]
+    },
+    {
       "bom-ref": "7561d461b00ff11d",
       "type": "file",
       "name": "/Users/nickcampbell/Projects/go/bishoujo-huntress/.github/workflows/ci.yml",
       "hashes": [
         {
           "alg": "SHA-1",
-          "content": "1683043843f6c0ce5d2e6ffe831b7da7fe85ebbc"
+          "content": "85b6ca9dc4803f1c043da749030d7f2b52e098c4"
         },
         {
           "alg": "SHA-256",
-          "content": "0c8a547323baf865443090d97318fbfbff3f8931b4b08b3a781737108fafb955"
+          "content": "32f6fcf1b1749937a2c4ca6b0b663bbcf6ef2b80a6a1883e718273976ce2cf37"
         }
       ]
     },
@@ -936,11 +1060,11 @@
       "hashes": [
         {
           "alg": "SHA-1",
-          "content": "7ca2813a1e07e76768589d90e33ad81a7cbcfa5f"
+          "content": "176f04647f104b11a4258ab3f4364f73191fdd4b"
         },
         {
           "alg": "SHA-256",
-          "content": "4d0c7369d83afa943ff03e578e9e3f0b5504f605dc473575856cc3df0697f23e"
+          "content": "b01aed2e8ee529e88dd15592c8f61907c34e98e9bcbf41e5004c403d73278936"
         }
       ]
     },

@@ -1,4 +1,3 @@
-
 # Bishoujo-Huntress: Implementation Todo List
 
 ## Open Items
@@ -7,30 +6,28 @@
 
 - [ ] **User Invitations**
   - [ ] No explicit invite user method yet
-[x] **API Versioning**
-  - [x] Version field present; explicit switching/custom headers implemented and tested
-[x] **Request Tracing**
-  - [x] Request tracing (correlation IDs, OpenTelemetry) implemented in HTTP client and infrastructure
-[x] **Testing/Mocking**
-  - [x] Test helpers and mock server for simulating Huntress API responses implemented and in use
 
 ### Features/Enhancements (vs. Huntress API Docs/Swagger)
 
 - [ ] **Strict Model Validation**
   - [ ] Ensure all request/response models match the latest Swagger schema (field types, required/optional, enums).
   - [ ] Some fields may be missing or have different types (e.g., time.Time vs. string).
-- [x] **Enum Types**
-  - [x] Go enums are now used for all major fields with limited values (incident status, agent platform, report type, webhook event type, etc.)
 - [ ] **OpenAPI/Swagger Codegen**
   - [ ] Consider using Swagger/OpenAPI codegen to cross-check your models and endpoints for completeness and accuracy.
 
-### Mock Generation & Testing
+## Completed Items
 
+- [x] **API Versioning**
+  - [x] Version field present; explicit switching/custom headers implemented and tested
+- [x] **Request Tracing**
+  - [x] Request tracing (correlation IDs, OpenTelemetry) implemented in HTTP client and infrastructure
+- [x] **Testing/Mocking**
+  - [x] Test helpers and mock server for simulating Huntress API responses implemented and in use
+- [x] **Enum Types**
+  - [x] Go enums are now used for all major fields with limited values (incident status, agent platform, report type, webhook event type, etc.)
 - [x] **Manual/Testify Mock Implementations**
   - [x] Interfaces are mocked using hand-written or testify-based mocks in test files.
-  - [x] No use of Mockery or auto-generated mocks; mocks are maintained alongside tests.
   - [x] All critical interfaces have corresponding test mocks for unit and integration testing.
-
 - [x] Advanced filtering in all list methods (date ranges, enums, search, tags) implemented and tested
 - [x] Error handling reviewed and updated for context and mapping
 - [x] Complete bulk, audit log, and integration adapters
@@ -445,5 +442,3 @@
 
 - [x] Expand advanced filtering in all list methods (date ranges, enums, search, tags)
 - [x] Review and update error handling for context and mapping
-
----
