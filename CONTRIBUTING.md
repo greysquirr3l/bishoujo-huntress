@@ -17,26 +17,13 @@ Thank you for your interest in contributing to Bishoujo-Huntress! We welcome con
    go mod download
    ```
 
-4. **Run tests, linters, and generate mocks:**
+4. **Run tests, linters, and generate artifacts:**
 
    ```bash
    make test
    make lint
-   make generate-mocks   # Regenerate mocks if you change interfaces
    ./ossf-attest.sh
    ```
-
-## Mocking & Test Doubles
-
-- We use [Mockery](https://github.com/vektra/mockery) for generating mocks for interfaces.
-- To regenerate mocks after changing interfaces, run:
-
-  ```bash
-  make generate-mocks
-  ```
-
-- Mocks are generated in `internal/mocks/` (for internal interfaces) and `pkg/huntress/mocks/` (for public API interfaces).
-- See the `//go:generate` directives in interface files for details.
 
 5. **Make your changes.**
 6. **Add or update tests** to ensure coverage for your changes.
@@ -65,14 +52,14 @@ Thank you for your interest in contributing to Bishoujo-Huntress! We welcome con
 - All API keys/secrets must be provided via environment variables or config.
 - Follow [OSSF Security Baselines](docs/OSSF_SECURITY_BASELINES.md).
 - Run secret scanning (`git secrets --scan`) before submitting.
-- Generate and include SBOM (`syft . -o cyclonedx-json > sbom.json`).
+- Generate and include attestation artifacts (`./ossf-attest.sh`).
 
 ## Pull Request Checklist
 
 - [ ] All tests pass (`make test`)
 - [ ] Lint passes (`make lint`)
 - [ ] Security checks pass (`./ossf-attest.sh`)
-- [ ] SBOM and attestation artifacts are up to date
+- [ ] SBOM, SEMGREP and attestation artifacts are up to date
 - [ ] Documentation is updated (if needed)
 - [ ] PR description explains the change and references issues
 

@@ -52,6 +52,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
+      - name: Install security tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git curl make
+          # Install golangci-lint
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v2.1.6
+          # Install gosec
+          go install github.com/securego/gosec/v2/cmd/gosec@latest
+          # Install govulncheck
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          # Install git-secrets
+          git clone https://github.com/awslabs/git-secrets.git
+          cd git-secrets && sudo make install && cd .. && rm -rf git-secrets
+          # Add Go bin to PATH
+          echo "$HOME/go/bin" >> $GITHUB_PATH
+
       - name: Run OSSF attestation script
         run: ./ossf-attest.sh
 

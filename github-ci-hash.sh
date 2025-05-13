@@ -98,7 +98,9 @@ resolve_sha() {
 changed=0
 for wf in .github/workflows/*.yml .github/workflows/*.yaml; do
   [[ -f "$wf" ]] || continue
-  cp "$wf" "$wf.bak"
+  # Create a timestamped backup before modifying
+  backup_name="$wf.bak.$(date +%Y%m%d%H%M%S)"
+  cp "$wf" "$backup_name"
   tmpfile="$(mktemp)"
   grep -nE '^[[:space:]]*uses: [^@]+@[^ #]+' "$wf" | while IFS=: read -r lineno line; do
   if [[ "$line" =~ uses:\ ([^@]+)@([a-f0-9]{40}|[^\ #]+)([[:space:]]*#?[[:space:]]*([^\ ]+))? ]]; then

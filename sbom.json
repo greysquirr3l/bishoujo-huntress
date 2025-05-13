@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:3dda3b69-5889-4c65-afaf-d9b32cff3ba7",
+  "serialNumber": "urn:uuid:b109a1e9-2f5c-4ac8-84c7-0b83d646fc74",
   "version": 1,
   "metadata": {
-    "timestamp": "2025-05-12T22:27:24-04:00",
+    "timestamp": "2025-05-12T23:08:34-04:00",
     "tools": {
       "components": [
         {
@@ -51,6 +51,32 @@
         {
           "name": "syft:location:0:path",
           "value": "/.github/workflows/ci.yml"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:github/actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683?package-id=21048f2808c1de28",
+      "type": "library",
+      "name": "actions/checkout",
+      "version": "11bd71901bbe5b1630ceea73d27597364c9af683",
+      "cpe": "cpe:2.3:a:actions\\/checkout:actions\\/checkout:11bd71901bbe5b1630ceea73d27597364c9af683:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/codeql.yml"
         }
       ]
     },
@@ -545,6 +571,144 @@
         {
           "name": "syft:metadata:h1Digest",
           "value": "h1:Xv5erBjTwe/5IxqUQTdXv5kgmIvbHo3QQyRwhJsOfJA="
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:github/github/codeql-action@60168efe1c415ce0f5521ea06d5c2062adbeed1b?package-id=fe85800abcc47519#analyze",
+      "type": "library",
+      "name": "github/codeql-action/analyze",
+      "version": "60168efe1c415ce0f5521ea06d5c2062adbeed1b",
+      "cpe": "cpe:2.3:a:github\\/codeql-action\\/analyze:github\\/codeql-action\\/analyze:60168efe1c415ce0f5521ea06d5c2062adbeed1b:*:*:*:*:*:*:*",
+      "purl": "pkg:github/github/codeql-action@60168efe1c415ce0f5521ea06d5c2062adbeed1b#analyze",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:github\\/codeql-action\\/analyze:github\\/codeql_action\\/analyze:60168efe1c415ce0f5521ea06d5c2062adbeed1b:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:github\\/codeql_action\\/analyze:github\\/codeql-action\\/analyze:60168efe1c415ce0f5521ea06d5c2062adbeed1b:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:github\\/codeql_action\\/analyze:github\\/codeql_action\\/analyze:60168efe1c415ce0f5521ea06d5c2062adbeed1b:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:github\\/codeql:github\\/codeql-action\\/analyze:60168efe1c415ce0f5521ea06d5c2062adbeed1b:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:github\\/codeql:github\\/codeql_action\\/analyze:60168efe1c415ce0f5521ea06d5c2062adbeed1b:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/codeql.yml"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:github/github/codeql-action@60168efe1c415ce0f5521ea06d5c2062adbeed1b?package-id=7c1eb17b14ffd3d4#autobuild",
+      "type": "library",
+      "name": "github/codeql-action/autobuild",
+      "version": "60168efe1c415ce0f5521ea06d5c2062adbeed1b",
+      "cpe": "cpe:2.3:a:github\\/codeql-action\\/autobuild:github\\/codeql-action\\/autobuild:60168efe1c415ce0f5521ea06d5c2062adbeed1b:*:*:*:*:*:*:*",
+      "purl": "pkg:github/github/codeql-action@60168efe1c415ce0f5521ea06d5c2062adbeed1b#autobuild",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:github\\/codeql-action\\/autobuild:github\\/codeql_action\\/autobuild:60168efe1c415ce0f5521ea06d5c2062adbeed1b:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:github\\/codeql_action\\/autobuild:github\\/codeql-action\\/autobuild:60168efe1c415ce0f5521ea06d5c2062adbeed1b:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:github\\/codeql_action\\/autobuild:github\\/codeql_action\\/autobuild:60168efe1c415ce0f5521ea06d5c2062adbeed1b:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:github\\/codeql:github\\/codeql-action\\/autobuild:60168efe1c415ce0f5521ea06d5c2062adbeed1b:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:github\\/codeql:github\\/codeql_action\\/autobuild:60168efe1c415ce0f5521ea06d5c2062adbeed1b:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/codeql.yml"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:github/github/codeql-action@60168efe1c415ce0f5521ea06d5c2062adbeed1b?package-id=04133cdb57cb9038#init",
+      "type": "library",
+      "name": "github/codeql-action/init",
+      "version": "60168efe1c415ce0f5521ea06d5c2062adbeed1b",
+      "cpe": "cpe:2.3:a:github\\/codeql-action\\/init:github\\/codeql-action\\/init:60168efe1c415ce0f5521ea06d5c2062adbeed1b:*:*:*:*:*:*:*",
+      "purl": "pkg:github/github/codeql-action@60168efe1c415ce0f5521ea06d5c2062adbeed1b#init",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:github\\/codeql-action\\/init:github\\/codeql_action\\/init:60168efe1c415ce0f5521ea06d5c2062adbeed1b:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:github\\/codeql_action\\/init:github\\/codeql-action\\/init:60168efe1c415ce0f5521ea06d5c2062adbeed1b:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:github\\/codeql_action\\/init:github\\/codeql_action\\/init:60168efe1c415ce0f5521ea06d5c2062adbeed1b:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:github\\/codeql:github\\/codeql-action\\/init:60168efe1c415ce0f5521ea06d5c2062adbeed1b:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:github\\/codeql:github\\/codeql_action\\/init:60168efe1c415ce0f5521ea06d5c2062adbeed1b:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/codeql.yml"
         }
       ]
     },
@@ -1054,17 +1218,32 @@
       ]
     },
     {
+      "bom-ref": "f4fe0eee66e1ba99",
+      "type": "file",
+      "name": "/Users/nickcampbell/Projects/go/bishoujo-huntress/.github/workflows/codeql.yml",
+      "hashes": [
+        {
+          "alg": "SHA-1",
+          "content": "2b56a64be2e6558d9bceb2e5235018edce30ca14"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "6ac8d32f6ab0a21e96a7143b4efdefbccf038d2aab555f7bd658cd1ff0c4fc67"
+        }
+      ]
+    },
+    {
       "bom-ref": "f175f3b2ff568407",
       "type": "file",
       "name": "/Users/nickcampbell/Projects/go/bishoujo-huntress/.github/workflows/scorecard.yml",
       "hashes": [
         {
           "alg": "SHA-1",
-          "content": "eb393ac1194fb5bf707b72e8a0b1238986f617ca"
+          "content": "53d01ff3cc2f236e31bbf5bb251998440e87de66"
         },
         {
           "alg": "SHA-256",
-          "content": "e28b23187529e049b608c34fc06cce095dd65e8cc7ca44e4b5928edde480375d"
+          "content": "b0af76bcd094aa382ba7d70b8e42befefa6055c6ab498cc59f0385cb4e8440fb"
         }
       ]
     },
