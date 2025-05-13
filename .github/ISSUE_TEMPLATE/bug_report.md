@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: ''
+title: 'Provide a concise and descriptive title for the bug (e.g., "Crash on login screen")'
 labels: ''
 assignees: ''
 
