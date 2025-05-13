@@ -59,7 +59,26 @@ ensure_tool() {
       SEMGR_VERSION="1.119.0"
       if ! command -v semgrep >/dev/null 2>&1 || [[ "$(semgrep --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')" != "$SEMGR_VERSION" ]]; then
         echo "Installing semgrep $SEMGR_VERSION..."
-        curl -sSfL -o semgrep.tar.gz "https://github.com/returntocorp/semgrep/releases/download/v${SEMGR_VERSION}/semgrep_${SEMGR_VERSION}_linux_x86_64.tar.gz"
+        unameOut="$(uname -s)"
+        archOut="$(uname -m)"
+        if [[ "$unameOut" == "Darwin" ]]; then
+          if [[ "$archOut" == "arm64" ]]; then
+            SEMGREP_URL="https://github.com/returntocorp/semgrep/releases/download/v${SEMGR_VERSION}/semgrep_${SEMGR_VERSION}_macos_arm64.tar.gz"
+          else
+            SEMGREP_URL="https://github.com/returntocorp/semgrep/releases/download/v${SEMGR_VERSION}/semgrep_${SEMGR_VERSION}_macos_x86_64.tar.gz"
+          fi
+        elif [[ "$unameOut" == "Linux" ]]; then
+          if [[ "$archOut" == "x86_64" || "$archOut" == "amd64" ]]; then
+            SEMGREP_URL="https://github.com/returntocorp/semgrep/releases/download/v${SEMGR_VERSION}/semgrep_${SEMGR_VERSION}_linux_x86_64.tar.gz"
+          elif [[ "$archOut" == "aarch64" || "$archOut" == "arm64" ]]; then
+            SEMGREP_URL="https://github.com/returntocorp/semgrep/releases/download/v${SEMGR_VERSION}/semgrep_${SEMGR_VERSION}_linux_arm64.tar.gz"
+          else
+            echo "Unsupported Linux architecture: $archOut"; exit 1
+          fi
+        else
+          echo "Unsupported OS: $unameOut"; exit 1
+        fi
+        curl -sSfL -o semgrep.tar.gz "$SEMGREP_URL"
         tar -xzf semgrep.tar.gz
         sudo mv semgrep/semgrep /usr/local/bin/
         rm -rf semgrep.tar.gz semgrep
