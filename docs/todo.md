@@ -4,8 +4,8 @@
 
 ### What’s Missing or Incomplete (vs. Huntress API Docs/Swagger)
 
-- [ ] **User Invitations**
-  - [ ] No explicit invite user method yet
+- [x] **User Invitations**
+  - [x] No explicit invite user method yet
 
 ### Features/Enhancements (vs. Huntress API Docs/Swagger)
 

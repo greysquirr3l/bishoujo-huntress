@@ -78,6 +78,31 @@ For full code quality checks (format, vet, lint, test):
 make check
 ```
 
+### Static Application Security Testing (SAST) with Semgrep
+
+This project uses [Semgrep](https://semgrep.dev/) for SAST. The recommended version is **v1.119.0** (pinned in CI and `ossf-attest.sh`).
+
+To run Semgrep locally:
+
+```bash
+brew install semgrep  # or pipx install semgrep==1.119.0
+semgrep --config p/owasp-top-ten .
+```
+
+Semgrep is run automatically in CI and as part of the OSSF attestation script (`ossf-attest.sh`).
+
+#### SBOM Generation
+
+This project uses [syft](https://github.com/anchore/syft) **v1.23.1** for SBOM generation. Please use this version for reproducibility and OSSF Scorecard compliance.
+
+Install syft v1.23.1 (recommended):
+
+```bash
+curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin v1.23.1
+syft --version  # should print syft 1.23.1
+syft . -o cyclonedx-json > sbom.json
+```
+
 ## 📥 Installation
 
 ```bash

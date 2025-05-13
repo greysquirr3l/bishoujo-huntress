@@ -154,9 +154,9 @@ The OSSF security baselines focus on these key areas:
    - Implement fuzzing
    - Conduct regular security audits
 
-### Tool Recommendations
+## Tool Recommendations
 
-#### General Purpose Tools
+### General Purpose Tools
 
 ```bash
 # Dependency scanning
@@ -165,14 +165,24 @@ $ dependency-check --project "Project Name" --scan /path/to/code
 # Secret scanning
 $ git-secrets --scan
 
-# SAST tool example
-$ semgrep --config=p/owasp-top-ten .
+#### Semgrep (SAST)
 
-# SBOM generation
-$ syft /path/to/project -o cyclonedx-json > sbom.json
+This project uses [Semgrep](https://semgrep.dev/) for static application security testing (SAST). The recommended version is **v1.119.0** (pinned in CI and `ossf-attest.sh`).
+
+To run Semgrep locally:
+
+```bash
+brew install semgrep  # or pipx install semgrep==1.119.0
+semgrep --config p/owasp-top-ten .
 ```
 
-#### Language-Specific Tools
+Semgrep is also run automatically in CI and as part of the OSSF attestation script (`ossf-attest.sh`).
+
+#### SBOM generation
+
+$ syft /path/to/project -o cyclonedx-json > sbom.json
+
+### Language-Specific Tools
 
 Different tools are recommended based on programming language:
 
@@ -246,10 +256,13 @@ git secrets --scan
 
 ### 4. SBOM Generation
 
-- Install [syft](https://github.com/anchore/syft) and generate a Software Bill of Materials:
+This project uses [syft](https://github.com/anchore/syft) **v1.23.1** for SBOM generation. Please use this version for reproducibility and OSSF Scorecard compliance.
+
+Install syft v1.23.1 (recommended):
 
 ```bash
-brew install syft
+curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin v1.23.1
+syft --version  # should print syft 1.23.1
 syft . -o cyclonedx-json > sbom.json
 ```
 

@@ -63,5 +63,6 @@ Thumbs.db
 # Project specific
 *.bak
 build/*
-/cmd/examples/config.yaml
+build/examples/basic
+build/examples/advanced
 

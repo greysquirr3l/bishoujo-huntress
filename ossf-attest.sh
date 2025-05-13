@@ -29,13 +29,10 @@ ensure_tool() {
       fi
       ;;
     syft)
-      if ! command -v syft >/dev/null 2>&1; then
-        echo "Installing syft..."
-        if command -v brew >/dev/null 2>&1; then
-          brew install syft || true
-        else
-          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b "$(go env GOPATH)/bin"
-        fi
+      SYFT_VERSION="v1.23.1"
+      if ! command -v syft >/dev/null 2>&1 || [[ "$(syft --version 2>/dev/null)" != "syft 1.23.1" ]]; then
+        echo "Installing syft $SYFT_VERSION..."
+        curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin $SYFT_VERSION
       fi
       ;;
     jq)
@@ -55,13 +52,29 @@ ensure_tool() {
         exit 1
       fi
       ;;
+    semgrep)
+      SEMGR_VERSION="1.119.0"
+      if ! command -v semgrep >/dev/null 2>&1 || [[ "$(semgrep --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')" != "$SEMGR_VERSION" ]]; then
+        echo "Installing semgrep $SEMGR_VERSION..."
+        # Prefer Homebrew if available, else use pipx
+        if command -v brew >/dev/null 2>&1; then
+          brew install semgrep || brew upgrade semgrep
+        elif command -v pipx >/dev/null 2>&1; then
+          pipx install --force semgrep==$SEMGR_VERSION
+        else
+          echo "Please install semgrep $SEMGR_VERSION manually (https://semgrep.dev/docs/getting-started/)."; exit 1
+        fi
+      fi
+      ;;
     *)
       echo "Unknown tool: $tool"; exit 1;;
   esac
 }
 
 # Check and install required tools
-for tool in golangci-lint gosec govulncheck git syft jq; do
+
+# Add semgrep to required tools
+for tool in golangci-lint gosec govulncheck git syft jq semgrep; do
   ensure_tool "$tool"
 done
 
@@ -73,6 +86,8 @@ GOVULN_OUT=govulncheck.txt
 GITSECRETS_OUT=git-secrets.txt
 SBOM_OUT=sbom.json
 COVERAGE_OUT=coverage.txt
+SEMGR_OUT=semgrep.txt
+SEMGR_VERSION="1.119.0"
 
 : "${PROJECT_NAME:=bishoujo-huntress}"
 : "${PROJECT_VERSION:=$(git describe --tags --abbrev=0 2>/dev/null || echo "dev")}"
@@ -88,6 +103,7 @@ syft version || true
 jq --version || true
 echo "==================="
 
+
 echo "== Running OSSF Security Baseline Checks =="
 echo "Running golangci-lint..."
 make lint > "$LINT_OUT" 2>&1 || true &
@@ -100,6 +116,13 @@ govulncheck ./... > "$GOVULN_OUT" 2>&1 || true &
 
 echo "Running git-secrets..."
 git secrets --scan > "$GITSECRETS_OUT" 2>&1 || true &
+
+if [[ -n "${SEMGREP_APP_TOKEN:-}" ]]; then
+  echo "Logging in to semgrep with SEMGREP_APP_TOKEN..."
+  semgrep login --token "$SEMGREP_APP_TOKEN" || true
+fi
+echo "Running semgrep (SAST)..."
+semgrep --config p/owasp-top-ten . > "$SEMGR_OUT" 2>&1 || true &
 
 wait
 
@@ -122,7 +145,7 @@ go test -v -coverprofile="$COVERAGE_OUT" ./... > "$TEST_OUT" 2>&1 || true
 
 echo
 echo "== OSSF Attestation Artifact Summary =="
-for f in "$LINT_OUT" "$GOSEC_OUT" "$GOVULN_OUT" "$GITSECRETS_OUT" "$SBOM_OUT" "$TEST_OUT" "$COVERAGE_OUT"; do
+for f in "$LINT_OUT" "$GOSEC_OUT" "$GOVULN_OUT" "$GITSECRETS_OUT" "$SEMGR_OUT" "$SBOM_OUT" "$TEST_OUT" "$COVERAGE_OUT"; do
   if [[ -f "$f" ]]; then
     echo "  $(ls -lh "$f" | awk '{print $9, $5}')"
     head -5 "$f" | sed 's/^/    /'
