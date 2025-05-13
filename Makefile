@@ -78,6 +78,14 @@ deps:
 	fi
 	@echo "Dependencies installed"
 
+# Run all Go fuzz targets in pkg/huntress for a short duration
+fuzz:
+	@echo "Running all Go fuzz targets in pkg/huntress..."
+	go test -fuzz=FuzzIncidentListOptionsValidate -fuzztime=10s ./pkg/huntress || exit 1
+	go test -fuzz=FuzzEncodeURLValues -fuzztime=10s ./pkg/huntress || exit 1
+	go test -fuzz=FuzzAddQueryParams -fuzztime=10s ./pkg/huntress || exit 1
+	go test -fuzz=FuzzExtractPagination -fuzztime=10s ./pkg/huntress || exit 1
+
 # Run tests
 test:
 	@echo "Running tests..."
