@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:375d038b-6c3e-43ee-bca9-dceac1a817e6",
+  "serialNumber": "urn:uuid:9b27fd31-083f-44c6-90fe-7169a9d8ce29",
   "version": 1,
   "metadata": {
-    "timestamp": "2025-05-13T10:08:32-04:00",
+    "timestamp": "2025-05-13T11:14:10-04:00",
     "tools": {
       "components": [
         {
@@ -81,6 +81,32 @@
       ]
     },
     {
+      "bom-ref": "pkg:github/actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683?package-id=91abeafe9000353d",
+      "type": "library",
+      "name": "actions/checkout",
+      "version": "11bd71901bbe5b1630ceea73d27597364c9af683",
+      "cpe": "cpe:2.3:a:actions\\/checkout:actions\\/checkout:11bd71901bbe5b1630ceea73d27597364c9af683:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/model-schema-drift.yml"
+        }
+      ]
+    },
+    {
       "bom-ref": "pkg:github/actions/checkout@v4.2.2?package-id=7cc33d3342343b53",
       "type": "library",
       "name": "actions/checkout",
@@ -133,6 +159,52 @@
       ]
     },
     {
+      "bom-ref": "pkg:github/actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5?package-id=a760b184e2e32363",
+      "type": "library",
+      "name": "actions/setup-go",
+      "version": "d35c59abb061a4a6fb18e82ac0862c26744d6ab5",
+      "cpe": "cpe:2.3:a:actions\\/setup-go:actions\\/setup-go:d35c59abb061a4a6fb18e82ac0862c26744d6ab5:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/setup-go:actions\\/setup_go:d35c59abb061a4a6fb18e82ac0862c26744d6ab5:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/setup_go:actions\\/setup-go:d35c59abb061a4a6fb18e82ac0862c26744d6ab5:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/setup_go:actions\\/setup_go:d35c59abb061a4a6fb18e82ac0862c26744d6ab5:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/setup:actions\\/setup-go:d35c59abb061a4a6fb18e82ac0862c26744d6ab5:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/setup:actions\\/setup_go:d35c59abb061a4a6fb18e82ac0862c26744d6ab5:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/model-schema-drift.yml"
+        }
+      ]
+    },
+    {
       "bom-ref": "pkg:github/actions/setup-go@v5.5.0?package-id=c03ed90805d72354",
       "type": "library",
       "name": "actions/setup-go",
@@ -175,6 +247,52 @@
         {
           "name": "syft:location:0:path",
           "value": "/.github/workflows/ci.yml"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:github/actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02?package-id=c73d550042c9f123",
+      "type": "library",
+      "name": "actions/upload-artifact",
+      "version": "ea165f8d65b6e75b540449e92b4886f43607fa02",
+      "cpe": "cpe:2.3:a:actions\\/upload-artifact:actions\\/upload-artifact:ea165f8d65b6e75b540449e92b4886f43607fa02:*:*:*:*:*:*:*",
+      "purl": "pkg:github/actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/upload-artifact:actions\\/upload_artifact:ea165f8d65b6e75b540449e92b4886f43607fa02:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/upload_artifact:actions\\/upload-artifact:ea165f8d65b6e75b540449e92b4886f43607fa02:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/upload_artifact:actions\\/upload_artifact:ea165f8d65b6e75b540449e92b4886f43607fa02:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/upload:actions\\/upload-artifact:ea165f8d65b6e75b540449e92b4886f43607fa02:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:actions\\/upload:actions\\/upload_artifact:ea165f8d65b6e75b540449e92b4886f43607fa02:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/model-schema-drift.yml"
         }
       ]
     },
@@ -1229,6 +1347,21 @@
         {
           "alg": "SHA-256",
           "content": "798a08c7a1ee6dfd37562c9a5d64b0f4b4f18565550d2964cb49646a4330233a"
+        }
+      ]
+    },
+    {
+      "bom-ref": "0c3f344a1abc6051",
+      "type": "file",
+      "name": "/Users/nickcampbell/Projects/go/bishoujo-huntress/.github/workflows/model-schema-drift.yml",
+      "hashes": [
+        {
+          "alg": "SHA-1",
+          "content": "219377bd23a36bf0b10e7f94733311aff26d0f8c"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "3d661ee070e9deb1e039550f29528a2f77d2a7bd909934b2b92919b72ef110bc"
         }
       ]
     },

@@ -59,16 +59,14 @@ ensure_tool() {
       SEMGR_VERSION="1.119.0"
       if ! command -v semgrep >/dev/null 2>&1 || [[ "$(semgrep --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')" != "$SEMGR_VERSION" ]]; then
         echo "Installing semgrep $SEMGR_VERSION..."
-        SEMGREP_URL="https://github.com/semgrep/semgrep/archive/refs/tags/v${SEMGR_VERSION}.tar.gz"
-        curl -sSfL -o "semgrep-v${SEMGR_VERSION}.tar.gz" "$SEMGREP_URL"
-        tar -xzf "semgrep-v${SEMGR_VERSION}.tar.gz"
-        # Try to find the semgrep binary in the extracted directory (if present)
-        SEMGREP_BIN=$(find semgrep-* -type f -name semgrep -perm +111 2>/dev/null | head -n1)
-        if [[ -z "$SEMGREP_BIN" ]]; then
-          echo "Could not find semgrep binary in the extracted archive."; exit 1
+        if command -v pipx >/dev/null 2>&1; then
+          pipx install --force semgrep==${SEMGR_VERSION}
+        elif command -v pip >/dev/null 2>&1; then
+          pip install --user --force-reinstall semgrep==${SEMGR_VERSION}
+          export PATH="$HOME/.local/bin:$PATH"
+        else
+          echo "pipx or pip is required to install semgrep. Please install pipx or pip."; exit 1
         fi
-        sudo mv "$SEMGREP_BIN" /usr/local/bin/semgrep
-        rm -rf "semgrep-v${SEMGR_VERSION}.tar.gz" semgrep-*
       fi
       ;;
     *)

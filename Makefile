@@ -11,6 +11,18 @@ GOVET=$(GOCMD) vet
 GOCOVER=$(GOCMD) tool cover
 GOLINT=golangci-lint
 
+# Model/Schema Compliance: Download and codegen targets
+SWAGGER_URL=https://api.huntress.io/swagger_doc.json
+SWAGGER_FILE=swagger_doc.json
+OPENAPI_GEN=$(shell \
+  if command -v openapi-generator-cli >/dev/null 2>&1; then echo openapi-generator-cli; \
+  elif command -v openapi-generator >/dev/null 2>&1; then echo openapi-generator; \
+  elif [ -x /opt/homebrew/opt/openapi-generator/bin/openapi-generator ]; then echo /opt/homebrew/opt/openapi-generator/bin/openapi-generator; \
+  elif [ -x /usr/local/bin/openapi-generator ]; then echo /usr/local/bin/openapi-generator; \
+  else echo openapi-generator; fi)
+OPENAPI_LANG=go
+OPENAPI_OUT=build/openapi-models
+
 # Project parameters
 BINARY_NAME=bishoujo-huntress
 PKG=github.com/greysquirr3l/bishoujo-huntress
@@ -110,6 +122,30 @@ lint:
 	@echo "Running linter..."
 	$(GOLINT) run ./...
 
+# Download the latest Huntress OpenAPI/Swagger spec
+swagger-download:
+	@echo "Downloading latest Huntress OpenAPI/Swagger spec..."
+	@mkdir -p build
+	@curl -sSfL $(SWAGGER_URL) -o build/$(SWAGGER_FILE)
+	@echo "Downloaded to build/$(SWAGGER_FILE)"
+
+# Generate Go models from the OpenAPI/Swagger spec (requires openapi-generator-cli)
+swagger-codegen:
+	@echo "Generating Go models from OpenAPI/Swagger spec..."
+	@if ! command -v $(OPENAPI_GEN) >/dev/null 2>&1; then \
+		echo "openapi-generator-cli not found. Install with: brew install openapi-generator"; \
+		exit 1; \
+	fi
+	@mkdir -p $(OPENAPI_OUT)
+	@$(OPENAPI_GEN) generate -i build/$(SWAGGER_FILE) -g $(OPENAPI_LANG) -o $(OPENAPI_OUT) --skip-validate-spec
+	@echo "Go models generated in $(OPENAPI_OUT)"
+
+# Diff generated models with hand-written models (manual step, see checklist for process)
+swagger-diff:
+	@echo "To compare generated models with hand-written models, use diff or meld:"
+	@echo "  diff -ruN $(OPENAPI_OUT)/model pkg/huntress/"
+	@echo "Or use a visual diff tool for easier review."
+
 # Run vet
 vet:
 	@echo "Running go vet..."
@@ -147,6 +183,7 @@ security-check:
 	@which govulncheck > /dev/null || go install golang.org/x/vuln/cmd/govulncheck@latest
 	@govulncheck ./...
 
+
 # Show help
 help:
 	@echo "Bishoujo-Huntress Makefile"
@@ -169,6 +206,9 @@ help:
 	@echo "  check          - Run all code quality checks"
 	@echo "  doc            - Generate documentation"
 	@echo "  security-check - Run security checks"
+	@echo "  swagger-download - Download latest Huntress OpenAPI/Swagger spec"
+	@echo "  swagger-codegen  - Generate Go models from OpenAPI/Swagger spec (requires openapi-generator-cli)"
+	@echo "  swagger-diff     - Show diff instructions for generated vs. hand-written models"
 	@echo "  help           - Show this help message"
 
 # Default target

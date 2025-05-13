@@ -3,15 +3,15 @@
 ┌─────────────┐
 │ Scan Status │
 └─────────────┘
-  Scanning 114 files tracked by git with 1865 Code rules:
+  Scanning 116 files tracked by git with 1865 Code rules:
                                                                                                                         
   Language      Rules   Files          Origin      Rules                                                                
  ─────────────────────────────        ───────────────────                                                               
-  <multilang>       5     114          Pro rules    1323                                                                
+  <multilang>       5     116          Pro rules    1323                                                                
   go              102      71          Community     542                                                                
-  yaml             19       6                                                                                           
+  yaml             19       7                                                                                           
+  bash              1       3                                                                                           
   json              3       2                                                                                           
-  bash              1       2                                                                                           
                                                                                                                         
                 
                 
@@ -21,13 +21,13 @@
 ✅ Scan completed successfully.
  • Findings: 0 (0 blocking)
  • Rules run: 130
- • Targets scanned: 114
+ • Targets scanned: 116
  • Parsed lines: ~100.0%
  • Scan skipped: 
    ◦ Files matching .semgrepignore patterns: 46
  • Scan was limited to files tracked by git
  • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
-Ran 130 rules on 114 files: 0 findings.
+Ran 130 rules on 116 files: 0 findings.
 
 A new version of Semgrep is available. See https://semgrep.dev/docs/upgrading
 If Semgrep missed a finding, please send us feedback to let us know!
