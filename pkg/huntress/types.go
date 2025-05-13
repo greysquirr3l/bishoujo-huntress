@@ -219,16 +219,16 @@ type AgentStatistics struct {
 // IncidentListOptions contains options for listing incidents
 type IncidentListOptions struct {
 	ListOptions
-	Organization   int              `url:"organization_id,omitempty"`
-	AgentID        string           `url:"agent_id,omitempty"`
-	Status         IncidentStatus   `url:"status,omitempty"`
-	Severity       IncidentSeverity `url:"severity,omitempty"`
-	Type           IncidentType     `url:"type,omitempty"`
-	Search         string           `url:"search,omitempty"`
-	AssignedTo     string           `url:"assigned_to,omitempty"`
-	Tags           []string         `url:"tags,omitempty"`
-	DetectedAfter  *time.Time       `url:"detected_after,omitempty"`
-	DetectedBefore *time.Time       `url:"detected_before,omitempty"`
+	Organization   int              `url:"organization_id,omitempty" json:"organization_id,omitempty"`
+	AgentID        string           `url:"agent_id,omitempty" json:"agent_id,omitempty"`
+	Status         IncidentStatus   `url:"status,omitempty" json:"status,omitempty"`
+	Severity       IncidentSeverity `url:"severity,omitempty" json:"severity,omitempty"`
+	Type           IncidentType     `url:"type,omitempty" json:"type,omitempty"`
+	Search         string           `url:"search,omitempty" json:"search,omitempty"`
+	AssignedTo     string           `url:"assigned_to,omitempty" json:"assigned_to,omitempty"`
+	Tags           []string         `url:"tags,omitempty" json:"tags,omitempty"`
+	DetectedAfter  *time.Time       `url:"detected_after,omitempty" json:"detected_after,omitempty"`
+	DetectedBefore *time.Time       `url:"detected_before,omitempty" json:"detected_before,omitempty"`
 }
 
 // ListIncidentsParams is an alias for IncidentListOptions

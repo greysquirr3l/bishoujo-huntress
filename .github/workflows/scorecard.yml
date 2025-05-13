@@ -54,17 +54,23 @@ jobs:
 
       - name: Install security tools
         run: |
+          set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y git curl make
-          # Install golangci-lint
-          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v2.1.6
-          # Install gosec
-          go install github.com/securego/gosec/v2/cmd/gosec@latest
-          # Install govulncheck
-          go install golang.org/x/vuln/cmd/govulncheck@latest
-          # Install git-secrets
+          sudo apt-get install -y git curl make coreutils
+          # Install golangci-lint v2.1.6 (no SHA256 pinning)
+          GOLANGCI_LINT_VERSION=v2.1.6
+          curl -sSfL -o golangci-lint.tar.gz "https://github.com/golangci/golangci-lint/releases/download/${GOLANGCI_LINT_VERSION}/golangci-lint-2.1.6-linux-amd64.tar.gz"
+          tar -xzf golangci-lint.tar.gz
+          sudo mv golangci-lint-2.1.6-linux-amd64/golangci-lint /usr/local/bin/
+          rm -rf golangci-lint.tar.gz golangci-lint-2.1.6-linux-amd64
+          # Install gosec pinned version
+          go install github.com/securego/gosec/v2/cmd/gosec@v2.19.0
+          # Install govulncheck pinned version
+          go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
+          # Install git-secrets pinned by commit
+          GIT_SECRETS_COMMIT="ad82d68ee924906a0401dfd48de5057731a9bc84"
           git clone https://github.com/awslabs/git-secrets.git
-          cd git-secrets && sudo make install && cd .. && rm -rf git-secrets
+          cd git-secrets && git checkout $GIT_SECRETS_COMMIT && sudo make install && cd .. && rm -rf git-secrets
           # Add Go bin to PATH
           echo "$HOME/go/bin" >> $GITHUB_PATH
 

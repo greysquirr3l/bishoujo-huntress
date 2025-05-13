@@ -63,6 +63,9 @@ jobs:
       - name: Run tests
         run: make test
 
+      - name: Run all Go fuzz tests
+        run: make fuzz
+
       - name: Run security scanner (gosec)
         uses: securego/gosec@6decf96c3d272d5a8bbdcf9fddb5789d0be16a8d # v2.22.4
         with:

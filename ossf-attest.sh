@@ -8,31 +8,34 @@ ensure_tool() {
   case "$tool" in
     golangci-lint)
       if ! command -v golangci-lint >/dev/null 2>&1; then
-        echo "Installing golangci-lint..."
-        if command -v brew >/dev/null 2>&1; then
-          brew install golangci-lint || true
-        else
-          go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-        fi
+        echo "Installing golangci-lint v2.1.6..."
+        GOLANGCI_LINT_VERSION="v2.1.6"
+        curl -sSfL -o golangci-lint.tar.gz "https://github.com/golangci/golangci-lint/releases/download/${GOLANGCI_LINT_VERSION}/golangci-lint-2.1.6-linux-amd64.tar.gz"
+        tar -xzf golangci-lint.tar.gz
+        sudo mv golangci-lint-2.1.6-linux-amd64/golangci-lint /usr/local/bin/
+        rm -rf golangci-lint.tar.gz golangci-lint-2.1.6-linux-amd64
       fi
       ;;
     gosec)
       if ! command -v gosec >/dev/null 2>&1; then
-        echo "Installing gosec..."
-        go install github.com/securego/gosec/v2/cmd/gosec@latest
+        echo "Installing gosec v2.19.0..."
+        go install github.com/securego/gosec/v2/cmd/gosec@v2.19.0
       fi
       ;;
     govulncheck)
       if ! command -v govulncheck >/dev/null 2>&1; then
-        echo "Installing govulncheck..."
-        go install golang.org/x/vuln/cmd/govulncheck@latest
+        echo "Installing govulncheck v1.1.4..."
+        go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
       fi
       ;;
     syft)
       SYFT_VERSION="v1.23.1"
       if ! command -v syft >/dev/null 2>&1 || [[ "$(syft --version 2>/dev/null)" != "syft 1.23.1" ]]; then
         echo "Installing syft $SYFT_VERSION..."
-        curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin $SYFT_VERSION
+        curl -sSfL -o syft.tar.gz "https://github.com/anchore/syft/releases/download/${SYFT_VERSION}/syft_${SYFT_VERSION#v}_linux_amd64.tar.gz"
+        tar -xzf syft.tar.gz
+        sudo mv syft /usr/local/bin/
+        rm -rf syft.tar.gz syft
       fi
       ;;
     jq)
@@ -56,14 +59,10 @@ ensure_tool() {
       SEMGR_VERSION="1.119.0"
       if ! command -v semgrep >/dev/null 2>&1 || [[ "$(semgrep --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')" != "$SEMGR_VERSION" ]]; then
         echo "Installing semgrep $SEMGR_VERSION..."
-        # Prefer Homebrew if available, else use pipx
-        if command -v brew >/dev/null 2>&1; then
-          brew install semgrep || brew upgrade semgrep
-        elif command -v pipx >/dev/null 2>&1; then
-          pipx install --force semgrep==$SEMGR_VERSION
-        else
-          echo "Please install semgrep $SEMGR_VERSION manually (https://semgrep.dev/docs/getting-started/)."; exit 1
-        fi
+        curl -sSfL -o semgrep.tar.gz "https://github.com/returntocorp/semgrep/releases/download/v${SEMGR_VERSION}/semgrep_${SEMGR_VERSION}_linux_x86_64.tar.gz"
+        tar -xzf semgrep.tar.gz
+        sudo mv semgrep/semgrep /usr/local/bin/
+        rm -rf semgrep.tar.gz semgrep
       fi
       ;;
     *)

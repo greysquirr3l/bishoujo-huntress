@@ -66,3 +66,5 @@ build/*
 build/examples/basic
 build/examples/advanced
 
+# Workflow files
+.github/workflows/*.bak.*

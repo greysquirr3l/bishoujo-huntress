@@ -144,6 +144,37 @@ The OSSF security baselines focus on these key areas:
    - Add a SECURITY.md file
    - Set up automated dependency scanning
 
+### Fuzz Testing
+
+This project includes fuzzing harnesses for core validation and utility functions, compatible with Go's built-in fuzzing and OSS-Fuzz.
+
+- Fuzzing entrypoints are located in [`pkg/huntress/fuzz_test.go`](../pkg/huntress/fuzz_test.go).
+- Fuzz tests are run automatically in CI via:
+
+  ```yaml
+  - name: Run all Go fuzz tests
+    run: make fuzz
+  ```
+
+- To run fuzzing locally for all targets:
+
+  ```bash
+  make fuzz
+  ```
+
+- To run a specific fuzz target locally:
+
+  ```bash
+  go test -fuzz=FuzzIncidentListOptionsValidate -fuzztime=10s ./pkg/huntress
+  go test -fuzz=FuzzEncodeURLValues -fuzztime=10s ./pkg/huntress
+  go test -fuzz=FuzzAddQueryParams -fuzztime=10s ./pkg/huntress
+  go test -fuzz=FuzzExtractPagination -fuzztime=10s ./pkg/huntress
+  ```
+
+- For OSS-Fuzz integration, see [https://google.github.io/oss-fuzz/](https://google.github.io/oss-fuzz/) and adapt the harness as needed.
+
+Fuzzing helps catch panics, crashes, and logic errors in input validation and encoding/decoding routines, and is required for OSSF Scorecard compliance.
+
 2. Progress to intermediate measures:
    - Implement automated security testing
    - Sign releases

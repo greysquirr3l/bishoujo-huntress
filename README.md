@@ -21,34 +21,39 @@ A comprehensive Go client library for the Huntress API, designed with Domain-Dri
 
 ## 📋 Table of Contents
 
-- [Development Environment Setup](#linting-and-development-environment-setup)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Architecture](#architecture)
-- [Documentation](#documentation)
-- [Examples](#examples)
-- [Security](#security)
-- [Contributing](#contributing)
-- [License](#license)
+- [Linting and Development Environment Setup](#linting-and-development-environment-setup)
+- [Installation](#-installation)
+- [Quick Start](#-quick-start)
+- [Architecture](#-architecture)
+- [Documentation](#-documentation)
+- [Example Usage](#-example-usage)
+- [API Coverage](#-api-coverage)
+- [Error Handling](#-error-handling)
+- [Testing](#-testing)
+- [Examples](#-examples)
+- [Security](#-security)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Acknowledgements](#-acknowledgements)
 
 ## Linting and Development Environment Setup
 
 ### Automated golangci-lint Installation
 
-The Makefile and CI workflows will automatically install `golangci-lint` (v1.56.2) if it is not present in your `$PATH`.
+The Makefile and CI workflows will automatically install `golangci-lint` (v2.1.6) if it is not present in your `$PATH`.
 
 **Manual Installation (Recommended for Consistency):**
 
 To ensure you have the correct version and avoid issues with Homebrew or system package managers, run:
 
 ```bash
-curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.56.2
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.1.6
 ```
 
 Or, to install to `/usr/local/bin` (requires sudo):
 
 ```bash
-curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v1.56.2
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v2.1.6
 ```
 
 After installation, ensure your `$PATH` includes the install location (e.g., `$GOPATH/bin` or `/usr/local/bin`).
@@ -86,6 +91,7 @@ To run Semgrep locally:
 
 ```bash
 brew install semgrep  # or pipx install semgrep==1.119.0
+semgrep --version  # should print semgrep 1.119.0
 semgrep --config p/owasp-top-ten .
 ```
 
