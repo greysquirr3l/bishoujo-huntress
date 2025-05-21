@@ -59,8 +59,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Clean cache directory
-        run: rm -rf ${{ runner.tool_cache }}
+      - name: Clean specific tool caches
+        run: |
+          # Clean Go module cache
+          rm -rf $GOPATH/pkg/mod
+          # Clean Node.js cache
+          rm -rf ~/.npm
+          # Optionally clean other specific paths if needed
 
       - name: Restore cache
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
