@@ -1,0 +1,26 @@
+name: Reusable Network Pre-Check
+
+on:
+  workflow_call:
+    outputs:
+      connectivity_ok:
+        description: "True if network connectivity to api.github.com is OK, false otherwise."
+        value: ${{ jobs.network_check_job.outputs.connectivity_status }}
+
+jobs:
+  network_check_job:
+    runs-on: ubuntu-latest
+    outputs:
+      connectivity_status: ${{ steps.network_pre_check_step.outputs.connectivity_ok }}
+    steps:
+      - name: Perform Network Pre-Check
+        id: network_pre_check_step
+        run: |
+          echo "Attempting to connect to api.github.com..."
+          if curl -s --connect-timeout 10 https://api.github.com > /dev/null; then
+            echo "Network connectivity to api.github.com is OK."
+            echo "connectivity_ok=true" >> $GITHUB_OUTPUT
+          else
+            echo "Network connectivity to api.github.com FAILED."
+            echo "connectivity_ok=false" >> $GITHUB_OUTPUT
+          fi

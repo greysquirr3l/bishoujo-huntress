@@ -21,19 +21,12 @@ jobs:
       security-events: write
       id-token: write
     steps:
-      - name: Network Pre-Check
-        id: network_pre_check
-        run: |
-          echo "Attempting to connect to api.github.com..."
-          if curl -s --connect-timeout 10 https://api.github.com > /dev/null; then
-            echo "Network connectivity to api.github.com is OK."
-            echo "connectivity_ok=true" >> $GITHUB_OUTPUT
-          else
-            echo "Network connectivity to api.github.com FAILED."
-            echo "connectivity_ok=false" >> $GITHUB_OUTPUT
-          fi
+      - name: Call Reusable Network Pre-Check
+        id: network_check
+        uses: ./.github/workflows/reusable-network-check.yml
+
       - name: Harden Runner
-        if: steps.network_pre_check.outputs.connectivity_ok == 'true'
+        if: steps.network_check.outputs.connectivity_ok == 'true'
         uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: block
@@ -88,19 +81,12 @@ jobs:
       contents: read
       security-events: write # Added permission to write security events
     steps:
-      - name: Network Pre-Check
-        id: network_pre_check
-        run: |
-          echo "Attempting to connect to api.github.com..."
-          if curl -s --connect-timeout 10 https://api.github.com > /dev/null; then
-            echo "Network connectivity to api.github.com is OK."
-            echo "connectivity_ok=true" >> $GITHUB_OUTPUT
-          else
-            echo "Network connectivity to api.github.com FAILED."
-            echo "connectivity_ok=false" >> $GITHUB_OUTPUT
-          fi
+      - name: Call Reusable Network Pre-Check
+        id: network_check
+        uses: ./.github/workflows/reusable-network-check.yml
+
       - name: Harden Runner # This is now a distinct step
-        if: steps.network_pre_check.outputs.connectivity_ok == 'true'
+        if: steps.network_check.outputs.connectivity_ok == 'true'
         uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: block

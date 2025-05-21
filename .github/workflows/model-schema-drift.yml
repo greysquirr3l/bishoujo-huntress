@@ -14,19 +14,12 @@ jobs:
   model-schema-drift:
     runs-on: ubuntu-latest
     steps:
-      - name: Network Pre-Check
-        id: network_pre_check
-        run: |
-          echo "Attempting to connect to api.github.com..."
-          if curl -s --connect-timeout 10 https://api.github.com > /dev/null; then
-            echo "Network connectivity to api.github.com is OK."
-            echo "connectivity_ok=true" >> $GITHUB_OUTPUT
-          else
-            echo "Network connectivity to api.github.com FAILED."
-            echo "connectivity_ok=false" >> $GITHUB_OUTPUT
-          fi
+      - name: Call Reusable Network Pre-Check
+        id: network_check
+        uses: ./.github/workflows/reusable-network-check.yml
+
       - name: Harden Runner
-        if: steps.network_pre_check.outputs.connectivity_ok == 'true'
+        if: steps.network_check.outputs.connectivity_ok == 'true'
         uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: block
@@ -66,17 +59,23 @@ jobs:
           # Clean Node.js cache
           rm -rf ~/.npm
           # Optionally clean other specific paths if needed
-
-      - name: Restore cache
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
-        with:
-          path: ${{ runner.tool_cache }}
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          # Consider removing 'rm -rf $GOPATH/pkg/mod' if you implement Go module caching below
 
       - name: Set up Go
         uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
         with:
           go-version: "1.22"
+
+      - name: Cache Go modules
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ github.job }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ github.job }}-
+            ${{ runner.os }}-go-
 
       - name: Set up Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -85,7 +84,7 @@ jobs:
 
       - name: Install OpenAPI Generator CLI (npm)
         run: |
-          npm install -g github:OpenAPITools/openapi-generator-cli#3a316fdb1abe9db951df3579130326d587a03c0c
+          npm install -g @openapitools/openapi-generator-cli@2.6.0
 
       - name: Download latest Huntress OpenAPI/Swagger spec
         run: |
