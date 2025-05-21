@@ -2,18 +2,25 @@
 # ossf-attest.sh: Run all OSSF Security Baseline checks and save attestation artifacts
 set -euo pipefail
 
+# Define local tools directory and add to PATH
+LOCAL_TOOLS_DIR="$(pwd)/.local_tools/bin"
+mkdir -p "$LOCAL_TOOLS_DIR"
+export PATH="$LOCAL_TOOLS_DIR:$PATH"
+
 # Ensure required tools are installed (macOS/Homebrew or Go-based)
 ensure_tool() {
   local tool="$1"
   case "$tool" in
     golangci-lint)
       if ! command -v golangci-lint >/dev/null 2>&1; then
-        echo "Installing golangci-lint v2.1.6..."
+        echo "Installing golangci-lint v2.1.6 to $LOCAL_TOOLS_DIR..."
         GOLANGCI_LINT_VERSION="v2.1.6"
-        curl -sSfL -o golangci-lint.tar.gz "https://github.com/golangci/golangci-lint/releases/download/${GOLANGCI_LINT_VERSION}/golangci-lint-2.1.6-linux-amd64.tar.gz"
-        tar -xzf golangci-lint.tar.gz
-        sudo mv golangci-lint-2.1.6-linux-amd64/golangci-lint /usr/local/bin/
-        rm -rf golangci-lint.tar.gz golangci-lint-2.1.6-linux-amd64
+        # Use the official install script for platform-agnostic installation
+        curl -sSfL https://raw.githubusercontent.com/golangci-lint/master/install.sh | sh -s -- -b "$LOCAL_TOOLS_DIR" "$GOLANGCI_LINT_VERSION"
+        if ! command -v golangci-lint >/dev/null 2>&1; then
+            echo "golangci-lint installation failed. Please check."
+            exit 1
+        fi
       fi
       ;;
     gosec)
@@ -29,13 +36,30 @@ ensure_tool() {
       fi
       ;;
     syft)
-      SYFT_VERSION="v1.23.1"
-      if ! command -v syft >/dev/null 2>&1 || [[ "$(syft --version 2>/dev/null)" != "syft 1.23.1" ]]; then
-        echo "Installing syft $SYFT_VERSION..."
-        curl -sSfL -o syft.tar.gz "https://github.com/anchore/syft/releases/download/${SYFT_VERSION}/syft_${SYFT_VERSION#v}_linux_amd64.tar.gz"
-        tar -xzf syft.tar.gz
-        sudo mv syft /usr/local/bin/
-        rm -rf syft.tar.gz syft
+      SYFT_VERSION="v1.26.0" # Updated version
+      SYFT_VERSION_NO_V="${SYFT_VERSION#v}"
+      syft_installed_version=""
+      if command -v syft >/dev/null 2>&1; then
+        # Robustly extract version: grep the line, then use sed to get the version string
+        syft_installed_version=$(syft version 2>/dev/null | grep "^Version:" | sed -e 's/Version:[[:space:]]*//')
+      fi
+
+      if [[ "$syft_installed_version" != "$SYFT_VERSION_NO_V" ]]; then
+        echo "Installing syft $SYFT_VERSION to $LOCAL_TOOLS_DIR (found: '$syft_installed_version')..."
+        curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b "$LOCAL_TOOLS_DIR" "$SYFT_VERSION"
+        # Verify installation and version
+        if ! command -v syft >/dev/null 2>&1; then
+            echo "Syft installation command failed. Please check."
+            exit 1
+        fi
+        syft_installed_version_after_install=$(syft version 2>/dev/null | grep "^Version:" | sed -e 's/Version:[[:space:]]*//')
+        if [[ "$syft_installed_version_after_install" != "$SYFT_VERSION_NO_V" ]]; then
+            echo "Syft installation succeeded but version is '$syft_installed_version_after_install', expected '$SYFT_VERSION_NO_V'. Please check."
+            exit 1
+        fi
+        echo "Syft $SYFT_VERSION installed successfully."
+      else
+        echo "Syft version $SYFT_VERSION_NO_V already installed."
       fi
       ;;
     jq)
@@ -102,7 +126,7 @@ golangci-lint --version || true
 gosec --version || true
 govulncheck --version || true
 git secrets --list || true
-syft version || true
+syft version || true # Changed from `syft version` to `syft --version` if that's the new syft CLI, or keep as is if `syft version` is correct
 jq --version || true
 echo "==================="
 
@@ -135,7 +159,7 @@ go mod tidy
 echo "Generating SBOM with syft..."
 if command -v jq >/dev/null 2>&1; then
   syft . -o cyclonedx-json --source-name "$PROJECT_NAME" --source-version "$PROJECT_VERSION" \
-    | jq 'del(.metadata.tools.components[].author) | .metadata.authors = [{"name": "anchore"}]' \
+    | jq 'del(.metadata.tools.components[]?.author) | .metadata.authors = [{"name": "anchore"}]' \
     > "$SBOM_OUT" || true
   echo "SBOM generated as a JSON object with name and version fields."
 else

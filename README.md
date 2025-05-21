@@ -4,7 +4,7 @@
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/greysquirr3l/bishoujo-huntress.svg)](https://pkg.go.dev/github.com/greysquirr3l/bishoujo-huntress)
 [![Go Report Card](https://goreportcard.com/badge/github.com/greysquirr3l/bishoujo-huntress)](https://goreportcard.com/report/github.com/greysquirr3l/bishoujo-huntress)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/greysquirr3l/bishoujo-huntress/badge)](https://securityscorecards.dev/viewer/?uri=github.com/greysquirr3l/bishoujo-huntress)
 
 A comprehensive Go client library for the Huntress API, designed with Domain-Driven Design and Clean Architecture principles.
@@ -47,13 +47,13 @@ The Makefile and CI workflows will automatically install `golangci-lint` (v2.1.6
 To ensure you have the correct version and avoid issues with Homebrew or system package managers, run:
 
 ```bash
-curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.1.6
+curl -sSfL https://raw.githubusercontent.com/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.1.6
 ```
 
 Or, to install to `/usr/local/bin` (requires sudo):
 
 ```bash
-curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v2.1.6
+curl -sSfL https://raw.githubusercontent.com/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v2.1.6
 ```
 
 After installation, ensure your `$PATH` includes the install location (e.g., `$GOPATH/bin` or `/usr/local/bin`).
@@ -663,10 +663,11 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 
 ## 📜 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgements
 
 - The [Huntress Team](https://www.huntress.com) for their API
 - [Go](https://golang.org) and its contributors
 - The Open Source Security Foundation for security best practices
+- All contributors and users of this project
