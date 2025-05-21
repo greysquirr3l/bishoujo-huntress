@@ -1722,6 +1722,21 @@
       ]
     },
     {
+      "bom-ref": "11e73355cf5d86c8",
+      "type": "file",
+      "name": "/Users/nickcampbell/Projects/go/bishoujo-huntress/build/bishoujo-huntress",
+      "hashes": [
+        {
+          "alg": "SHA-1",
+          "content": "e3e9e75831e4f9dae87eeac9270eb6d1740f3c5d"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "1fe1392e3889db279d63c9579288960b38a2c62adf67792684faa0b6ffb00f9b"
+        }
+      ]
+    },
+    {
       "bom-ref": "45e11a4d2360a6a8",
       "type": "file",
       "name": "/Users/nickcampbell/Projects/go/bishoujo-huntress/build/examples/basic",
