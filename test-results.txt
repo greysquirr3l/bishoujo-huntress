@@ -406,7 +406,7 @@ ok  	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/retr
 === RUN   TestClient_New
 --- PASS: TestClient_New (0.00s)
 === RUN   TestAccountService_Get_NotImplemented
---- PASS: TestAccountService_Get_NotImplemented (0.20s)
+--- PASS: TestAccountService_Get_NotImplemented (0.18s)
 === RUN   TestClient_NewRequest_sets_headers
 --- PASS: TestClient_NewRequest_sets_headers (0.00s)
 === RUN   TestClient_NewRequest_with_body

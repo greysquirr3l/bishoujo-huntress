@@ -1446,6 +1446,130 @@
       ]
     },
     {
+      "bom-ref": "pkg:github/step-security/harden-runner@v2.12.0?package-id=c36408e96ebb90ce",
+      "type": "library",
+      "name": "step-security/harden-runner",
+      "version": "v2.12.0",
+      "cpe": "cpe:2.3:a:step-security\\/harden-runner:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*",
+      "purl": "pkg:github/step-security/harden-runner@v2.12.0",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step-security\\/harden-runner:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step_security\\/harden_runner:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step_security\\/harden_runner:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step-security\\/harden:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step-security\\/harden:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step_security\\/harden:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step_security\\/harden:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/codeql.yml"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:github/step-security/harden-runner@v2.12.0?package-id=8b7cf3e2f3e8a558",
+      "type": "library",
+      "name": "step-security/harden-runner",
+      "version": "v2.12.0",
+      "cpe": "cpe:2.3:a:step-security\\/harden-runner:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*",
+      "purl": "pkg:github/step-security/harden-runner@v2.12.0",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "github-actions-usage-cataloger"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "github-action"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "github-actions-use-statement"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step-security\\/harden-runner:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step_security\\/harden_runner:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step_security\\/harden_runner:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step-security\\/harden:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step-security\\/harden:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step_security\\/harden:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step_security\\/harden:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step:step-security\\/harden-runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:step:step_security\\/harden_runner:v2.12.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/.github/workflows/model-schema-drift.yml"
+        }
+      ]
+    },
+    {
       "bom-ref": "pkg:github/step-security/harden-runner@v2.12.0?package-id=1f584b9e340775f6",
       "type": "library",
       "name": "step-security/harden-runner",
@@ -1514,11 +1638,11 @@
       "hashes": [
         {
           "alg": "SHA-1",
-          "content": "13360e97d2dbfc529d3f71a04ffa7f7c7175d10b"
+          "content": "a396a92518143442b29f172dfdce2f9f824172e5"
         },
         {
           "alg": "SHA-256",
-          "content": "403e33c7a6d13f1d973abda85eb935631c3b71ae82c0bba3219f00b417b0b47c"
+          "content": "abdebdd9f54de1e0a7ed37a23228e08cf2e61c480cbaadc46e0c0eed34a7b3da"
         }
       ]
     },
@@ -1544,11 +1668,11 @@
       "hashes": [
         {
           "alg": "SHA-1",
-          "content": "1de7345ce4684f3f14f8e0fec0fc339a120d626b"
+          "content": "0901ee15857d512b037bbda9b8887c476433a590"
         },
         {
           "alg": "SHA-256",
-          "content": "dc99d4a81e34f4801bd03a91951e9cd34314422a5784d1fce25fd0441fcae547"
+          "content": "095005dcc13469ee13a4b76696cfd2ac33d19aa06f2feac99702e1047f6db823"
         }
       ]
     },
@@ -1559,11 +1683,26 @@
       "hashes": [
         {
           "alg": "SHA-1",
-          "content": "a97115802e54277f757f91be8e986ceafd3077b8"
+          "content": "67511e0e7d567493adea08077ea5226c447ad39d"
         },
         {
           "alg": "SHA-256",
-          "content": "6b8c3138c773cfb3c462aee41e5950281291cfd8bbafd9b90fd249a45a978de9"
+          "content": "c557c473384940f10ef90903d45b3f45a2ce1c98221e8f44deb53373e61b4571"
+        }
+      ]
+    },
+    {
+      "bom-ref": "11e73355cf5d86c8",
+      "type": "file",
+      "name": "/Users/nickcampbell/Projects/go/bishoujo-huntress/build/bishoujo-huntress",
+      "hashes": [
+        {
+          "alg": "SHA-1",
+          "content": "e3e9e75831e4f9dae87eeac9270eb6d1740f3c5d"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "1fe1392e3889db279d63c9579288960b38a2c62adf67792684faa0b6ffb00f9b"
         }
       ]
     },
