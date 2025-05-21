@@ -19,7 +19,20 @@ jobs:
       pull-requests: read # for golangci/golangci-lint-action to fetch pull requests
     runs-on: ubuntu-latest
     steps:
+      - name: Network Pre-Check
+        id: network_pre_check
+        run: |
+          echo "Attempting to connect to api.github.com..."
+          if curl -s --connect-timeout 10 https://api.github.com > /dev/null; then
+            echo "Network connectivity to api.github.com is OK."
+            echo "connectivity_ok=true" >> $GITHUB_OUTPUT
+          else
+            echo "Network connectivity to api.github.com FAILED."
+            echo "connectivity_ok=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Harden Runner
+        if: steps.network_pre_check.outputs.connectivity_ok == 'true'
         uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: block
