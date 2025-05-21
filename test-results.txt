@@ -329,7 +329,7 @@ ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/incident	0.006s	c
 --- PASS: Test_isValidEmail (0.00s)
 PASS
 coverage: 100.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/organization	0.008s	coverage: 100.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/organization	0.010s	coverage: 100.0% of statements
 === RUN   TestParseEvent
 --- PASS: TestParseEvent (0.00s)
 === RUN   TestValidateEvent
@@ -368,7 +368,7 @@ ok  	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http	0.07
 --- PASS: TestExecuteWithRetry_RetryAndFail (0.01s)
 PASS
 coverage: 73.5% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/retry	0.075s	coverage: 73.5% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/retry	0.080s	coverage: 73.5% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/logging		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/ports/repository		coverage: 0.0% of statements
 === RUN   TestAgentService_Get
