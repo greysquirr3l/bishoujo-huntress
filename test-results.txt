@@ -28,7 +28,7 @@
 === RUN   TestDoPostBulkActionAndDecode_Success
 --- PASS: TestDoPostBulkActionAndDecode_Success (0.00s)
 === RUN   TestDoPostBulkActionAndDecode_ErrorStatus
---- PASS: TestDoPostBulkActionAndDecode_ErrorStatus (0.00s)
+--- PASS: TestDoPostBulkActionAndDecode_ErrorStatus (0.01s)
 === RUN   TestDoPostBulkActionAndDecode_BadJSON
 --- PASS: TestDoPostBulkActionAndDecode_BadJSON (0.00s)
 === RUN   TestBuildQueryParams_Empty

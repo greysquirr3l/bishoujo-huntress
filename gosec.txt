@@ -131,91 +131,91 @@ Results:
   > 349: 		w.Close()
     350: 	}
 
-Autofix: 
+Autofix:
 
 [/Users/nickcampbell/Projects/go/bishoujo-huntress/build/openapi-models/client.go:326] - G104 (CWE-703): Errors unhandled (Confidence: HIGH, Severity: LOW)
     325: 				} else { // form value
   > 326: 					w.WriteField(k, iv)
     327: 				}
 
-Autofix: 
+Autofix:
 
 [/Users/nickcampbell/Projects/go/bishoujo-huntress/build/openapi-models/api_v1.go:1408] - G104 (CWE-703): Errors unhandled (Confidence: HIGH, Severity: LOW)
     1407: 	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
   > 1408: 	localVarHTTPResponse.Body.Close()
     1409: 	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 
-Autofix: 
+Autofix:
 
 [/Users/nickcampbell/Projects/go/bishoujo-huntress/build/openapi-models/api_v1.go:1316] - G104 (CWE-703): Errors unhandled (Confidence: HIGH, Severity: LOW)
     1315: 	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
   > 1316: 	localVarHTTPResponse.Body.Close()
     1317: 	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 
-Autofix: 
+Autofix:
 
 [/Users/nickcampbell/Projects/go/bishoujo-huntress/build/openapi-models/api_v1.go:1130] - G104 (CWE-703): Errors unhandled (Confidence: HIGH, Severity: LOW)
     1129: 	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
   > 1130: 	localVarHTTPResponse.Body.Close()
     1131: 	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 
-Autofix: 
+Autofix:
 
 [/Users/nickcampbell/Projects/go/bishoujo-huntress/build/openapi-models/api_v1.go:1038] - G104 (CWE-703): Errors unhandled (Confidence: HIGH, Severity: LOW)
     1037: 	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
   > 1038: 	localVarHTTPResponse.Body.Close()
     1039: 	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 
-Autofix: 
+Autofix:
 
 [/Users/nickcampbell/Projects/go/bishoujo-huntress/build/openapi-models/api_v1.go:890] - G104 (CWE-703): Errors unhandled (Confidence: HIGH, Severity: LOW)
     889: 	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
   > 890: 	localVarHTTPResponse.Body.Close()
     891: 	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 
-Autofix: 
+Autofix:
 
 [/Users/nickcampbell/Projects/go/bishoujo-huntress/build/openapi-models/api_v1.go:798] - G104 (CWE-703): Errors unhandled (Confidence: HIGH, Severity: LOW)
     797: 	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
   > 798: 	localVarHTTPResponse.Body.Close()
     799: 	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 
-Autofix: 
+Autofix:
 
 [/Users/nickcampbell/Projects/go/bishoujo-huntress/build/openapi-models/api_v1.go:608] - G104 (CWE-703): Errors unhandled (Confidence: HIGH, Severity: LOW)
     607: 	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
   > 608: 	localVarHTTPResponse.Body.Close()
     609: 	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 
-Autofix: 
+Autofix:
 
 [/Users/nickcampbell/Projects/go/bishoujo-huntress/build/openapi-models/api_v1.go:516] - G104 (CWE-703): Errors unhandled (Confidence: HIGH, Severity: LOW)
     515: 	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
   > 516: 	localVarHTTPResponse.Body.Close()
     517: 	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 
-Autofix: 
+Autofix:
 
 [/Users/nickcampbell/Projects/go/bishoujo-huntress/build/openapi-models/api_v1.go:358] - G104 (CWE-703): Errors unhandled (Confidence: HIGH, Severity: LOW)
     357: 	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
   > 358: 	localVarHTTPResponse.Body.Close()
     359: 	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 
-Autofix: 
+Autofix:
 
 [/Users/nickcampbell/Projects/go/bishoujo-huntress/build/openapi-models/api_v1.go:266] - G104 (CWE-703): Errors unhandled (Confidence: HIGH, Severity: LOW)
     265: 	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
   > 266: 	localVarHTTPResponse.Body.Close()
     267: 	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 
-Autofix: 
+Autofix:
 
 [/Users/nickcampbell/Projects/go/bishoujo-huntress/build/openapi-models/api_v1.go:98] - G104 (CWE-703): Errors unhandled (Confidence: HIGH, Severity: LOW)
     97: 	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
   > 98: 	localVarHTTPResponse.Body.Close()
     99: 	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 
-Autofix: 
+Autofix:
 
 Summary:
   Gosec  : 2.22.4
