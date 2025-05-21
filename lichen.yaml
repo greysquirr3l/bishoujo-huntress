@@ -1,0 +1,30 @@
+# Default policy: deny licenses not explicitly allowed.
+default: deny
+
+# List of SPDX license identifiers that are allowed.
+# These are generally compatible with GPL-3.0.
+allow:
+  - MIT
+  - Apache-2.0
+  - BSD-2-Clause
+  - BSD-3-Clause
+  - ISC
+  - MPL-2.0 # Mozilla Public License 2.0 is generally GPL-compatible
+  # GPL licenses
+  - GPL-3.0-only
+  - GPL-3.0-or-later
+  - AGPL-3.0-only # If you intend to allow AGPL
+  - AGPL-3.0-or-later # If you intend to allow AGPL
+  - LGPL-3.0-only # LGPL is compatible with GPL
+  - LGPL-3.0-or-later
+
+# Paths to ignore during license checking.
+# Useful for vendored dependencies you manage separately or internal modules.
+ignorePaths:
+  - vendor/ # If you vendor dependencies
+  # - internal/ # If you don't want to check your own internal packages
+
+# Specific modules to ignore, regardless of their license.
+# Use this sparingly.
+# ignore:
+#   - github.com/example/some-module

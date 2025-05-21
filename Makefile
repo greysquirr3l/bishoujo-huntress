@@ -79,8 +79,8 @@ deps:
 	@$(GOMOD) download
 	@echo "Checking for golangci-lint..."
 	@if ! command -v $(GOLINT) >/dev/null 2>&1; then \
-	  echo "golangci-lint not found, installing v1.56.2..."; \
-	  curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $$(go env GOPATH)/bin v1.56.2; \
+	  echo "golangci-lint not found, installing v2.1.6..."; \
+	  curl -sSfL https://raw.githubusercontent.com/golangci-lint/master/install.sh | sh -s -- -b $$(go env GOPATH)/bin v2.1.6; \
 	  if ! command -v $(GOLINT) >/dev/null 2>&1; then \
 		echo "golangci-lint still not found. Please ensure $(GOLINT) is in your PATH."; \
 		exit 1; \
