@@ -59,7 +59,7 @@ jobs:
 
       - name: Upload Scorecard results to GitHub Security tab
         # OSSF Scorecard: SHA pinning required for supply chain security
-        uses: github/codeql-action/upload-sarif@3d392940475e4c472e143ff2fd41aaffb1178094 # codeql-bundle-20221007
+        uses: github/codeql-action/upload-sarif@ff0a06e83cb2de871e5a09832bc6a81e7276941f # codeql-bundle-20221007
         with:
           sarif_file: results.sarif
 
