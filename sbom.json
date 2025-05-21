@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:fd93e5a3-ef4d-4585-811e-f3146b854ebb",
+  "serialNumber": "urn:uuid:d04c1750-c625-4fe1-861e-fe50e874a5fa",
   "version": 1,
   "metadata": {
-    "timestamp": "2025-05-21T12:26:03-04:00",
+    "timestamp": "2025-05-21T12:38:42-04:00",
     "tools": {
       "components": [
         {
@@ -1949,13 +1949,11 @@
       "hashes": [
         {
           "alg": "SHA-1",
-          "content": "8773aab451ea1c6cb64d37c654267ab75347cad2"
-          "content": "8773aab451ea1c6cb64d37c654267ab75347cad2"
+          "content": "98738690a6103c56a56f8bac03f0b38557355d91"
         },
         {
           "alg": "SHA-256",
-          "content": "44aada199aac7e8f853de9806c7acc7945c606fbf73ffc67e177bc8e88e9b56c"
-          "content": "44aada199aac7e8f853de9806c7acc7945c606fbf73ffc67e177bc8e88e9b56c"
+          "content": "118ddaf7b627ec39e4f4194ebf482e1fa71eb824efaa81ea8f48480c54246727"
         }
       ]
     },
