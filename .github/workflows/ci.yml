@@ -27,24 +27,30 @@ jobs:
         uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: block
-          allowed-endpoints: >
+          allowed-endpoints: | # Changed from > to | and added new domains
             api.github.com:443
             api.huntress.io:443
             archive.ubuntu.com:443
             artifactcache.actions.githubusercontent.com:443
+            cloud.google.com:443 # New
             dl.google.com:443
             files.pythonhosted.org:443
             ghcr.io:443
             github.com:443
+            go.opentelemetry.io:443 # New
+            golang.org:443 # New (base domain)
             golangci-lint.run:443
+            google.golang.org:443 # New
             hosted-compute-watchdog-prod-eus-02.githubapp.com:443
             hosted-compute-watchdog-prod-iad-01.githubapp.com:443
             objects.githubusercontent.com:443
+            packages.microsoft.com:443
             pkg-containers.githubusercontent.com:443
             proxy.golang.org:443
             pypi.org:443
             raw.githubusercontent.com:443
             registry.npmjs.org:443
+            repo1.maven.org:443
             security.ubuntu.com:443
             semgrep.dev:443
             storage.googleapis.com:443
