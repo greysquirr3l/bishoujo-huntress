@@ -754,16 +754,6 @@ github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/client.go
 github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/client.go:249.129,251.2 1 1
 github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/client.go:254.128,256.2 1 1
 github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/client.go:259.125,261.2 1 1
-github.com/greysquirr3l/bishoujo-huntress/pkg/huntress/types/common_types.go:16.37,18.2 1 1
-github.com/greysquirr3l/bishoujo-huntress/pkg/huntress/types/common_types.go:21.41,23.2 1 1
-github.com/greysquirr3l/bishoujo-huntress/pkg/huntress/types/common_types.go:26.37,27.17 1 1
-github.com/greysquirr3l/bishoujo-huntress/pkg/huntress/types/common_types.go:27.17,29.3 1 1
-github.com/greysquirr3l/bishoujo-huntress/pkg/huntress/types/common_types.go:30.2,30.15 1 1
-github.com/greysquirr3l/bishoujo-huntress/pkg/huntress/types/common_types.go:34.41,35.21 1 1
-github.com/greysquirr3l/bishoujo-huntress/pkg/huntress/types/common_types.go:35.21,37.3 1 1
-github.com/greysquirr3l/bishoujo-huntress/pkg/huntress/types/common_types.go:38.2,38.15 1 1
-github.com/greysquirr3l/bishoujo-huntress/pkg/huntress/types/common_types.go:42.41,44.2 1 1
-github.com/greysquirr3l/bishoujo-huntress/pkg/huntress/types/common_types.go:47.40,49.2 1 1
 github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/retry/print_error.go:7.28,9.2 1 0
 github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/retry/retrier.go:44.41,48.2 1 1
 github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/retry/retrier.go:53.102,57.62 3 1

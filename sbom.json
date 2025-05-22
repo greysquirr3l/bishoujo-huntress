@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:d04c1750-c625-4fe1-861e-fe50e874a5fa",
+  "serialNumber": "urn:uuid:bd7c6966-3b4c-4b50-a36e-b91318082d52",
   "version": 1,
   "metadata": {
-    "timestamp": "2025-05-21T12:38:42-04:00",
+    "timestamp": "2025-05-21T08:48:27-04:00",
     "tools": {
       "components": [
         {
@@ -1949,11 +1949,11 @@
       "hashes": [
         {
           "alg": "SHA-1",
-          "content": "98738690a6103c56a56f8bac03f0b38557355d91"
+          "content": "8773aab451ea1c6cb64d37c654267ab75347cad2"
         },
         {
           "alg": "SHA-256",
-          "content": "118ddaf7b627ec39e4f4194ebf482e1fa71eb824efaa81ea8f48480c54246727"
+          "content": "44aada199aac7e8f853de9806c7acc7945c606fbf73ffc67e177bc8e88e9b56c"
         }
       ]
     },
@@ -2003,6 +2003,21 @@
           "alg": "SHA-256",
           "content": "1fe1392e3889db279d63c9579288960b38a2c62adf67792684faa0b6ffb00f9b"
           "content": "c557c473384940f10ef90903d45b3f45a2ce1c98221e8f44deb53373e61b4571"
+        }
+      ]
+    },
+    {
+      "bom-ref": "11e73355cf5d86c8",
+      "type": "file",
+      "name": "/Users/nickcampbell/Projects/go/bishoujo-huntress/build/bishoujo-huntress",
+      "hashes": [
+        {
+          "alg": "SHA-1",
+          "content": "e3e9e75831e4f9dae87eeac9270eb6d1740f3c5d"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "1fe1392e3889db279d63c9579288960b38a2c62adf67792684faa0b6ffb00f9b"
         }
       ]
     },

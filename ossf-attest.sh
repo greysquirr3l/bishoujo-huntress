@@ -156,7 +156,7 @@ golangci-lint --version || true
 gosec --version || true
 govulncheck version || true # govulncheck does not have a --version flag, 'version' subcommand works
 git secrets --list || true
-syft version || true # Changed from `syft version` to `syft --version` if that's the new syft CLI, or keep as is if `syft version` is correct
+syft version || true
 jq --version || true
 semgrep --version || true
 echo "==================="

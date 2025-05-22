@@ -70,7 +70,7 @@ jobs:
 
       - name: Upload Scorecard results to GitHub Security tab
         # OSSF Scorecard: SHA pinning required for supply chain security
-        uses: github/codeql-action/upload-sarif@ff0a06e83cb2de871e5a09832bc6a81e7276941f # codeql-bundle-20221007
+        uses: github/codeql-action/upload-sarif@b611370bb5703a7efb587f9d136a52ea24c5c38c # v3.25.12
         with:
           sarif_file: results.sarif
 
@@ -81,11 +81,18 @@ jobs:
       contents: read
       security-events: write # Added permission to write security events
     steps:
-      - name: Harden Runner
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      #- name: Call Reusable Network Pre-Check
+      #  id: network_check
+      #  uses: ./.github/workflows/reusable-network-check.yml
+
+      - name: Harden Runner # This is now a distinct step
         uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: block
-          allowed-endpoints: |
+          allowed-endpoints: >
             api.github.com:443
             api.huntress.io:443
             archive.ubuntu.com:443
@@ -94,6 +101,9 @@ jobs:
             files.pythonhosted.org:443
             ghcr.io:443
             github.com:443
+            golangci-lint.run:443
+            hosted-compute-watchdog-prod-eus-02.githubapp.com:443
+            hosted-compute-watchdog-prod-iad-01.githubapp.com:443
             objects.githubusercontent.com:443
             pkg-containers.githubusercontent.com:443
             proxy.golang.org:443
@@ -105,9 +115,11 @@ jobs:
             storage.googleapis.com:443
             sum.golang.org:443
             *.blob.core.windows.net:443
-
-      - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+            *.archive.ubuntu.com:443
+            repo1.maven.org:443
+            packages.microsoft.com:443
+            api.osv.dev:443
+            oss-fuzz-build-logs.storage.googleapis.com:443
 
       #- name: Call Reusable Network Pre-Check
       #  id: network_check
