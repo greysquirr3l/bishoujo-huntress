@@ -65,6 +65,7 @@ Thumbs.db
 build/*
 build/examples/basic
 build/examples/advanced
+.local_tools/
 
 # Workflow files
 .github/workflows/*.bak.*
