@@ -1,0 +1,41 @@
+# Set default behavior for all files to be text and use LF line endings
+* text=auto eol=lf
+
+# Explicitly declare files that are binary and should not be normalized
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.tar binary
+*.so binary
+*.dylib binary
+*.exe binary
+*.dll binary
+*.deb binary
+*.dmg binary
+*.iso binary
+*.jar binary
+*.war binary
+*.ear binary
+*.class binary
+*.pyc binary
+*.pyo binary
+*.o binary
+*.a binary
+*.obj binary
+*.lib binary
+*.idx binary
+*.pack binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.otf binary
+*.DS_Store binary
+
+# Specific overrides if needed for certain file types
+# For example, if you have Windows batch files that must have CRLF:
+# *.bat text eol=crlf

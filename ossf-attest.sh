@@ -14,9 +14,9 @@ ensure_tool() {
     golangci-lint)
       if ! command -v golangci-lint >/dev/null 2>&1; then
         echo "Installing golangci-lint v2.1.6 to $LOCAL_TOOLS_DIR..."
-        GOLANGCI_LINT_VERSION="v2.1.6"
+        GOLANGCI_LINT_VERSION="v2.1.6" # Makefile should handle primary install
         # Use the official install script for platform-agnostic installation
-        curl -sSfL https://raw.githubusercontent.com/golangci-lint/master/install.sh | sh -s -- -b "$LOCAL_TOOLS_DIR" "$GOLANGCI_LINT_VERSION"
+        curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b "$LOCAL_TOOLS_DIR" "$GOLANGCI_LINT_VERSION"
         if ! command -v golangci-lint >/dev/null 2>&1; then
             echo "golangci-lint installation failed. Please check."
             exit 1
@@ -24,19 +24,38 @@ ensure_tool() {
       fi
       ;;
     gosec)
-      if ! command -v gosec >/dev/null 2>&1; then
-        echo "Installing gosec v2.19.0..."
-        go install github.com/securego/gosec/v2/cmd/gosec@v2.19.0
+      GOSEC_VERSION="v2.22.4"
+      gosec_installed_version=""
+      if command -v gosec >/dev/null 2>&1; then
+        gosec_installed_version=$(gosec --version 2>/dev/null | awk '{print $NF}')
+      fi
+      if [[ "$gosec_installed_version" != "$GOSEC_VERSION" ]]; then
+        echo "Installing gosec $GOSEC_VERSION (found: '$gosec_installed_version')..."
+        go install github.com/securego/gosec/v2/cmd/gosec@"$GOSEC_VERSION"
+      else
+        echo "gosec version $GOSEC_VERSION already installed."
       fi
       ;;
     govulncheck)
-      if ! command -v govulncheck >/dev/null 2>&1; then
-        echo "Installing govulncheck v1.1.4..."
-        go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
+      GOVULNCHECK_VERSION="v1.1.4" # Assuming this is the desired latest stable
+      govulncheck_installed_version=""
+      if command -v govulncheck >/dev/null 2>&1; then
+        # govulncheck --version is not standard, check via go list
+        # Extracts the Go version by invoking 'go list -f {{.Version}} -m' as a fallback mechanism,
+        # since the 'go' command does not provide a standard '--version' flag.
+        # This approach ensures compatibility across different Go toolchain versions,
+        # and aids future maintainers in understanding why 'go list' is used for version extraction.
+        govulncheck_installed_version=$(go list -m -f '{{.Version}}' golang.org/x/vuln/cmd/govulncheck 2>/dev/null || echo "")
+      fi
+      if [[ "$govulncheck_installed_version" != "$GOVULNCHECK_VERSION" ]]; then
+        echo "Installing govulncheck $GOVULNCHECK_VERSION (found: '$govulncheck_installed_version')..."
+        go install golang.org/x/vuln/cmd/govulncheck@"$GOVULNCHECK_VERSION"
+      else
+        echo "govulncheck version $GOVULNCHECK_VERSION already installed."
       fi
       ;;
     syft)
-      SYFT_VERSION="v1.26.0" # Updated version
+      SYFT_VERSION="v1.23.1" # OSSF/Project specific version
       SYFT_VERSION_NO_V="${SYFT_VERSION#v}"
       syft_installed_version=""
       if command -v syft >/dev/null 2>&1; then
@@ -81,16 +100,30 @@ ensure_tool() {
       ;;
     semgrep)
       SEMGR_VERSION="1.119.0"
-      if ! command -v semgrep >/dev/null 2>&1 || [[ "$(semgrep --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')" != "$SEMGR_VERSION" ]]; then
-        echo "Installing semgrep $SEMGR_VERSION..."
+      semgrep_installed_version=""
+      if command -v semgrep >/dev/null 2>&1; then
+        semgrep_installed_version=$(semgrep --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)
+      fi
+      if [[ "$semgrep_installed_version" != "$SEMGR_VERSION" ]]; then
+        echo "Installing semgrep $SEMGR_VERSION (found: '$semgrep_installed_version')..."
         if command -v pipx >/dev/null 2>&1; then
-          pipx install --force semgrep==${SEMGR_VERSION}
+          pipx install --force semgrep=="${SEMGR_VERSION}"
+        elif command -v pip3 >/dev/null 2>&1; then
+          pip3 install --user --force-reinstall semgrep=="${SEMGR_VERSION}"
+          # Ensure $HOME/.local/bin is in PATH if pip3 --user is used
+          if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+            export PATH="$HOME/.local/bin:$PATH"
+          fi
         elif command -v pip >/dev/null 2>&1; then
-          pip install --user --force-reinstall semgrep==${SEMGR_VERSION}
-          export PATH="$HOME/.local/bin:$PATH"
+          pip install --user --force-reinstall semgrep=="${SEMGR_VERSION}"
+          if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+            export PATH="$HOME/.local/bin:$PATH"
+          fi
         else
-          echo "pipx or pip is required to install semgrep. Please install pipx or pip."; exit 1
+          echo "pipx or pip/pip3 is required to install semgrep. Please install pipx or pip."; exit 1
         fi
+      else
+        echo "semgrep version $SEMGR_VERSION already installed."
       fi
       ;;
     *)
@@ -99,8 +132,6 @@ ensure_tool() {
 }
 
 # Check and install required tools
-
-# Add semgrep to required tools
 for tool in golangci-lint gosec govulncheck git syft jq semgrep; do
   ensure_tool "$tool"
 done
@@ -114,7 +145,6 @@ GITSECRETS_OUT=git-secrets.txt
 SBOM_OUT=sbom.json
 COVERAGE_OUT=coverage.txt
 SEMGR_OUT=semgrep.txt
-SEMGR_VERSION="1.119.0"
 
 : "${PROJECT_NAME:=bishoujo-huntress}"
 : "${PROJECT_VERSION:=$(git describe --tags --abbrev=0 2>/dev/null || echo "dev")}"
@@ -124,10 +154,11 @@ go version || true
 go env GOMOD || true
 golangci-lint --version || true
 gosec --version || true
-govulncheck --version || true
+govulncheck version || true # govulncheck does not have a --version flag, 'version' subcommand works
 git secrets --list || true
-syft version || true # Changed from `syft version` to `syft --version` if that's the new syft CLI, or keep as is if `syft version` is correct
+syft version || true
 jq --version || true
+semgrep --version || true
 echo "==================="
 
 
@@ -149,7 +180,13 @@ if [[ -n "${SEMGREP_APP_TOKEN:-}" ]]; then
   semgrep login --token "$SEMGREP_APP_TOKEN" || true
 fi
 echo "Running semgrep (SAST)..."
-semgrep --config p/owasp-top-ten . > "$SEMGR_OUT" 2>&1 || true &
+# Use OSSF recommended config, or OWASP Top Ten as a fallback
+SEMGR_CONFIG="p/ossf-scf"
+if ! semgrep scan --config "$SEMGR_CONFIG" --dry-run >/dev/null 2>&1; then
+  echo "Semgrep config $SEMGR_CONFIG not found, falling back to p/owasp-top-ten"
+  SEMGR_CONFIG="p/owasp-top-ten"
+fi
+semgrep scan --config "$SEMGR_CONFIG" . > "$SEMGR_OUT" 2>&1 || true &
 
 wait
 
@@ -189,4 +226,6 @@ if [[ -f "$COVERAGE_OUT" ]]; then
 fi
 
 echo "========================================"
-echo "Artifacts saved in: $(pwd)"
+echo "Artifacts saved to the current directory."
+echo "OSSF Attestation complete."
+echo "========================================"
