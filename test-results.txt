@@ -28,7 +28,7 @@
 === RUN   TestDoPostBulkActionAndDecode_Success
 --- PASS: TestDoPostBulkActionAndDecode_Success (0.00s)
 === RUN   TestDoPostBulkActionAndDecode_ErrorStatus
---- PASS: TestDoPostBulkActionAndDecode_ErrorStatus (0.00s)
+--- PASS: TestDoPostBulkActionAndDecode_ErrorStatus (0.01s)
 === RUN   TestDoPostBulkActionAndDecode_BadJSON
 --- PASS: TestDoPostBulkActionAndDecode_BadJSON (0.00s)
 === RUN   TestBuildQueryParams_Empty
@@ -101,7 +101,7 @@
 --- PASS: TestWebhookRepository_Create_Success (0.00s)
 PASS
 coverage: 49.6% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/api	4.616s	coverage: 49.6% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/api	4.637s	coverage: 49.6% of statements
 === RUN   TestClient_Do_Success
 --- PASS: TestClient_Do_Success (0.00s)
 === RUN   TestClient_Do_RateLimit
@@ -131,7 +131,7 @@ ok  	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/api	4.616s	cove
 --- PASS: TestRateLimiter_Wait_ContextCancel (0.03s)
 PASS
 coverage: 90.6% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/api/httpclient	0.407s	coverage: 90.6% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/api/httpclient	0.412s	coverage: 90.6% of statements
 === RUN   TestExtractPagination
 --- PASS: TestExtractPagination (0.00s)
 === RUN   TestParseTime
@@ -156,7 +156,7 @@ ok  	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/api/httpclient	
 --- PASS: TestPagination_IsFirstAndLastPage (0.00s)
 PASS
 coverage: 11.6% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/repository	0.017s	coverage: 11.6% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/repository	0.030s	coverage: 11.6% of statements
 === RUN   TestCreateOrganizationHandler_Handle_Success
 --- PASS: TestCreateOrganizationHandler_Handle_Success (0.00s)
 === RUN   TestCreateOrganizationHandler_Handle_ValidationError
@@ -177,7 +177,7 @@ ok  	github.com/greysquirr3l/bishoujo-huntress/internal/adapters/repository	0.01
 --- PASS: TestUpdateOrganizationHandler_Handle_RepoError (0.00s)
 PASS
 coverage: 62.3% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/application/command/organization	0.016s	coverage: 62.3% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/application/command/organization	0.019s	coverage: 62.3% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/application/query/auditlog		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/application/query/organization		coverage: 0.0% of statements
 === RUN   TestAccount_Validate
@@ -206,7 +206,7 @@ ok  	github.com/greysquirr3l/bishoujo-huntress/internal/application/command/orga
 --- PASS: TestStatus_IsValid (0.00s)
 PASS
 coverage: 100.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/account	0.016s	coverage: 100.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/account	0.013s	coverage: 100.0% of statements
 === RUN   TestAgent_Validate
 === RUN   TestAgent_Validate/valid
 === RUN   TestAgent_Validate/empty_id
@@ -235,7 +235,7 @@ ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/account	0.016s	co
 --- PASS: TestAgent_RemoveTag (0.00s)
 PASS
 coverage: 100.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/agent	0.015s	coverage: 100.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/agent	0.008s	coverage: 100.0% of statements
 === RUN   TestAuditLog_Validate
 === RUN   TestAuditLog_Validate/empty_id
 === RUN   TestAuditLog_Validate/zero_timestamp
@@ -252,7 +252,7 @@ ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/agent	0.015s	cove
     --- PASS: TestAuditLog_Validate/empty_resource_id (0.00s)
 PASS
 coverage: 100.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/auditlog	0.021s	coverage: 100.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/auditlog	0.012s	coverage: 100.0% of statements
 === RUN   TestDomainError_ErrorAndUnwrap
 --- PASS: TestDomainError_ErrorAndUnwrap (0.00s)
 === RUN   TestNewDomainError
@@ -271,14 +271,14 @@ ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/auditlog	0.021s	c
 --- PASS: TestUUID_Basics (0.00s)
 PASS
 coverage: 96.4% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/common	0.021s	coverage: 96.4% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/common	0.018s	coverage: 96.4% of statements
 === RUN   TestAPIError_Error
 --- PASS: TestAPIError_Error (0.00s)
 === RUN   TestNewAPIError
 --- PASS: TestNewAPIError (0.00s)
 PASS
 coverage: 75.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/errors	0.016s	coverage: 75.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/errors	0.024s	coverage: 75.0% of statements
 === RUN   TestIndicatorOfCompromise_Struct
 --- PASS: TestIndicatorOfCompromise_Struct (0.00s)
 === RUN   TestArtifact_Struct
@@ -289,7 +289,7 @@ ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/errors	0.016s	cov
 --- PASS: TestIncident_Struct (0.00s)
 PASS
 coverage: [no statements]
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/incident	0.006s	coverage: [no statements]
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/incident	0.011s	coverage: [no statements]
 === RUN   TestOrganization_Validate
 === RUN   TestOrganization_Validate/valid
 === RUN   TestOrganization_Validate/empty_name
@@ -330,7 +330,7 @@ ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/incident	0.006s	c
 --- PASS: Test_isValidEmail (0.00s)
 PASS
 coverage: 100.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/organization	0.008s	coverage: 100.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/organization	0.012s	coverage: 100.0% of statements
 === RUN   TestParseEvent
 --- PASS: TestParseEvent (0.00s)
 === RUN   TestValidateEvent
@@ -339,7 +339,7 @@ ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/organization	0.00
 --- PASS: TestWebhook_Validate (0.00s)
 PASS
 coverage: 100.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/webhook	0.009s	coverage: 100.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/webhook	0.015s	coverage: 100.0% of statements
 === RUN   TestClient_Do_Success
 --- PASS: TestClient_Do_Success (0.00s)
 === RUN   TestClient_Do_ErrorResponse
@@ -356,7 +356,7 @@ ok  	github.com/greysquirr3l/bishoujo-huntress/internal/domain/webhook	0.009s	co
 --- PASS: TestGetPagination_Defaults (0.00s)
 PASS
 coverage: 65.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http	0.071s	coverage: 65.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http	0.066s	coverage: 65.0% of statements
 === RUN   TestRetrier_Do_Success
 --- PASS: TestRetrier_Do_Success (0.00s)
 === RUN   TestRetrier_Do_RetryOnStatus
@@ -369,7 +369,7 @@ ok  	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http	0.07
 --- PASS: TestExecuteWithRetry_RetryAndFail (0.01s)
 PASS
 coverage: 73.5% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/retry	0.075s	coverage: 73.5% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/retry	0.079s	coverage: 73.5% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/logging		coverage: 0.0% of statements
 	github.com/greysquirr3l/bishoujo-huntress/internal/ports/repository		coverage: 0.0% of statements
 === RUN   TestAgentService_Get
@@ -483,7 +483,7 @@ ok  	github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/retr
 --- PASS: FuzzExtractPagination (0.00s)
 PASS
 coverage: 39.5% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress	0.199s	coverage: 39.5% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress	0.210s	coverage: 39.5% of statements
 === RUN   TestPagination_HasNext
 --- PASS: TestPagination_HasNext (0.00s)
 === RUN   TestPagination_HasPrevious
@@ -498,4 +498,4 @@ ok  	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress	0.199s	coverage: 39.
 --- PASS: TestPagination_IsLastPage (0.00s)
 PASS
 coverage: 100.0% of statements
-ok  	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress/types	0.010s	coverage: 100.0% of statements
+ok  	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress/types	0.007s	coverage: 100.0% of statements
