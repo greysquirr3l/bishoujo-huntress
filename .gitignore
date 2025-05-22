@@ -68,3 +68,4 @@ build/examples/advanced
 
 # Workflow files
 .github/workflows/*.bak.*
+.github/workflows/reusable-network-check.yml

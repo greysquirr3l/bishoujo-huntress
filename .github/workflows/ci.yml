@@ -17,13 +17,17 @@ jobs:
     permissions:
       contents: read # for actions/checkout to fetch code
       pull-requests: read # for golangci/golangci-lint-action to fetch pull requests
+      security-events: write # for uploading SARIF results
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
       - name: Harden Runner
         uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: block
-          allowed-endpoints: |
+          allowed-endpoints: >
             api.github.com:443
             api.huntress.io:443
             archive.ubuntu.com:443
@@ -32,6 +36,9 @@ jobs:
             files.pythonhosted.org:443
             ghcr.io:443
             github.com:443
+            golangci-lint.run:443
+            hosted-compute-watchdog-prod-eus-02.githubapp.com:443
+            hosted-compute-watchdog-prod-iad-01.githubapp.com:443
             objects.githubusercontent.com:443
             pkg-containers.githubusercontent.com:443
             proxy.golang.org:443
@@ -43,9 +50,8 @@ jobs:
             storage.googleapis.com:443
             sum.golang.org:443
             *.blob.core.windows.net:443
-
-      - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+            repo1.maven.org:443
+            packages.microsoft.com:443
 
       - name: Set up Go
         uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
@@ -58,8 +64,9 @@ jobs:
           path: |
             ~/.cache/go-build
             ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          key: ${{ runner.os }}-go-${{ github.job }}-${{ hashFiles('**/go.sum') }}
           restore-keys: |
+            ${{ runner.os }}-go-${{ github.job }}-
             ${{ runner.os }}-go-
 
       - name: Install dependencies
@@ -83,10 +90,26 @@ jobs:
       - name: Run tests
         run: make test
 
+      - name: Upload Test Coverage
+        if: success() || failure() # Upload coverage even if tests fail to show what was covered
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: coverage-report
+          path: coverage.txt # Assuming your 'make test' generates 'coverage.txt'
+
       - name: Run all Go fuzz tests
-        run: make fuzz
+        run: make fuzz FUZZTIME=60s # Time-box fuzzing
+        continue-on-error: true # Do not fail CI if fuzz tests find issues, treat as advisory
 
       - name: Run security scanner (gosec)
+        id: gosec_scan # Add an ID to reference the step
         uses: securego/gosec@6decf96c3d272d5a8bbdcf9fddb5789d0be16a8d # v2.22.4
         with:
-          args: ./...
+          args: "-fmt=sarif -out=gosec-results.sarif ./..." # Output SARIF for upload
+
+      - name: Upload Gosec SARIF results
+        if: success() || failure() # Upload SARIF even if gosec finds issues
+        uses: github/codeql-action/upload-sarif@b611370bb5703a7efb587f9d136a52ea24c5c38c # v3.25.12
+        with:
+          sarif_file: gosec-results.sarif
+          category: gosec

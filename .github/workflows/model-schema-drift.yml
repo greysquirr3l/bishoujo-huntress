@@ -14,11 +14,18 @@ jobs:
   model-schema-drift:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      # - name: Call Reusable Network Pre-Check
+      #  id: network_check
+      #  uses: ./.github/workflows/reusable-network-check.yml
+
       - name: Harden Runner
         uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: block
-          allowed-endpoints: |
+          allowed-endpoints: >
             api.github.com:443
             api.huntress.io:443
             archive.ubuntu.com:443
@@ -27,6 +34,9 @@ jobs:
             files.pythonhosted.org:443
             ghcr.io:443
             github.com:443
+            golangci-lint.run:443
+            hosted-compute-watchdog-prod-eus-02.githubapp.com:443
+            hosted-compute-watchdog-prod-iad-01.githubapp.com:443
             objects.githubusercontent.com:443
             pkg-containers.githubusercontent.com:443
             proxy.golang.org:443
@@ -38,14 +48,33 @@ jobs:
             storage.googleapis.com:443
             sum.golang.org:443
             *.blob.core.windows.net:443
+            repo1.maven.org:443
+            packages.microsoft.com:443
 
-      - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Clean specific tool caches
+        run: |
+          # Clean Go module cache
+          rm -rf $GOPATH/pkg/mod
+          # Clean Node.js cache
+          rm -rf ~/.npm
+          # Optionally clean other specific paths if needed
+          # Consider removing 'rm -rf $GOPATH/pkg/mod' if you implement Go module caching below
 
       - name: Set up Go
         uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
         with:
           go-version: "1.22"
+
+      - name: Cache Go modules
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ github.job }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ github.job }}-
+            ${{ runner.os }}-go-
 
       - name: Set up Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -54,7 +83,7 @@ jobs:
 
       - name: Install OpenAPI Generator CLI (npm)
         run: |
-          npm install --global @openapitools/openapi-generator-cli
+          npm install -g @openapitools/openapi-generator-cli@2.6.0
 
       - name: Download latest Huntress OpenAPI/Swagger spec
         run: |
