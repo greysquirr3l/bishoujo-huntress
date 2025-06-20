@@ -115,7 +115,7 @@ syft . -o cyclonedx-json > sbom.json
 go get github.com/greysquirr3l/bishoujo-huntress
 ```
 
-Ensure you're using Go 1.20 or later for best compatibility.
+Ensure you're using Go 1.24 or later for best compatibility.
 
 ## 🚀 Quick Start
 

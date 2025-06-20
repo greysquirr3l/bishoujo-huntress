@@ -25,7 +25,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ["go"]
+        include:
+          - language: go
+            build-mode: autobuild
+          - language: actions
+            build-mode: none
     steps:
       - name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -35,12 +39,15 @@ jobs:
       #  uses: ./.github/workflows/reusable-network-check.yml
 
       - name: Harden Runner
+        if: github.actor != 'nektos/act' # Skip when running with ACT locally
         uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: block
-          allowed-endpoints: >
+          allowed-endpoints: |
+            *.blob.core.windows.net:443
             api.github.com:443
             api.huntress.io:443
+            api.osv.dev:443
             archive.ubuntu.com:443
             artifactcache.actions.githubusercontent.com:443
             cloud.google.com:443
@@ -55,6 +62,7 @@ jobs:
             hosted-compute-watchdog-prod-eus-02.githubapp.com:443
             hosted-compute-watchdog-prod-iad-01.githubapp.com:443
             objects.githubusercontent.com:443
+            oss-fuzz-build-logs.storage.googleapis.com:443
             packages.microsoft.com:443
             pkg-containers.githubusercontent.com:443
             proxy.golang.org:443
@@ -66,19 +74,12 @@ jobs:
             semgrep.dev:443
             storage.googleapis.com:443
             sum.golang.org:443
-            *.blob.core.windows.net:443
-            repo1.maven.org:443
-            packages.microsoft.com:443
-            api.osv.dev:443
-            oss-fuzz-build-logs.storage.googleapis.com:443
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@b611370bb5703a7efb587f9d136a52ea24c5c38c # v3.25.12
         with:
           languages: ${{ matrix.language }}
-
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@b611370bb5703a7efb587f9d136a52ea24c5c38c # v3.25.12
+          build-mode: ${{ matrix.build-mode }}
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@b611370bb5703a7efb587f9d136a52ea24c5c38c # v3.25.12

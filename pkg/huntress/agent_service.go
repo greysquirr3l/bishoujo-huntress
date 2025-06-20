@@ -27,13 +27,11 @@ func (s *agentService) Get(ctx context.Context, id string) (*Agent, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute request for Get: %w", err)
 	}
-	if resp != nil {
-		defer func() {
-			if err := resp.Body.Close(); err != nil {
-				fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
-			}
-		}()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	return agent, nil
 }
@@ -67,7 +65,11 @@ func (s *agentService) GetStats(ctx context.Context, id string) (*AgentStatistic
 		return nil, fmt.Errorf("failed to execute request for GetStats: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		defer func() {
+			if err := resp.Body.Close(); err != nil {
+				fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+			}
+		}()
 	}
 
 	return stats, nil
@@ -86,9 +88,11 @@ func (s *agentService) Update(ctx context.Context, id string, agent map[string]i
 	if err != nil {
 		return nil, err
 	}
-	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	return updatedAgent, nil
 }
@@ -105,12 +109,17 @@ func (s *agentService) Delete(ctx context.Context, id string) error {
 	if err != nil {
 		return err
 	}
-	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
-		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-			bodyBytes, _ := io.ReadAll(resp.Body)
-			return fmt.Errorf("API error: status code %d, body: %s", resp.StatusCode, string(bodyBytes))
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
 		}
+	}()
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		bodyBytes, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return fmt.Errorf("API error: status code %d, failed to read body: %w", resp.StatusCode, err)
+		}
+		return fmt.Errorf("API error: status code %d, body: %s", resp.StatusCode, string(bodyBytes))
 	}
 	return nil
 }

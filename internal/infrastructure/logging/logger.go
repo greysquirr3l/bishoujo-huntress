@@ -103,6 +103,11 @@ func SetLogger(l Logger) {
 	}
 }
 
+// GetLogger returns the global logger.
+func GetLogger() Logger {
+	return globalLogger
+}
+
 // L returns the global logger.
 func L() Logger {
 	return globalLogger
@@ -131,7 +136,9 @@ func (l *StandardLogger) logf(lvl Level, prefix, msg string, fields ...Field) {
 	if lvl < l.level {
 		return
 	}
-	allFields := append(l.fields, fields...)
+	allFields := make([]Field, 0, len(l.fields)+len(fields))
+	allFields = append(allFields, l.fields...)
+	allFields = append(allFields, fields...)
 	l.logger.Printf("[%s] %s %v", prefix, msg, allFields)
 }
 

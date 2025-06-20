@@ -42,13 +42,11 @@ func (r *OrganizationRepositoryImpl) Get(ctx context.Context, id string) (*organ
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute request: %w", err)
 	}
-	if resp != nil {
-		defer func() {
-			if err := resp.Body.Close(); err != nil {
-				fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
-			}
-		}()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, handleErrorResponse(resp)
@@ -77,9 +75,11 @@ func (r *OrganizationRepositoryImpl) List(ctx context.Context, filters map[strin
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to execute request: %w", err)
 	}
-	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 	if resp.StatusCode != http.StatusOK {
 		return nil, nil, handleErrorResponse(resp)
 	}
@@ -120,9 +120,11 @@ func (r *OrganizationRepositoryImpl) Create(ctx context.Context, org *organizati
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute request: %w", err)
 	}
-	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusCreated {
 		return nil, handleErrorResponse(resp)
@@ -157,9 +159,11 @@ func (r *OrganizationRepositoryImpl) Update(ctx context.Context, org *organizati
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute request: %w", err)
 	}
-	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, handleErrorResponse(resp)
@@ -186,9 +190,11 @@ func (r *OrganizationRepositoryImpl) Delete(ctx context.Context, id string) erro
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusNoContent {
 		return handleErrorResponse(resp)
@@ -209,9 +215,11 @@ func (r *OrganizationRepositoryImpl) GetUsers(ctx context.Context, orgID string)
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to execute request: %w", err)
 	}
-	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, nil, handleErrorResponse(resp)
@@ -256,9 +264,11 @@ func (r *OrganizationRepositoryImpl) AddUser(ctx context.Context, orgID string, 
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusCreated {
 		return handleErrorResponse(resp)
@@ -279,9 +289,11 @@ func (r *OrganizationRepositoryImpl) RemoveUser(ctx context.Context, orgID strin
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusNoContent {
 		return handleErrorResponse(resp)

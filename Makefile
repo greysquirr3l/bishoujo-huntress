@@ -98,6 +98,11 @@ fuzz:
 	go test -fuzz=FuzzAddQueryParams -fuzztime=10s ./pkg/huntress || exit 1
 	go test -fuzz=FuzzExtractPagination -fuzztime=10s ./pkg/huntress || exit 1
 
+# Run fuzz tests for CI and save output
+fuzz-ci:
+	@echo "Running fuzz tests for CI..."
+	go test -fuzz=Fuzz -fuzztime=60s ./... > fuzz-results.txt 2>&1 || true
+
 # Run tests
 test:
 	@echo "Running tests..."

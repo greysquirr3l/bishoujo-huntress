@@ -118,7 +118,11 @@ func (r *OrganizationRepository) List(ctx context.Context, params *organization.
 		return nil, nil, fmt.Errorf("failed to list organizations: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		defer func() {
+			if err := resp.Body.Close(); err != nil {
+				fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+			}
+		}()
 	}
 	if resp.StatusCode != http.StatusOK {
 		return nil, nil, fmt.Errorf("unexpected status code %d when listing organizations", resp.StatusCode)
@@ -167,7 +171,11 @@ func (r *OrganizationRepository) Create(ctx context.Context, org *organization.O
 		return nil, fmt.Errorf("failed to create organization: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		defer func() {
+			if err := resp.Body.Close(); err != nil {
+				fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+			}
+		}()
 	}
 	// Check for expected status code (e.g., 201 Created)
 	if resp.StatusCode != http.StatusCreated {
@@ -206,7 +214,11 @@ func (r *OrganizationRepository) Update(ctx context.Context, org *organization.O
 		return nil, fmt.Errorf("failed to update organization: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		defer func() {
+			if err := resp.Body.Close(); err != nil {
+				fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+			}
+		}()
 	}
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("unexpected status code %d when updating organization", resp.StatusCode)
@@ -231,7 +243,11 @@ func (r *OrganizationRepository) Delete(ctx context.Context, id string) error {
 		return fmt.Errorf("failed to delete organization: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		defer func() {
+			if err := resp.Body.Close(); err != nil {
+				fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+			}
+		}()
 	}
 	// Check for expected status code (e.g., 204 No Content)
 	if resp.StatusCode != http.StatusNoContent {
@@ -257,7 +273,11 @@ func (r *OrganizationRepository) GetUsers(ctx context.Context, organizationID st
 		return nil, nil, fmt.Errorf("failed to get organization users: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		defer func() {
+			if err := resp.Body.Close(); err != nil {
+				fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+			}
+		}()
 	}
 	if resp.StatusCode != http.StatusOK {
 		return nil, nil, fmt.Errorf("unexpected status code %d when getting organization users", resp.StatusCode)
@@ -293,7 +313,11 @@ func (r *OrganizationRepository) AddUser(ctx context.Context, organizationID str
 		return fmt.Errorf("failed to add user to organization: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		defer func() {
+			if err := resp.Body.Close(); err != nil {
+				fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+			}
+		}()
 	}
 	// Check for expected status code (e.g., 201 Created or 200 OK)
 	if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
@@ -313,7 +337,11 @@ func (r *OrganizationRepository) RemoveUser(ctx context.Context, organizationID 
 		return fmt.Errorf("failed to remove user from organization: %w", err)
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		defer func() {
+			if err := resp.Body.Close(); err != nil {
+				fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+			}
+		}()
 	}
 	// Check for expected status code (e.g., 204 No Content)
 	if resp.StatusCode != http.StatusNoContent {

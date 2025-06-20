@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 )
 
 // incidentService implements the IncidentService interface
@@ -25,12 +26,11 @@ func (s *incidentService) Get(ctx context.Context, id string) (*Incident, error)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute request for Get: %w", err)
 	}
-	if resp != nil {
-		errClose := resp.Body.Close()
-		if errClose != nil {
-			return nil, fmt.Errorf("incident get: error closing response body: %w", errClose)
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
 		}
-	}
+	}()
 
 	return incident, nil
 }
@@ -63,12 +63,11 @@ func (s *incidentService) UpdateStatus(ctx context.Context, id string, status st
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute request for UpdateStatus: %w", err)
 	}
-	if resp != nil {
-		errClose := resp.Body.Close()
-		if errClose != nil {
-			return nil, fmt.Errorf("incident update status: error closing response body: %w", errClose)
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
 		}
-	}
+	}()
 
 	return incident, nil
 }
@@ -89,7 +88,11 @@ func (s *incidentService) Assign(ctx context.Context, id string, userID string) 
 		return nil, err
 	}
 	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
+		defer func() {
+			if err := resp.Body.Close(); err != nil {
+				fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+			}
+		}()
 	}
 
 	return incident, nil
