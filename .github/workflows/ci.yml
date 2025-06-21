@@ -27,7 +27,8 @@ jobs:
         if: github.actor != 'nektos/act' # Skip when running with ACT locally
         uses: step-security/harden-runner@002fdce3c6a235733a90a27c80493a3241e56863 # v2.12.1 # v2.12.0
         with:
-          egress-policy: block
+          egress-policy: audit
+          disable-sudo: false
           allowed-endpoints: |
             *.blob.core.windows.net:443
             *.githubusercontent.com:443
@@ -42,6 +43,7 @@ jobs:
             files.pythonhosted.org:443
             ghcr.io:443
             github.com:443
+            github.com:22
             go.opentelemetry.io:443
             golang.org:443
             golangci-lint.run:443
@@ -62,6 +64,7 @@ jobs:
             semgrep.dev:443
             storage.googleapis.com:443
             sum.golang.org:443
+            uploads.github.com:443
 
       - name: Set up Go
         uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
@@ -113,14 +116,14 @@ jobs:
           golangci-lint --version || true
 
       - name: Run tests
-        run: make test
+        run: make test-cover
 
       - name: Upload Test Coverage
         if: success() || failure() # Upload coverage even if tests fail to show what was covered
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: coverage-report
-          path: coverage.txt # Assuming your 'make test' generates 'coverage.txt'
+          path: coverage/coverage.out
 
       - name: Run all Go fuzz tests
         run: make fuzz FUZZTIME=60s # Time-box fuzzing
@@ -130,10 +133,10 @@ jobs:
         id: gosec_scan # Add an ID to reference the step
         uses: securego/gosec@d2d3ae66bd8d340b78b5142b6fe610691783c2fe # v2.22.5 # v2.22.4
         with:
-          args: "-fmt=sarif -out=gosec-results.sarif ./..." # Output SARIF for upload
+          args: '-fmt sarif -out gosec-results.sarif -exclude-dir=build ./...'
 
       - name: Upload Gosec SARIF results
-        if: success() || failure() # Upload SARIF even if gosec finds issues
+        if: always() && hashFiles('gosec-results.sarif') != '' # Upload SARIF only if file exists
         uses: github/codeql-action/upload-sarif@b1e4dc3db58c9601794e22a9f6d28d45461b9dbf # codeql-bundle-v2.22.0 # v3.25.12
         with:
           sarif_file: gosec-results.sarif
