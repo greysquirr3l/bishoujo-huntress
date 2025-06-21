@@ -43,13 +43,11 @@ func (r *IncidentRepositoryImpl) Get(ctx context.Context, id string) (*incident.
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute request: %w", err)
 	}
-	if resp != nil {
-		defer func() {
-			if err := resp.Body.Close(); err != nil {
-				fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
-			}
-		}()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, handleErrorResponse(resp)
@@ -116,9 +114,11 @@ func (r *IncidentRepositoryImpl) List(ctx context.Context, filters repository.In
 	if err != nil {
 		return nil, repository.Pagination{}, fmt.Errorf("failed to execute request: %w", err)
 	}
-	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, repository.Pagination{}, handleErrorResponse(resp)
@@ -165,9 +165,11 @@ func (r *IncidentRepositoryImpl) Create(ctx context.Context, inc *incident.Incid
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusCreated {
 		return handleErrorResponse(resp)
@@ -214,9 +216,11 @@ func (r *IncidentRepositoryImpl) Update(ctx context.Context, inc *incident.Incid
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusOK {
 		return handleErrorResponse(resp)
@@ -237,9 +241,11 @@ func (r *IncidentRepositoryImpl) Delete(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusNoContent {
 		return handleErrorResponse(resp)
@@ -268,9 +274,11 @@ func (r *IncidentRepositoryImpl) UpdateStatus(ctx context.Context, id string, st
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusOK {
 		return handleErrorResponse(resp)
@@ -299,9 +307,11 @@ func (r *IncidentRepositoryImpl) UpdateAssignee(ctx context.Context, id string, 
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusOK {
 		return handleErrorResponse(resp)
@@ -344,9 +354,11 @@ func (r *IncidentRepositoryImpl) AddNote(ctx context.Context, incidentID string,
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusCreated {
 		return handleErrorResponse(resp)
@@ -381,9 +393,11 @@ func (r *IncidentRepositoryImpl) AddIOC(ctx context.Context, incidentID string, 
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusCreated {
 		return handleErrorResponse(resp)
@@ -420,9 +434,11 @@ func (r *IncidentRepositoryImpl) AddArtifact(ctx context.Context, incidentID str
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusCreated {
 		return handleErrorResponse(resp)
@@ -451,9 +467,11 @@ func (r *IncidentRepositoryImpl) UpdateTags(ctx context.Context, id string, tags
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	if resp != nil {
-		defer func() { _ = resp.Body.Close() }()
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "error closing response body: %v\n", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusOK {
 		return handleErrorResponse(resp)

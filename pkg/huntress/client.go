@@ -202,7 +202,10 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 
 	// Check for error responses
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		bodyBytes, _ := io.ReadAll(resp.Body)
+		bodyBytes, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return resp, fmt.Errorf("API error: status code %d, failed to read body: %w", resp.StatusCode, err)
+		}
 		if c.Logger != nil {
 			c.Logger.Warn("API error response", logging.Int("status", resp.StatusCode), logging.String("body", string(bodyBytes)))
 		}

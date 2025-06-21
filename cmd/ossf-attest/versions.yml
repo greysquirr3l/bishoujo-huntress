@@ -1,0 +1,122 @@
+# OSSF Attestation Tool versions configuration
+# This file follows idempotence and predictability principles by centralizing
+# version management and making updates atomic and traceable.
+
+# Security tool versions
+tools:
+  golangci-lint:
+    version: "v2.1.6"
+    install_method: "script"
+    install_url: "https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh"
+    github_repo: "golangci/golangci-lint"
+    description: "Go linter aggregator with security rules"
+    check_command: ["golangci-lint", "--version"]
+    run_command: ["golangci-lint", "run", "./..."]
+    output_file: "golangci-lint.txt"
+
+  gosec:
+    version: "v2.22.4"
+    install_method: "go_install"
+    install_package: "github.com/securego/gosec/v2/cmd/gosec"
+    github_repo: "securecode/gosec"
+    description: "Go security scanner"
+    check_command: ["gosec", "--version"]
+    run_command: ["gosec", "-exclude-dir=build", "./..."]
+    output_file: "gosec.txt"
+
+  govulncheck:
+    version: "v1.1.4"
+    install_method: "go_install"
+    install_package: "golang.org/x/vuln/cmd/govulncheck"
+    github_repo: "golang/vuln"
+    description: "Go vulnerability checker"
+    check_command: ["govulncheck", "version"]
+    run_command: ["govulncheck", "./..."]
+    output_file: "govulncheck.txt"
+
+  syft:
+    version: "v1.23.1"
+    install_method: "go_install"
+    install_package: "github.com/anchore/syft/cmd/syft"
+    github_repo: "anchore/syft"
+    description: "SBOM generation tool"
+    check_command: ["syft", "version"]
+    run_command: ["syft", ".", "-o", "cyclonedx-json"]
+    output_file: "sbom.json"
+    special_handling: "sbom_generator"
+
+  semgrep:
+    version: "1.119.0"
+    install_method: "pip"
+    install_package: "semgrep"
+    description: "Static analysis security scanner"
+    check_command: ["semgrep", "--version"]
+    run_command: ["semgrep", "scan", "--config", "auto", "."]
+    fallback_config: "p/golang"
+    secondary_configs: ["p/security-audit", "p/secrets", "p/supply-chain"]
+    output_file: "semgrep.txt"
+    auth_env: "SEMGREP_APP_TOKEN"
+
+  go-test:
+    version: "built-in"
+    install_method: "built-in"
+    description: "Go test runner with coverage"
+    check_command: ["go", "version"]
+    run_command: ["go", "test", "-v", "-coverprofile=coverage.txt", "./..."]
+    output_file: "test-results.txt"
+
+# Application metadata
+app:
+  name: "ossf-attest"
+  version: "1.0.0"
+  description: "OSSF Security Baseline attestation tool"
+  default_project_name: "bishoujo-huntress"
+
+# Configuration options
+config:
+  # Default output directory for reports
+  default_output_dir: "."
+
+  # Local tools installation directory
+  local_tools_dir: ".local_tools/bin"
+
+  # Whether to run tools in parallel by default
+  parallel_by_default: true
+
+  # Installation preferences
+  install_preferences:
+    # Prefer local installation over global
+    prefer_local: true
+    # Maximum installation timeout in seconds
+    install_timeout: 300
+    # Retry count for failed installations
+    install_retry_count: 2
+
+  # Tool execution preferences
+  execution:
+    # Maximum execution timeout per tool in seconds
+    max_tool_timeout: 600
+    # Buffer size for concurrent operations
+    channel_buffer_size: 10
+    # Number of parallel workers
+    max_workers: 6
+
+# Feature flags for enabling/disabling functionality
+features:
+  enable_parallel_execution: true
+  enable_local_tool_installation: true
+  enable_pip_fallback_methods: true
+  enable_version_checking: true
+  enable_automatic_path_management: true
+  enable_coverage_generation: true
+  enable_sbom_generation: true
+  enable_semgrep_auth: true
+
+# Environment variable mappings
+environment:
+  project_name: "PROJECT_NAME"
+  project_version: "PROJECT_VERSION"
+  semgrep_token: "SEMGREP_APP_TOKEN"
+  output_dir: "OSSF_OUTPUT_DIR"
+  verbose: "OSSF_VERBOSE"
+  parallel: "OSSF_PARALLEL"

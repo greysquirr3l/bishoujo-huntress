@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/http/retry"
+	"github.com/greysquirr3l/bishoujo-huntress/internal/infrastructure/logging"
 )
 
 // APIError represents an error returned by the Huntress API
@@ -111,6 +112,7 @@ type Pagination struct {
 }
 
 // Do performs an HTTP request
+// TODO: Refactor this function to reduce cyclomatic complexity.
 func (c *Client) Do(ctx context.Context, method, path string, body, result interface{}, opts *RequestOptions) (*http.Response, error) {
 	// Create the request URL
 	reqURL, err := c.BaseURL.Parse(path)
@@ -169,7 +171,9 @@ func (c *Client) Do(ctx context.Context, method, path string, body, result inter
 	})
 	if err != nil {
 		if resp != nil {
-			_ = resp.Body.Close()
+			if closeErr := resp.Body.Close(); closeErr != nil {
+				logging.GetLogger().Error("failed to close response body", logging.Field{Key: "error", Value: closeErr})
+			}
 		}
 		return nil, fmt.Errorf("request failed after retries: %w", err)
 	}
@@ -177,7 +181,13 @@ func (c *Client) Do(ctx context.Context, method, path string, body, result inter
 	// Read the response body
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("error reading response body: %w", err)
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			logging.GetLogger().Error("failed to close response body", logging.Field{Key: "error", Value: closeErr})
+		}
+		return resp, fmt.Errorf("error reading response body: %w", err)
+	}
+	if closeErr := resp.Body.Close(); closeErr != nil {
+		logging.GetLogger().Error("failed to close response body", logging.Field{Key: "error", Value: closeErr})
 	}
 
 	// Check for error response

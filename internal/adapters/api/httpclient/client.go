@@ -95,7 +95,10 @@ func (c *Client) DoJSON(ctx context.Context, req *http.Request, v interface{}) (
 		return resp, nil
 	}
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		body, _ := io.ReadAll(resp.Body)
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return resp, fmt.Errorf("API error: status %d, unable to read body: %w", resp.StatusCode, err)
+		}
 		return resp, fmt.Errorf("API error: status %d, body: %s", resp.StatusCode, string(body))
 	}
 	return resp, decodeJSON(resp.Body, v)

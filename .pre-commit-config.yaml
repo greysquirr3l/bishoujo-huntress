@@ -1,0 +1,49 @@
+# Pre-commit hooks for Bishoujo-Huntress
+# See https://pre-commit.com for more information
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+
+  - repo: https://github.com/golangci/golangci-lint
+    rev: v2.1.6
+    hooks:
+      - id: golangci-lint
+        # Note: build directory exclusion is handled in .golangci.yml config
+
+  - repo: local
+    hooks:
+      - id: github-ci-hash-verify
+        name: Verify GitHub Actions are pinned to SHAs
+        entry: make ci-hash-verify
+        language: system
+        files: '^\.github/workflows/.*\.ya?ml$'
+        pass_filenames: false
+        description: Ensures all GitHub Actions in workflows are pinned to commit SHAs
+
+      - id: ossf-attest
+        name: OSSF Security Baseline Attestation
+        entry: make ossf-attest
+        language: system
+        files: '\.go$|go\.mod|go\.sum|\.golangci\.yml$'
+        pass_filenames: false
+        description: Runs OSSF security baseline checks on Go code changes
+
+      - id: go-test
+        name: Go tests
+        entry: make test
+        language: system
+        files: '\.go$'
+        pass_filenames: false
+
+      - id: go-fmt
+        name: Go format
+        entry: make fmt
+        language: system
+        files: '\.go$'
+        pass_filenames: false
