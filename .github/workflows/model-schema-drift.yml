@@ -23,17 +23,19 @@ jobs:
 
       - name: Harden Runner
         if: github.actor != 'nektos/act' # Skip when running with ACT locally
-        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
+        uses: step-security/harden-runner@002fdce3c6a235733a90a27c80493a3241e56863 # v2.12.1 # v2.12.0
         with:
           egress-policy: block
           allowed-endpoints: |
             *.blob.core.windows.net:443
+            *.githubusercontent.com:443
             api.github.com:443
             api.huntress.io:443
             api.osv.dev:443
             archive.ubuntu.com:443
             artifactcache.actions.githubusercontent.com:443
             cloud.google.com:443
+            codeload.github.com:443
             dl.google.com:443
             files.pythonhosted.org:443
             ghcr.io:443
@@ -52,6 +54,7 @@ jobs:
             pypi.org:443
             raw.githubusercontent.com:443
             registry.npmjs.org:443
+            releases.github.com:443
             repo1.maven.org:443
             security.ubuntu.com:443
             semgrep.dev:443

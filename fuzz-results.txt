@@ -1,0 +1,71 @@
+Running fuzz tests for CI...
+Starting fuzzing on pkg/huntress package...
+fuzz: elapsed: 0s, gathering baseline coverage: 0/239 completed
+fuzz: elapsed: 0s, gathering baseline coverage: 239/239 completed, now fuzzing with 11 workers
+fuzz: elapsed: 3s, execs: 338179 (112690/sec), new interesting: 19 (total: 258)
+fuzz: elapsed: 6s, execs: 702105 (121339/sec), new interesting: 34 (total: 273)
+fuzz: elapsed: 9s, execs: 1082881 (126924/sec), new interesting: 43 (total: 282)
+fuzz: elapsed: 12s, execs: 1441781 (119641/sec), new interesting: 55 (total: 294)
+fuzz: elapsed: 15s, execs: 1813610 (123906/sec), new interesting: 62 (total: 301)
+fuzz: elapsed: 18s, execs: 2180522 (122332/sec), new interesting: 68 (total: 307)
+fuzz: elapsed: 21s, execs: 2527144 (115542/sec), new interesting: 69 (total: 308)
+fuzz: elapsed: 24s, execs: 2899782 (124219/sec), new interesting: 75 (total: 314)
+fuzz: elapsed: 27s, execs: 3267945 (122722/sec), new interesting: 81 (total: 320)
+fuzz: elapsed: 30s, execs: 3629656 (120365/sec), new interesting: 84 (total: 323)
+fuzz: elapsed: 33s, execs: 3987166 (119333/sec), new interesting: 89 (total: 328)
+fuzz: elapsed: 36s, execs: 4380699 (131215/sec), new interesting: 90 (total: 329)
+fuzz: elapsed: 39s, execs: 4747928 (122408/sec), new interesting: 91 (total: 330)
+fuzz: elapsed: 42s, execs: 5109564 (120515/sec), new interesting: 92 (total: 331)
+fuzz: elapsed: 45s, execs: 5478104 (122855/sec), new interesting: 100 (total: 339)
+fuzz: elapsed: 48s, execs: 5845961 (122646/sec), new interesting: 103 (total: 342)
+fuzz: elapsed: 51s, execs: 6210655 (121529/sec), new interesting: 104 (total: 343)
+fuzz: elapsed: 54s, execs: 6566914 (118753/sec), new interesting: 104 (total: 343)
+fuzz: elapsed: 57s, execs: 6930666 (121262/sec), new interesting: 105 (total: 344)
+fuzz: elapsed: 1m0s, execs: 7305464 (124905/sec), new interesting: 106 (total: 345)
+fuzz: elapsed: 1m1s, execs: 7305464 (0/sec), new interesting: 106 (total: 345)
+PASS
+ok  	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress	60.898s
+fuzz: elapsed: 0s, gathering baseline coverage: 0/251 completed
+fuzz: elapsed: 0s, gathering baseline coverage: 251/251 completed, now fuzzing with 11 workers
+fuzz: elapsed: 3s, execs: 300225 (100068/sec), new interesting: 9 (total: 260)
+fuzz: elapsed: 6s, execs: 696992 (132254/sec), new interesting: 18 (total: 269)
+fuzz: elapsed: 9s, execs: 1049201 (117407/sec), new interesting: 23 (total: 274)
+fuzz: elapsed: 12s, execs: 1413664 (121478/sec), new interesting: 27 (total: 278)
+fuzz: elapsed: 15s, execs: 1765580 (117321/sec), new interesting: 29 (total: 280)
+fuzz: elapsed: 18s, execs: 2113825 (116069/sec), new interesting: 36 (total: 287)
+fuzz: elapsed: 21s, execs: 2473943 (120024/sec), new interesting: 39 (total: 290)
+fuzz: elapsed: 24s, execs: 2845828 (123970/sec), new interesting: 40 (total: 291)
+fuzz: elapsed: 27s, execs: 3208006 (120745/sec), new interesting: 42 (total: 293)
+fuzz: elapsed: 30s, execs: 3588414 (126803/sec), new interesting: 47 (total: 298)
+fuzz: elapsed: 33s, execs: 3971953 (127848/sec), new interesting: 53 (total: 304)
+fuzz: elapsed: 36s, execs: 4348934 (125645/sec), new interesting: 55 (total: 306)
+fuzz: elapsed: 39s, execs: 4725635 (125569/sec), new interesting: 57 (total: 308)
+fuzz: elapsed: 42s, execs: 5098851 (124376/sec), new interesting: 60 (total: 311)
+fuzz: elapsed: 45s, execs: 5436927 (112704/sec), new interesting: 62 (total: 313)
+fuzz: elapsed: 48s, execs: 5821592 (128244/sec), new interesting: 69 (total: 320)
+fuzz: elapsed: 51s, execs: 6197804 (125408/sec), new interesting: 77 (total: 328)
+fuzz: elapsed: 54s, execs: 6561692 (121267/sec), new interesting: 82 (total: 333)
+fuzz: elapsed: 57s, execs: 6929678 (122689/sec), new interesting: 85 (total: 336)
+fuzz: elapsed: 1m0s, execs: 7323296 (131202/sec), new interesting: 92 (total: 343)
+fuzz: elapsed: 1m1s, execs: 7323296 (0/sec), new interesting: 92 (total: 343)
+PASS
+ok  	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress	61.898s
+fuzz: elapsed: 0s, gathering baseline coverage: 0/224 completed
+fuzz: elapsed: 0s, gathering baseline coverage: 224/224 completed, now fuzzing with 11 workers
+fuzz: elapsed: 3s, execs: 348567 (116174/sec), new interesting: 16 (total: 240)
+fuzz: elapsed: 6s, execs: 737253 (129535/sec), new interesting: 36 (total: 260)
+fuzz: elapsed: 9s, execs: 1105838 (122893/sec), new interesting: 50 (total: 274)
+fuzz: elapsed: 12s, execs: 1487079 (127047/sec), new interesting: 63 (total: 287)
+fuzz: elapsed: 15s, execs: 1868976 (127332/sec), new interesting: 74 (total: 298)
+fuzz: elapsed: 18s, execs: 2223115 (118039/sec), new interesting: 84 (total: 308)
+fuzz: elapsed: 21s, execs: 2600434 (125751/sec), new interesting: 89 (total: 313)
+fuzz: elapsed: 24s, execs: 2982322 (127316/sec), new interesting: 95 (total: 319)
+fuzz: elapsed: 27s, execs: 3334931 (117545/sec), new interesting: 99 (total: 323)
+fuzz: elapsed: 30s, execs: 3685340 (116795/sec), new interesting: 102 (total: 326)
+fuzz: elapsed: 33s, execs: 4052291 (122322/sec), new interesting: 105 (total: 329)
+fuzz: elapsed: 36s, execs: 4427152 (124925/sec), new interesting: 107 (total: 331)
+fuzz: elapsed: 39s, execs: 4778094 (117019/sec), new interesting: 109 (total: 333)
+fuzz: elapsed: 41s, execs: 5044360 (113381/sec), new interesting: 109 (total: 333)
+PASS
+ok  	github.com/greysquirr3l/bishoujo-huntress/pkg/huntress	41.727s
+FuzzAddQueryParams completed

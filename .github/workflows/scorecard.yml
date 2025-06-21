@@ -29,17 +29,19 @@ jobs:
 
       - name: Harden Runner
         if: github.actor != 'nektos/act' # Skip when running with ACT locally
-        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
+        uses: step-security/harden-runner@002fdce3c6a235733a90a27c80493a3241e56863 # v2.12.1 # v2.12.0
         with:
           egress-policy: block
           allowed-endpoints: |
             *.blob.core.windows.net:443
+            *.githubusercontent.com:443
             api.github.com:443
             api.huntress.io:443
             api.osv.dev:443
             archive.ubuntu.com:443
             artifactcache.actions.githubusercontent.com:443
             cloud.google.com:443
+            codeload.github.com:443
             dl.google.com:443
             files.pythonhosted.org:443
             ghcr.io:443
@@ -48,6 +50,19 @@ jobs:
             golang.org:443
             golangci-lint.run:443
             google.golang.org:443
+            objects.githubusercontent.com:443
+            packages.microsoft.com:443
+            pkg-containers.githubusercontent.com:443
+            proxy.golang.org:443
+            pypi.org:443
+            raw.githubusercontent.com:443
+            registry.npmjs.org:443
+            releases.github.com:443
+            repo1.maven.org:443
+            security.ubuntu.com:443
+            semgrep.dev:443
+            storage.googleapis.com:443
+            sum.golang.org:443
             hosted-compute-watchdog-prod-eus-02.githubapp.com:443
             hosted-compute-watchdog-prod-iad-01.githubapp.com:443
             objects.githubusercontent.com:443
@@ -66,7 +81,7 @@ jobs:
 
       - name: OSSF Scorecard action
         # OSSF Scorecard: SHA pinning required for supply chain security
-        uses: ossf/scorecard-action@f49aabe0b5af0936a0987cfb85d86b75731b0186 # v2.4.1
+        uses: ossf/scorecard-action@05b42c624433fc40578a4040d5cf5e36ddca8cde # v2.4.2 # v2.4.1
         with:
           results_file: results.sarif
           results_format: sarif
@@ -74,7 +89,7 @@ jobs:
 
       - name: Upload Scorecard results to GitHub Security tab
         # OSSF Scorecard: SHA pinning required for supply chain security
-        uses: github/codeql-action/upload-sarif@b611370bb5703a7efb587f9d136a52ea24c5c38c # v3.25.12
+        uses: github/codeql-action/upload-sarif@b1e4dc3db58c9601794e22a9f6d28d45461b9dbf # codeql-bundle-v2.22.0 # v3.25.12
         with:
           sarif_file: results.sarif
 
@@ -96,17 +111,19 @@ jobs:
 
       - name: Harden Runner # This is now a distinct step
         if: github.actor != 'nektos/act' # Skip when running with ACT locally
-        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
+        uses: step-security/harden-runner@002fdce3c6a235733a90a27c80493a3241e56863 # v2.12.1 # v2.12.0
         with:
           egress-policy: block
           allowed-endpoints: |
             *.blob.core.windows.net:443
+            *.githubusercontent.com:443
             api.github.com:443
             api.huntress.io:443
             api.osv.dev:443
             archive.ubuntu.com:443
             artifactcache.actions.githubusercontent.com:443
             cloud.google.com:443
+            codeload.github.com:443
             dl.google.com:443
             files.pythonhosted.org:443
             ghcr.io:443
@@ -123,6 +140,14 @@ jobs:
             pkg-containers.githubusercontent.com:443
             proxy.golang.org:443
             pypi.org:443
+            raw.githubusercontent.com:443
+            registry.npmjs.org:443
+            releases.github.com:443
+            repo1.maven.org:443
+            security.ubuntu.com:443
+            semgrep.dev:443
+            storage.googleapis.com:443
+            sum.golang.org:443
             raw.githubusercontent.com:443
             registry.npmjs.org:443
             repo1.maven.org:443
@@ -179,7 +204,7 @@ jobs:
 
       - name: Upload golangci-lint SARIF results
         if: success() && steps.golangci_lint_run.outputs.sarif-filepath # Ensure the file path output exists
-        uses: github/codeql-action/upload-sarif@b611370bb5703a7efb587f9d136a52ea24c5c38c # v3.25.12
+        uses: github/codeql-action/upload-sarif@b1e4dc3db58c9601794e22a9f6d28d45461b9dbf # codeql-bundle-v2.22.0 # v3.25.12
         with:
           sarif_file: ${{ steps.golangci_lint_run.outputs.sarif-filepath }}
 

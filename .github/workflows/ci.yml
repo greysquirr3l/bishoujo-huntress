@@ -25,17 +25,19 @@ jobs:
 
       - name: Harden Runner
         if: github.actor != 'nektos/act' # Skip when running with ACT locally
-        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
+        uses: step-security/harden-runner@002fdce3c6a235733a90a27c80493a3241e56863 # v2.12.1 # v2.12.0
         with:
           egress-policy: block
           allowed-endpoints: |
             *.blob.core.windows.net:443
+            *.githubusercontent.com:443
             api.github.com:443
             api.huntress.io:443
             api.osv.dev:443
             archive.ubuntu.com:443
             artifactcache.actions.githubusercontent.com:443
             cloud.google.com:443
+            codeload.github.com:443
             dl.google.com:443
             files.pythonhosted.org:443
             ghcr.io:443
@@ -44,6 +46,19 @@ jobs:
             golang.org:443
             golangci-lint.run:443
             google.golang.org:443
+            objects.githubusercontent.com:443
+            packages.microsoft.com:443
+            pkg-containers.githubusercontent.com:443
+            proxy.golang.org:443
+            pypi.org:443
+            raw.githubusercontent.com:443
+            registry.npmjs.org:443
+            releases.github.com:443
+            repo1.maven.org:443
+            security.ubuntu.com:443
+            semgrep.dev:443
+            storage.googleapis.com:443
+            sum.golang.org:443
             hosted-compute-watchdog-prod-eus-02.githubapp.com:443
             hosted-compute-watchdog-prod-iad-01.githubapp.com:443
             objects.githubusercontent.com:443
@@ -125,13 +140,13 @@ jobs:
 
       - name: Run security scanner (gosec)
         id: gosec_scan # Add an ID to reference the step
-        uses: securego/gosec@6decf96c3d272d5a8bbdcf9fddb5789d0be16a8d # v2.22.4
+        uses: securego/gosec@d2d3ae66bd8d340b78b5142b6fe610691783c2fe # v2.22.5 # v2.22.4
         with:
           args: "-fmt=sarif -out=gosec-results.sarif ./..." # Output SARIF for upload
 
       - name: Upload Gosec SARIF results
         if: success() || failure() # Upload SARIF even if gosec finds issues
-        uses: github/codeql-action/upload-sarif@b611370bb5703a7efb587f9d136a52ea24c5c38 # v3.25.12
+        uses: github/codeql-action/upload-sarif@b1e4dc3db58c9601794e22a9f6d28d45461b9dbf # codeql-bundle-v2.22.0 # v3.25.12
         with:
           sarif_file: gosec-results.sarif
           category: gosec

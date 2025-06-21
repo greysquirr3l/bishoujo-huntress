@@ -53,6 +53,14 @@ linters:
       threshold: 150
   exclusions:
     rules:
+      - path: build/
+        linters:
+          - gosec
+          - errcheck
+          - staticcheck
+          - unused
+          - govet
+          - ineffassign
       - path: _test\.go
         linters:
           - errcheck

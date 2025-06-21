@@ -2,9 +2,9 @@
 
 ## Introduction
 
-This document provides guidelines for developing our app using Domain-Driven 
-Design (DDD), Command Query Responsibility Segregation (CQRS), and Clean Architecture 
-principles in Go. These approaches combine to create maintainable, testable, and 
+This document provides guidelines for developing our app using Domain-Driven
+Design (DDD), Command Query Responsibility Segregation (CQRS), and Clean Architecture
+principles in Go. These approaches combine to create maintainable, testable, and
 business-focused code.
 
 ## Core Concepts
@@ -133,12 +133,12 @@ func (h *CreateUserHandler) Handle(ctx context.Context, cmd CreateUser) error {
     if err != nil {
         return err
     }
-    
+
     password, err := NewPassword(cmd.Password)
     if err != nil {
         return err
     }
-    
+
     user := NewUser(email, password)
     return h.userRepo.Save(ctx, user)
 }

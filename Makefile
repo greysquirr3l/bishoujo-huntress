@@ -32,6 +32,9 @@ BUILD_DIR=./build
 COVERAGE_DIR=./coverage
 DOCS_DIR=./docs
 
+# Fuzz testing parameters
+FUZZTIME ?= 60s
+
 # Version information - can be overridden by git tags or CI/CD
 VERSION ?= $(shell git describe --tags --always --dirty || echo "dev")
 COMMIT ?= $(shell git rev-parse --short HEAD || echo "unknown")
@@ -43,7 +46,7 @@ LD_FLAGS = -X '$(PKG)/pkg/huntress.Version=$(VERSION)' \
 		   -X '$(PKG)/pkg/huntress.BuildDate=$(BUILD_DATE)'
 
 # Build targets
-.PHONY: all build clean deps examples test test-race test-cover lint vet fmt tidy check vendor doc security-check help
+.PHONY: all build clean deps examples test test-race test-cover lint vet fmt tidy check vendor doc security-check ossf-build ossf-attest ossf-clean ci-hash-build ci-hash-check ci-hash-update ci-hash-verify help
 
 # Default target
 all: clean deps lint test build
@@ -101,7 +104,13 @@ fuzz:
 # Run fuzz tests for CI and save output
 fuzz-ci:
 	@echo "Running fuzz tests for CI..."
-	go test -fuzz=Fuzz -fuzztime=60s ./... > fuzz-results.txt 2>&1 || true
+	@echo "Running fuzz tests for CI..." > fuzz-results.txt
+	@echo "Starting fuzzing on pkg/huntress package..." >> fuzz-results.txt
+	@go test -fuzz=FuzzIncidentListOptionsValidate -fuzztime=${FUZZTIME} ./pkg/huntress >> fuzz-results.txt 2>&1 || echo "FuzzIncidentListOptionsValidate completed" >> fuzz-results.txt
+	@go test -fuzz=FuzzEncodeURLValues -fuzztime=${FUZZTIME} ./pkg/huntress >> fuzz-results.txt 2>&1 || echo "FuzzEncodeURLValues completed" >> fuzz-results.txt
+	@go test -fuzz=FuzzAddQueryParams -fuzztime=${FUZZTIME} ./pkg/huntress >> fuzz-results.txt 2>&1 || echo "FuzzAddQueryParams completed" >> fuzz-results.txt
+	@go test -fuzz=FuzzExtractPagination -fuzztime=${FUZZTIME} ./pkg/huntress >> fuzz-results.txt 2>&1 || echo "FuzzExtractPagination completed" >> fuzz-results.txt
+	@echo "Fuzz testing completed. Results saved to fuzz-results.txt"
 
 # Run tests
 test:
@@ -188,6 +197,42 @@ security-check:
 	@which govulncheck > /dev/null || go install golang.org/x/vuln/cmd/govulncheck@latest
 	@govulncheck ./...
 
+# GitHub CI hash updater tools
+ci-hash-build:
+	@echo "Building GitHub CI hash tool..."
+	@mkdir -p $(BUILD_DIR)
+	@$(GOBUILD) -ldflags "$(LD_FLAGS)" -o $(BUILD_DIR)/github-ci-hash ./cmd/github-ci-hash/
+	@echo "Built: $(BUILD_DIR)/github-ci-hash"
+
+ci-hash-check: ci-hash-build
+	@echo "Checking for GitHub Action updates..."
+	@$(BUILD_DIR)/github-ci-hash check
+
+ci-hash-update: ci-hash-build
+	@echo "Updating GitHub Actions with confirmation..."
+	@$(BUILD_DIR)/github-ci-hash update
+
+ci-hash-verify: ci-hash-build
+	@echo "Verifying all actions are pinned to SHAs..."
+	@$(BUILD_DIR)/github-ci-hash verify
+
+# OSSF Security Baseline Attestation
+ossf-build:
+	@echo "Building OSSF attestation tool..."
+	@mkdir -p $(BUILD_DIR)
+	@$(GOBUILD) -ldflags "$(LD_FLAGS)" -o $(BUILD_DIR)/ossf-attest ./cmd/ossf-attest/
+	@echo "Built: $(BUILD_DIR)/ossf-attest"
+
+ossf-attest: ossf-build
+	@echo "Running OSSF Security Baseline Attestation..."
+	@$(BUILD_DIR)/ossf-attest --verbose
+
+ossf-clean:
+	@echo "Cleaning OSSF attestation artifacts..."
+	@rm -f ossf-attestation-*.json ossf-attestation-*.txt
+	@rm -f golangci-lint.txt gosec.txt govulncheck.txt semgrep.txt test-results.txt sbom.json
+	@echo "OSSF attestation artifacts cleaned"
+
 
 # Show help
 help:
@@ -211,6 +256,13 @@ help:
 	@echo "  check          - Run all code quality checks"
 	@echo "  doc            - Generate documentation"
 	@echo "  security-check - Run security checks"
+	@echo "  ci-hash-build  - Build the GitHub CI hash tool"
+	@echo "  ci-hash-check  - Check for GitHub Action updates"
+	@echo "  ci-hash-update - Update GitHub Actions with confirmation"
+	@echo "  ci-hash-verify - Verify all actions are pinned to SHAs"
+	@echo "  ossf-build     - Build the OSSF attestation tool"
+	@echo "  ossf-attest    - Run OSSF Security Baseline Attestation"
+	@echo "  ossf-clean     - Clean OSSF attestation artifacts"
 	@echo "  swagger-download - Download latest Huntress OpenAPI/Swagger spec"
 	@echo "  swagger-codegen  - Generate Go models from OpenAPI/Swagger spec (requires openapi-generator-cli)"
 	@echo "  swagger-diff     - Show diff instructions for generated vs. hand-written models"

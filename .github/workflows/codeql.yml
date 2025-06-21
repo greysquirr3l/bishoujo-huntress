@@ -40,17 +40,19 @@ jobs:
 
       - name: Harden Runner
         if: github.actor != 'nektos/act' # Skip when running with ACT locally
-        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
+        uses: step-security/harden-runner@002fdce3c6a235733a90a27c80493a3241e56863 # v2.12.1 # v2.12.0
         with:
           egress-policy: block
           allowed-endpoints: |
             *.blob.core.windows.net:443
+            *.githubusercontent.com:443
             api.github.com:443
             api.huntress.io:443
             api.osv.dev:443
             archive.ubuntu.com:443
             artifactcache.actions.githubusercontent.com:443
             cloud.google.com:443
+            codeload.github.com:443
             dl.google.com:443
             files.pythonhosted.org:443
             ghcr.io:443
@@ -69,6 +71,7 @@ jobs:
             pypi.org:443
             raw.githubusercontent.com:443
             registry.npmjs.org:443
+            releases.github.com:443
             repo1.maven.org:443
             security.ubuntu.com:443
             semgrep.dev:443
@@ -76,12 +79,12 @@ jobs:
             sum.golang.org:443
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@b611370bb5703a7efb587f9d136a52ea24c5c38c # v3.25.12
+        uses: github/codeql-action/init@b1e4dc3db58c9601794e22a9f6d28d45461b9dbf # codeql-bundle-v2.22.0 # v3.25.12
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@b611370bb5703a7efb587f9d136a52ea24c5c38c # v3.25.12
+        uses: github/codeql-action/analyze@b1e4dc3db58c9601794e22a9f6d28d45461b9dbf # codeql-bundle-v2.22.0 # v3.25.12
         with:
           category: "/language:${{ matrix.language }}"
