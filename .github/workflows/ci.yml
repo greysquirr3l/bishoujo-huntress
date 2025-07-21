@@ -131,7 +131,7 @@ jobs:
 
       - name: Run security scanner (gosec)
         id: gosec_scan # Add an ID to reference the step
-        uses: securego/gosec@d2d3ae66bd8d340b78b5142b6fe610691783c2fe # v2.22.5 # v2.22.4
+        uses: securego/gosec@32975f4bab0d7b683a88756aaf3fa5502188b476 # v2.22.5 # v2.22.4
         with:
           args: "-fmt sarif -out gosec-results.sarif -exclude-dir=build ./..."
 
